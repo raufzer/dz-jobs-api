@@ -17,3 +17,25 @@
 
 # Go workspace file
 go.work
+
+# Docker-related files
+.docker/
+docker-compose.override.yml
+Dockerfile.*
+.dockerignore
+
+# Docker containers, volumes, and networks
+**/*.log
+**/*.pid
+**/*.bak
+**/*.swp
+docker-compose.yml
+
+# Ignore environment and local config files
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Ignore the db folder created by Docker
+data/db/
