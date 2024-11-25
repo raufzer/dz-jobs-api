@@ -39,12 +39,12 @@ func main() {
 	// Repositories
 	userRepo := repositories.NewUserRepository(dbConfig.DB)
 
-    // Services
+	// Services
 	authService := services.NewAuthenticationServiceImpl(userRepo, validate)
 
 	// Controllers
 	userController := controllers.NewUserController(userRepo)
-	authController := controllers.NewAuthenticationController(authService,appConfig)
+	authController := controllers.NewAuthenticationController(authService, appConfig)
 
 	// Gin setup
 	gin.SetMode(gin.ReleaseMode) // Production mode
@@ -57,13 +57,12 @@ func main() {
 	corsConfig.AddAllowHeaders("Authorization", "Content-Type")
 	server.Use(cors.New(corsConfig))
 
-
 	// Global middleware
 	server.Use(gin.Recovery())
 
 	// Swagger setup
 	server.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler,
-		ginSwagger.URL("http://localhost:"+appConfig.ServerPort+"/swagger/doc.json"),
+		ginSwagger.URL("https://dz-jobs-api-production.up.railway.app:"+appConfig.ServerPort+"/swagger/doc.json"),
 	))
 
 	// API Routes
