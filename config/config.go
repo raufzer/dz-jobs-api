@@ -1,8 +1,9 @@
 package config
 
 import (
+	"dz-jobs-api/pkg/helpers"
+	"dz-jobs-api/pkg/utils"
 	"log"
-	"os"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -14,48 +15,35 @@ type AppConfig struct {
 	JWTSecret      string
 	TokenSecret    string
 	TokenExpiresIn time.Duration
-	TokenMaxAge    int
+	TokenMaxAge    time.Duration
 }
 
 func LoadConfig() (*AppConfig, error) {
+
 	err := godotenv.Load("../.env")
 	if err != nil {
 		log.Println("Warning: No .env file found, using default environment variables.")
 	}
 
-	// Convert token expiration string to duration
-	tokenExpStr := getEnvWithDefault("TOKEN_EXPIRES_IN", "24h")
-	tokenExpDuration, err := time.ParseDuration(tokenExpStr)
+	tokenExpiresInStr := utils.GetEnv("TOKEN_EXPIRES_IN")
+	tokenExpiresIn, err := time.ParseDuration(tokenExpiresInStr)
 	if err != nil {
-		return nil, err
+		return nil, helpers.WrapError(err, "parsing TOKEN_EXPIRES_IN")
+	}
+	tokenMaxAgeStr := utils.GetEnv("TOKEN_MAX_AGE")
+	tokenMaxAge, err := time.ParseDuration(tokenMaxAgeStr)
+	if err != nil {
+		return nil, helpers.WrapError(err, "parsing TOKEN_MAX_AGE")
 	}
 
 	config := &AppConfig{
-		ServerPort:     getEnvWithDefault("SERVER_PORT", "8080"),
-		DatabaseURI:    getEnv("DATABASE_URI"),
-		JWTSecret:      getEnv("JWT_SECRET"),
-		TokenSecret:    getEnv("TOKEN_SECRET"),
-		TokenExpiresIn: tokenExpDuration,
-		TokenMaxAge:    int(tokenExpDuration.Hours()),
+		ServerPort:     utils.GetEnv("SERVER_PORT"),
+		DatabaseURI:    utils.GetEnv("DATABASE_URI"),
+		JWTSecret:      utils.GetEnv("JWT_SECRET"),
+		TokenSecret:    utils.GetEnv("TOKEN_SECRET"),
+		TokenExpiresIn: tokenExpiresIn,
+		TokenMaxAge:    tokenMaxAge,
 	}
 
 	return config, nil
-}
-
-// getEnv gets an environment variable and panics if it's not set
-func getEnv(key string) string {
-	value := os.Getenv(key)
-	if value == "" {
-		log.Fatalf("Environment variable %s is not set.", key)
-	}
-	return value
-}
-
-// getEnvWithDefault gets an environment variable or returns a default value if not set
-func getEnvWithDefault(key string, defaultValue string) string {
-	value := os.Getenv(key)
-	if value == "" {
-		return defaultValue
-	}
-	return value
 }
