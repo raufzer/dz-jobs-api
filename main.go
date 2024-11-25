@@ -62,7 +62,7 @@ func main() {
 
 	// Swagger setup
 	server.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler,
-		ginSwagger.URL("https://dz-jobs-api-production.up.railway.app:"+appConfig.ServerPort+"/swagger/doc"),
+		ginSwagger.URL("https://dz-jobs-api-production.up.railway.app/api-docs"),
 	))
 
 	// API Routes
