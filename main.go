@@ -62,11 +62,10 @@ func main() {
 	server.Use(gin.Recovery())
 
 	// Swagger setup
-	server.GET("/api-docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler,
-		ginSwagger.URL("https://dz-jobs-api-production.up.railway.app/api-docs/swagger.json"),
-		ginSwagger.DefaultModelsExpandDepth(-1),
+	// Alternative configuration
+	server.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler,
+		ginSwagger.URL("https://dz-jobs-api-production.up.railway.app/docs/doc.json"),
 	))
-
 	// API Routes
 	basePath := server.Group("/v1")
 	v1.UserRoutes(basePath, userController)
