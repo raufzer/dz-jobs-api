@@ -62,7 +62,7 @@ func main() {
 
 	// Swagger setup
 	server.GET("/api-docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler,
-		ginSwagger.URL("/api-docs/*any"),
+		ginSwagger.URL("/docs/swagger/*any"),
 	))
 
 	// API Routes
