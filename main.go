@@ -21,8 +21,9 @@ import (
 // @title           DzJobs API
 // @version         1.0
 // @description     Complete API for DzJobs Platform
-// @host            localhost:9090
+// @host            dz-jobs-api-production.up.railway.app
 // @BasePath        /v1
+// @schemes         https
 func main() {
 	// Load configuration
 	appConfig, err := config.LoadConfig()
@@ -62,7 +63,8 @@ func main() {
 
 	// Swagger setup
 	server.GET("/api-docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler,
-		ginSwagger.URL("/docs/swagger/*any"),
+		ginSwagger.URL("https://dz-jobs-api-production.up.railway.app/api-docs/swagger.json"),
+		ginSwagger.DefaultModelsExpandDepth(-1),
 	))
 
 	// API Routes

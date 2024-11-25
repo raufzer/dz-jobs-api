@@ -364,16 +364,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "name": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "minLength": 3
+                    "type": "string"
                 },
                 "password": {
                     "type": "string",
-                    "minLength": 6
-                },
-                "role": {
-                    "type": "string"
+                    "minLength": 8
                 }
             }
         },
@@ -467,9 +462,9 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8080",
+	Host:             "dz-jobs-api-production.up.railway.app",
 	BasePath:         "/v1",
-	Schemes:          []string{},
+	Schemes:          []string{"https"},
 	Title:            "DzJobs API",
 	Description:      "Complete API for DzJobs Platform",
 	InfoInstanceName: "swagger",

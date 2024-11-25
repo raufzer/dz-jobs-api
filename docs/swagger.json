@@ -1,4 +1,7 @@
 {
+    "schemes": [
+        "https"
+    ],
     "swagger": "2.0",
     "info": {
         "description": "Complete API for DzJobs Platform",
@@ -6,7 +9,7 @@
         "contact": {},
         "version": "1.0"
     },
-    "host": "localhost:8080",
+    "host": "dz-jobs-api-production.up.railway.app",
     "basePath": "/v1",
     "paths": {
         "/auth/login": {
@@ -358,16 +361,11 @@
                     "type": "string"
                 },
                 "name": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "minLength": 3
+                    "type": "string"
                 },
                 "password": {
                     "type": "string",
-                    "minLength": 6
-                },
-                "role": {
-                    "type": "string"
+                    "minLength": 8
                 }
             }
         },

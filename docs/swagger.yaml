@@ -5,13 +5,9 @@ definitions:
       email:
         type: string
       name:
-        maxLength: 50
-        minLength: 3
         type: string
       password:
-        minLength: 6
-        type: string
-      role:
+        minLength: 8
         type: string
     required:
     - email
@@ -74,7 +70,7 @@ definitions:
       updatedAt:
         type: string
     type: object
-host: localhost:8080
+host: dz-jobs-api-production.up.railway.app
 info:
   contact: {}
   description: Complete API for DzJobs Platform
@@ -287,4 +283,6 @@ paths:
       summary: Update an existing user
       tags:
       - Users
+schemes:
+- https
 swagger: "2.0"
