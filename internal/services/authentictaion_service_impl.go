@@ -5,7 +5,6 @@ import (
 	"dz-jobs-api/data/request"
 	"dz-jobs-api/internal/models"
 	"dz-jobs-api/internal/repositories"
-	"dz-jobs-api/pkg/helpers"
 	"dz-jobs-api/pkg/utils"
 	"errors"
 	"time"
@@ -14,13 +13,14 @@ import (
 )
 
 type AuthenticationServiceImpl struct {
-	UsersRepository repositories.UserRepository
+	UserRepository repositories.UserRepository
 	Validate        *validator.Validate
 }
 
-func NewAuthenticationServiceImpl(usersRepository repositories.UserRepository, validate *validator.Validate) AuthenticationService {
-	return &AuthenticationServiceImpl{
-		UsersRepository: usersRepository,
+// NewAuthenticationServiceImpl returns a pointer to AuthenticationServiceImpl
+func NewAuthenticationServiceImpl(userRepository repositories.UserRepository, validate *validator.Validate) AuthenticationService {
+	return &AuthenticationServiceImpl{  // Return a pointer to AuthenticationServiceImpl
+		UserRepository: userRepository,
 		Validate:        validate,
 	}
 }
@@ -28,41 +28,51 @@ func NewAuthenticationServiceImpl(usersRepository repositories.UserRepository, v
 // Login implements AuthenticationService
 func (a *AuthenticationServiceImpl) Login(user request.LoginRequest) (string, error) {
 	// Find username in database
-	new_users, user_err := a.UsersRepository.GetByName(user.Name)
-	if user_err != nil {
-		return "", errors.New("invalid username or Password")
+	newUser, userErr := a.UserRepository.GetByName(user.Name)
+	if userErr != nil {
+		return "", errors.New("invalid name or password") // Return specific error message
 	}
 
+	// Load configuration
 	config, err := config.LoadConfig()
-	helpers.ErrorPanic(err) // Panic on configuration error as it's critical
+	if err != nil {
+		return "", err // Return error instead of panicking
+	}
 
-	verify_error := utils.VerifyPassword(new_users.Password, user.Password)
-	if verify_error != nil {
-		return "", errors.New("invalid username or Password")
+	// Verify password
+	verifyErr := utils.VerifyPassword(newUser.Password, user.Password)
+	if verifyErr != nil {
+		return "", errors.New("invalid name or password") // Return specific error message
 	}
 
 	// Generate Token
-	token, err_token := utils.GenerateToken(config.TokenExpiresIn, new_users.ID, config.TokenSecret)
-	helpers.ErrorPanic(err_token) // Panic on token generation error as it's a critical system function
+	token, errToken := utils.GenerateToken(config.TokenExpiresIn, newUser.ID, config.TokenSecret)
+	if errToken != nil {
+		return "", errToken // Return error instead of panicking
+	}
 
 	return token, nil
 }
 
 // Register implements AuthenticationService
-func (a *AuthenticationServiceImpl) Register(user request.CreateUsersRequest) {
+func (a *AuthenticationServiceImpl) Register(user request.CreateUsersRequest) error {
 	// Validate user input
 	err := a.Validate.Struct(user)
-	helpers.ErrorPanic(err) // Panic on validation error as it indicates a system issue
+	if err != nil {
+		return err // Return validation error instead of panicking
+	}
 
 	// Check if user already exists
-	_, err = a.UsersRepository.GetByName(user.Name)
+	_, err = a.UserRepository.GetByName(user.Name)
 	if err == nil {
-		helpers.ErrorPanic(errors.New("username already exists"))
+		return errors.New("username already exists") // Return error instead of panicking
 	}
 
 	// Hash password
 	hashedPassword, err := utils.HashPassword(user.Password)
-	helpers.ErrorPanic(err) // Panic on hashing error as it's a critical security function
+	if err != nil {
+		return err // Return hashing error instead of panicking
+	}
 
 	// Create new user with all required fields
 	now := time.Now()
@@ -76,6 +86,10 @@ func (a *AuthenticationServiceImpl) Register(user request.CreateUsersRequest) {
 	}
 
 	// Create user in repository
-	err = a.UsersRepository.Create(&newUser)
-	helpers.ErrorPanic(err) // Panic on database error as it's a critical system function
+	err = a.UserRepository.Create(&newUser)
+	if err != nil {
+		return err // Return database error instead of panicking
+	}
+
+	return nil // Return nil if registration is successful
 }
