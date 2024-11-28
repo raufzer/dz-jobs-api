@@ -14,82 +14,72 @@ import (
 
 type AuthenticationServiceImpl struct {
 	UserRepository repositories.UserRepository
-	Validate        *validator.Validate
+	Validate       *validator.Validate
 }
 
-// NewAuthenticationServiceImpl returns a pointer to AuthenticationServiceImpl
 func NewAuthenticationServiceImpl(userRepository repositories.UserRepository, validate *validator.Validate) AuthenticationService {
-	return &AuthenticationServiceImpl{  // Return a pointer to AuthenticationServiceImpl
+	return &AuthenticationServiceImpl{
 		UserRepository: userRepository,
-		Validate:        validate,
+		Validate:       validate,
 	}
 }
 
-// Login implements AuthenticationService
 func (a *AuthenticationServiceImpl) Login(user request.LoginRequest) (string, error) {
-	// Find username in database
-	newUser, userErr := a.UserRepository.GetByName(user.Name)
+
+	newUser, userErr := a.UserRepository.GetByName(user.Email)
 	if userErr != nil {
-		return "", errors.New("invalid name or password") // Return specific error message
+		return "", errors.New("invalid name or password")
 	}
 
-	// Load configuration
 	config, err := config.LoadConfig()
 	if err != nil {
-		return "", err // Return error instead of panicking
+		return "", err
 	}
 
-	// Verify password
 	verifyErr := utils.VerifyPassword(newUser.Password, user.Password)
 	if verifyErr != nil {
-		return "", errors.New("invalid name or password") // Return specific error message
+		return "", errors.New("invalid name or password")
 	}
 
-	// Generate Token
 	token, errToken := utils.GenerateToken(config.TokenExpiresIn, newUser.ID, config.TokenSecret)
 	if errToken != nil {
-		return "", errToken // Return error instead of panicking
+		return "", errToken
 	}
 
 	return token, nil
 }
 
-// Register implements AuthenticationService
 func (a *AuthenticationServiceImpl) Register(user request.CreateUsersRequest) error {
-	// Validate user input
+
 	err := a.Validate.Struct(user)
 	if err != nil {
-		return err // Return validation error instead of panicking
+		return err
 	}
 
-	// Check if user already exists
 	_, err = a.UserRepository.GetByName(user.Name)
 	if err == nil {
-		return errors.New("username already exists") // Return error instead of panicking
+		return errors.New("username already exists")
 	}
 
-	// Hash password
 	hashedPassword, err := utils.HashPassword(user.Password)
 	if err != nil {
-		return err // Return hashing error instead of panicking
+		return err
 	}
 
-	// Create new user with all required fields
 	now := time.Now()
 	newUser := models.User{
 		Name:      user.Name,
 		Email:     user.Email,
 		Password:  hashedPassword,
-		Role:      "user", // Set default role
+		Role:      "user",
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
 
-	// Create user in repository
 	err = a.UserRepository.Create(&newUser)
 	if err != nil {
-		return err // Return database error instead of panicking
+		return err
 	}
 
-	return nil // Return nil if registration is successful
+	return nil
 }

@@ -1,20 +1,24 @@
 package utils
 
 import (
-	"fmt"
-
 	"golang.org/x/crypto/bcrypt"
 )
 
-func HashPassword(password string) (string, error) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		return "", fmt.Errorf("could not hash password %w", err)
+		return "", err
 	}
-	return string(hashedPassword), nil
+	return string(bytes), nil
 }
 
-func VerifyPassword(hashedPassword string, candidatePassword string) error {
-	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(candidatePassword))
+
+func VerifyPassword(hashedPassword, password string) error {
+	// Compare the hashed password with the provided password
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+	if err != nil {
+		return err // Return an error if passwords do not match
+	}
+	return nil // Return nil if passwords match
 }

@@ -21,14 +21,14 @@ func NewUserRepository(db *sql.DB) UserRepository {
 // Create a new user in the database.
 func (r *SQLUserRepository) Create(user *models.User) error {
 	query := "INSERT INTO users (name, email, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING id"
-	
+
 	// Use QueryRow instead of Prepare for simple inserts
 	var id int
 	err := r.db.QueryRow(query, user.Name, user.Email, user.Password, user.Role).Scan(&id)
 	if err != nil {
 		return err
 	}
-	
+
 	user.ID = id
 	return nil
 }
@@ -58,7 +58,7 @@ func (r *SQLUserRepository) GetByID(id int) (*models.User, error) {
 	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Role, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil // No user found
+			return nil, nil
 		}
 		return nil, err
 	}
@@ -91,11 +91,10 @@ func (r *SQLUserRepository) GetAll() ([]*models.User, error) {
 }
 
 // Update updates an existing user in the database.
-func (r *SQLUserRepository) Update(user *models.User) error {
+func (r *SQLUserRepository) Update(id int, user *models.User) error {
 	query := "UPDATE users SET name = $1, email = $2, password = $3, role = $4, updated_at = NOW() WHERE id = $5"
-	
-	// Use Exec directly instead of Prepare for simple updates
-	result, err := r.db.Exec(query, user.Name, user.Email, user.Password, user.Role, user.ID)
+
+	result, err := r.db.Exec(query, user.Name, user.Email, user.Password, user.Role, id)
 	if err != nil {
 		return err
 	}
@@ -105,16 +104,16 @@ func (r *SQLUserRepository) Update(user *models.User) error {
 		return err
 	}
 	if rowsAffected == 0 {
-		return errors.New("no rows updated")
+		return errors.New("no user found or updated")
 	}
 
 	return nil
 }
 
 // Delete removes a user from the database by name.
-func (r *SQLUserRepository) Delete(name string) error {
-	query := "DELETE FROM users WHERE name = $1"
-	result, err := r.db.Exec(query, name)
+func (r *SQLUserRepository) Delete(id int) error {
+	query := "DELETE FROM users WHERE id = $1"
+	result, err := r.db.Exec(query, id)
 	if err != nil {
 		return err
 	}

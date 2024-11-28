@@ -7,10 +7,10 @@ import (
 )
 
 func UserRoutes(rg *gin.RouterGroup, userController *controllers.UserController) {
-	userRoute := rg.Group("/user")
-	userRoute.POST("/", userController.CreateUser)
-	userRoute.GET("/:name", userController.GetUser)
-	userRoute.GET("/", userController.GetAllUsers)
-	userRoute.PATCH("/", userController.UpdateUser)
-	userRoute.DELETE("/", userController.DeleteUser)
+	usersRoute := rg.Group("/users")
+	usersRoute.POST("/", userController.CreateUser)      // Create a new user
+	usersRoute.GET("/", userController.GetAllUsers)      // Retrieve all users with optional query params (e.g., pagination)
+	usersRoute.GET("/:id", userController.GetUser)       // Retrieve a user by ID
+	usersRoute.PATCH("/:id", userController.UpdateUser)  // Update user details by ID
+	usersRoute.DELETE("/:id", userController.DeleteUser) // Delete a user by ID
 }
