@@ -49,7 +49,7 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 		return
 	}
 
-	helpers.RespondWithSuccess(ctx, "User created successfully", toUserResponse(user))
+	helpers.RespondWithSuccess(ctx, "User created successfully", helpers.ToUserResponse(user))
 }
 
 func (uc *UserController) GetUser(ctx *gin.Context) {
@@ -65,7 +65,7 @@ func (uc *UserController) GetUser(ctx *gin.Context) {
 		return
 	}
 
-	helpers.RespondWithSuccess(ctx, "User found", toUserResponse(user))
+	helpers.RespondWithSuccess(ctx, "User found", helpers.ToUserResponse(user))
 }
 
 func (uc *UserController) UpdateUser(ctx *gin.Context) {
@@ -100,7 +100,7 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 		return
 	}
 
-	helpers.RespondWithSuccess(ctx, "User updated successfully", toUserResponse(user))
+	helpers.RespondWithSuccess(ctx, "User updated successfully", helpers.ToUserResponse(user))
 }
 
 func (uc *UserController) GetAllUsers(ctx *gin.Context) {
@@ -112,10 +112,14 @@ func (uc *UserController) GetAllUsers(ctx *gin.Context) {
 
 	userResponses := make([]response.UserResponse, len(users))
 	for i, user := range users {
-		userResponses[i] = toUserResponse(user)
+		userResponses[i] = helpers.ToUserResponse(user)
+	}
+	response := map[string]interface{}{
+		"users": userResponses,
+		"total": len(users),
 	}
 
-	helpers.RespondWithSuccess(ctx, "Users retrieved successfully", userResponses)
+	helpers.RespondWithSuccess(ctx, "Users retrieved successfully", response)
 }
 
 func (uc *UserController) DeleteUser(ctx *gin.Context) {
@@ -131,15 +135,4 @@ func (uc *UserController) DeleteUser(ctx *gin.Context) {
 	}
 
 	helpers.RespondWithSuccess(ctx, "User deleted successfully", nil)
-}
-
-func toUserResponse(user *models.User) response.UserResponse {
-	return response.UserResponse{
-		ID:        user.ID,
-		Name:      user.Name,
-		Email:     user.Email,
-		Role:      user.Role,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
-	}
 }

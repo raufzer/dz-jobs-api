@@ -3,8 +3,10 @@ package helpers
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"dz-jobs-api/data/response"
+	"dz-jobs-api/internal/models"
+
+	"github.com/gin-gonic/gin"
 )
 
 func RespondWithError(ctx *gin.Context, message string, statusCode int) {
@@ -26,3 +28,13 @@ func RespondWithSuccess(ctx *gin.Context, message string, data interface{}) {
 	ctx.JSON(http.StatusOK, webResponse)
 }
 
+func ToUserResponse(user *models.User) response.UserResponse {
+	return response.UserResponse{
+		ID:        user.ID,
+		Name:      user.Name,
+		Email:     user.Email,
+		Role:      user.Role,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+	}
+}
