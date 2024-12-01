@@ -12,19 +12,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type AuthenticationController struct {
-	authService services.AuthenticationService
+type AuthController struct {
+	authService services.AuthService
 	config      *config.AppConfig
 }
 
-func NewAuthenticationController(service services.AuthenticationService, config *config.AppConfig) *AuthenticationController {
-	return &AuthenticationController{
+func NewAuthController(service services.AuthService, config *config.AppConfig) *AuthController {
+	return &AuthController{
 		authService: service,
 		config:      config,
 	}
 }
 
-func (ac *AuthenticationController) Login(ctx *gin.Context) {
+func (ac *AuthController) Login(ctx *gin.Context) {
 	var loginRequest request.LoginRequest
 	if err := ctx.ShouldBindJSON(&loginRequest); err != nil {
 		helpers.RespondWithError(ctx, "Invalid request format", http.StatusBadRequest)
@@ -45,7 +45,7 @@ func (ac *AuthenticationController) Login(ctx *gin.Context) {
 	helpers.RespondWithSuccess(ctx, "Successfully logged in!", resp)
 }
 
-func (ac *AuthenticationController) Register(ctx *gin.Context) {
+func (ac *AuthController) Register(ctx *gin.Context) {
 	var createUserRequest request.CreateUsersRequest
 	if err := ctx.ShouldBindJSON(&createUserRequest); err != nil {
 		helpers.RespondWithError(ctx, "Invalid request format", http.StatusBadRequest)

@@ -41,11 +41,11 @@ func main() {
 	userRepo := repositories.NewUserRepository(dbConfig.DB)
 
 	// Services
-	authService := services.NewAuthenticationServiceImpl(userRepo, validate)
+	authService := services.NewAuthServiceImpl(userRepo, validate)
 
 	// Controllers
 	userController := controllers.NewUserController(userRepo)
-	authController := controllers.NewAuthenticationController(authService, appConfig)
+	authController := controllers.NewAuthController(authService, appConfig)
 
 	// Gin setup
 	gin.SetMode(gin.ReleaseMode) // Production mode
@@ -69,7 +69,7 @@ func main() {
 	// API Routes
 	basePath := server.Group("/v1")
 	v1.UserRoutes(basePath, userController)
-	v1.AuthenticationRoutes(basePath, authController)
+	v1.AuthRoutes(basePath, authController)
 
 	// Server startup
 	serverAddr := ":" + appConfig.ServerPort

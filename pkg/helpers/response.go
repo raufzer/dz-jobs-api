@@ -38,3 +38,14 @@ func ToUserResponse(user *models.User) response.UserResponse {
 		UpdatedAt: user.UpdatedAt,
 	}
 }
+
+
+// func RespondWithSuccess(ctx *gin.Context, message string, data interface{}, statusCode int) {
+// 	webResponse := response.Response{
+// 		Code:    statusCode,
+// 		Status:  http.StatusText(statusCode),
+// 		Message: message,
+// 		Data:    data,
+// 	}
+// 	ctx.JSON(http.StatusOK, webResponse)
+// }

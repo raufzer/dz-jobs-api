@@ -12,19 +12,19 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-type AuthenticationServiceImpl struct {
+type AuthServiceImpl struct {
 	UserRepository repositories.UserRepository
 	Validate       *validator.Validate
 }
 
-func NewAuthenticationServiceImpl(userRepository repositories.UserRepository, validate *validator.Validate) AuthenticationService {
-	return &AuthenticationServiceImpl{
+func NewAuthServiceImpl(userRepository repositories.UserRepository, validate *validator.Validate) AuthService {
+	return &AuthServiceImpl{
 		UserRepository: userRepository,
 		Validate:       validate,
 	}
 }
 
-func (a *AuthenticationServiceImpl) Login(user request.LoginRequest) (string, error) {
+func (a *AuthServiceImpl) Login(user request.LoginRequest) (string, error) {
 
 	newUser, userErr := a.UserRepository.GetByName(user.Email)
 	if userErr != nil {
@@ -49,7 +49,7 @@ func (a *AuthenticationServiceImpl) Login(user request.LoginRequest) (string, er
 	return token, nil
 }
 
-func (a *AuthenticationServiceImpl) Register(user request.CreateUsersRequest) error {
+func (a *AuthServiceImpl) Register(user request.CreateUsersRequest) error {
 
 	err := a.Validate.Struct(user)
 	if err != nil {
