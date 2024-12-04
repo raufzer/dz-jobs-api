@@ -3,6 +3,7 @@ package repositories
 import (
 	"database/sql"
 	"dz-jobs-api/internal/models"
+	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
 	"errors"
 )
 
@@ -12,7 +13,7 @@ type SQLUserRepository struct {
 }
 
 // NewUserRepository initializes a new UserRepository with a database connection.
-func NewUserRepository(db *sql.DB) UserRepository {
+func NewUserRepository(db *sql.DB) repositoryInterfaces.UserRepository {
 	return &SQLUserRepository{
 		db: db,
 	}
@@ -33,19 +34,20 @@ func (r *SQLUserRepository) Create(user *models.User) error {
 	return nil
 }
 
-// GetByName fetches a user by name from the database.
-func (r *SQLUserRepository) GetByName(name string) (*models.User, error) {
-	query := "SELECT id, name, email, role, created_at, updated_at FROM users WHERE name = $1"
-	row := r.db.QueryRow(query, name)
+// GetByEmail fetches a user by name from the database.
+func (r *SQLUserRepository) GetByEmail(email string) (*models.User, error) {
+	query := "SELECT id, name, email, password, role, created_at, updated_at FROM users WHERE email = $1"
+	row := r.db.QueryRow(query, email)
 
 	user := &models.User{}
-	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Role, &user.CreatedAt, &user.UpdatedAt)
+	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Role, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil // No user found
+			return nil, nil
 		}
 		return nil, err
 	}
+
 	return user, nil
 }
 
