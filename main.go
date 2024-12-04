@@ -3,6 +3,7 @@ package main
 import (
 	"dz-jobs-api/config"
 	"dz-jobs-api/internal/controllers"
+	"dz-jobs-api/internal/middleware"
 	"dz-jobs-api/internal/repositories"
 	"dz-jobs-api/internal/services"
 	v1 "dz-jobs-api/routes/api/v1"
@@ -60,6 +61,7 @@ func main() {
 
 	// Global middleware
 	server.Use(gin.Recovery())
+	server.Use(middleware.ErrorHandlingMiddleware()) // Add error handling middleware
 
 	// Swagger setup
 	// Alternative configuration

@@ -4,20 +4,21 @@ import (
 	"dz-jobs-api/config"
 	"dz-jobs-api/data/request"
 	"dz-jobs-api/internal/models"
-	"dz-jobs-api/internal/repositories"
+	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
+	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
+	"dz-jobs-api/pkg/helpers"
 	"dz-jobs-api/pkg/utils"
-	"errors"
 	"time"
 
 	"github.com/go-playground/validator/v10"
 )
 
 type AuthServiceImpl struct {
-	UserRepository repositories.UserRepository
+	UserRepository repositoryInterfaces.UserRepository
 	Validate       *validator.Validate
 }
 
-func NewAuthServiceImpl(userRepository repositories.UserRepository, validate *validator.Validate) AuthService {
+func NewAuthServiceImpl(userRepository repositoryInterfaces.UserRepository, validate *validator.Validate) serviceInterfaces.AuthService {
 	return &AuthServiceImpl{
 		UserRepository: userRepository,
 		Validate:       validate,
@@ -25,25 +26,23 @@ func NewAuthServiceImpl(userRepository repositories.UserRepository, validate *va
 }
 
 func (a *AuthServiceImpl) Login(user request.LoginRequest) (string, error) {
-
-	newUser, userErr := a.UserRepository.GetByName(user.Email)
+	newUser, userErr := a.UserRepository.GetByEmail(user.Email)
 	if userErr != nil {
-		return "", errors.New("invalid name or password")
+		return "", helpers.ErrInvalidCredentials
 	}
-
 	config, err := config.LoadConfig()
 	if err != nil {
-		return "", err
+		return "", helpers.WrapError(err, "config loading failed")
 	}
 
 	verifyErr := utils.VerifyPassword(newUser.Password, user.Password)
 	if verifyErr != nil {
-		return "", errors.New("invalid name or password")
+		return "", helpers.ErrInvalidCredentials
 	}
 
 	token, errToken := utils.GenerateToken(config.TokenExpiresIn, newUser.ID, config.TokenSecret)
 	if errToken != nil {
-		return "", errToken
+		return "", helpers.ErrTokenGeneration
 	}
 
 	return token, nil
@@ -51,20 +50,20 @@ func (a *AuthServiceImpl) Login(user request.LoginRequest) (string, error) {
 
 func (a *AuthServiceImpl) Register(user request.CreateUsersRequest) error {
 
-	err := a.Validate.Struct(user)
-	if err != nil {
-		return err
+	if err := a.Validate.Struct(user); err != nil {
+		return helpers.WrapError(err, "validation failed")
 	}
 
-	_, err = a.UserRepository.GetByName(user.Name)
-	if err == nil {
-		return errors.New("username already exists")
+	existingUser, err := a.UserRepository.GetByEmail(user.Email)
+	if err == nil && existingUser != nil {
+		return helpers.ErrEmailAlreadyExists
 	}
 
 	hashedPassword, err := utils.HashPassword(user.Password)
 	if err != nil {
-		return err
+		return helpers.WrapError(err, "password hashing failed")
 	}
+
 
 	now := time.Now()
 	newUser := models.User{
@@ -76,9 +75,9 @@ func (a *AuthServiceImpl) Register(user request.CreateUsersRequest) error {
 		UpdatedAt: now,
 	}
 
-	err = a.UserRepository.Create(&newUser)
-	if err != nil {
-		return err
+
+	if err := a.UserRepository.Create(&newUser); err != nil {
+		return helpers.WrapError(err, "user creation failed")
 	}
 
 	return nil
