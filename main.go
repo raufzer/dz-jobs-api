@@ -54,7 +54,7 @@ func main() {
 
 	// CORS Configuration
 	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowOrigins = []string{appConfig.Domaine}
 	corsConfig.AllowCredentials = true
 	corsConfig.AddAllowHeaders("Authorization", "Content-Type")
 	server.Use(cors.New(corsConfig))
@@ -66,7 +66,7 @@ func main() {
 	// Swagger setup
 	// Alternative configuration
 	server.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler,
-		ginSwagger.URL("https://dz-jobs-api-production.up.railway.app/docs/doc.json"),
+		ginSwagger.URL(appConfig.Domaine+"/docs/doc.json"),
 	))
 	// API Routes
 	basePath := server.Group("/v1")

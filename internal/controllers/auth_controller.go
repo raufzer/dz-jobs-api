@@ -42,7 +42,7 @@ func (ac *AuthController) Login(ctx *gin.Context) {
 		return
 	}
 
-	helpers.SetAuthCookie(ctx, token, ac.config.TokenMaxAge, "localhost")
+	helpers.SetAuthCookie(ctx, token, ac.config.TokenMaxAge, ac.config.Domaine)
 
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
