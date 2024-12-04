@@ -10,7 +10,7 @@ import (
 )
 
 type AppConfig struct {
-	Domaine        string
+	Domain        string
 	ServerPort     string
 	DatabaseURI    string
 	JWTSecret      string
@@ -38,7 +38,7 @@ func LoadConfig() (*AppConfig, error) {
 	}
 
 	config := &AppConfig{
-		Domaine:     utils.GetEnv("DOMAIN"),
+		Domain:     utils.GetEnv("DOMAIN"),
 		ServerPort:     utils.GetEnv("SERVER_PORT"),
 		DatabaseURI:    utils.GetEnv("DATABASE_URI"),
 		JWTSecret:      utils.GetEnv("JWT_SECRET"),
@@ -49,3 +49,4 @@ func LoadConfig() (*AppConfig, error) {
 
 	return config, nil
 }
+

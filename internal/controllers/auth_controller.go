@@ -42,7 +42,7 @@ func (ac *AuthController) Login(ctx *gin.Context) {
 		return
 	}
 	isProduction := ac.config.ServerPort != "9090"
-	helpers.SetAuthCookie(ctx, token, ac.config.TokenMaxAge, ac.config.Domaine, isProduction)
+	helpers.SetAuthCookie(ctx, token, ac.config.TokenMaxAge, ac.config.Domain, isProduction)
 
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
