@@ -5,11 +5,11 @@ import (
 )
 
 type User struct {
-	ID        int       `json:"id"`             // Primary key
-	Name      string    `json:"name"`           // User's name
-	Email     string    `json:"email"`          // User's email
-	Password  string    `json:"-"`              // User's password (omit from JSON)
-	Role      string    `json:"role,omitempty"` // Optional role
-	CreatedAt time.Time `json:"created_at"`     // Record creation timestamp
-	UpdatedAt time.Time `json:"updated_at"`     // Record update timestamp
+    ID        int       `db:"id"`
+    Name      string    `db:"name"`
+    Email     string    `db:"email"`
+    Password  string    `db:"password"` 
+    Role      string    `db:"role"`
+    CreatedAt time.Time `db:"created_at"`
+    UpdatedAt time.Time `db:"updated_at"`
 }
