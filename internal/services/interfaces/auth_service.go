@@ -1,6 +1,6 @@
 package interfaces
 
-import "dz-jobs-api/data/request"
+import "dz-jobs-api/internal/dto/request"
 
 type AuthService interface {
 	Login(users request.LoginRequest) (string, error)

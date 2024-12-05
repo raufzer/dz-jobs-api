@@ -2,11 +2,11 @@ package services
 
 import (
 	"dz-jobs-api/config"
-	"dz-jobs-api/data/request"
+	"dz-jobs-api/helpers"
+	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/models"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
 	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
-	"dz-jobs-api/helpers"
 	"dz-jobs-api/pkg/utils"
 	"time"
 
@@ -64,7 +64,6 @@ func (a *AuthServiceImpl) Register(user request.CreateUsersRequest) error {
 		return helpers.WrapError(err, "password hashing failed")
 	}
 
-
 	now := time.Now()
 	newUser := models.User{
 		Name:      user.Name,
@@ -74,7 +73,6 @@ func (a *AuthServiceImpl) Register(user request.CreateUsersRequest) error {
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
-
 
 	if err := a.UserRepository.Create(&newUser); err != nil {
 		return helpers.WrapError(err, "user creation failed")

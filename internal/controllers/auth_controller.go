@@ -5,10 +5,10 @@ import (
 	"net/http"
 
 	"dz-jobs-api/config"
-	"dz-jobs-api/data/request"
-	"dz-jobs-api/data/response"
-	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
 	"dz-jobs-api/helpers"
+	"dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/dto/response"
+	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
 
 	"github.com/gin-gonic/gin"
 )

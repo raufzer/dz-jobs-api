@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strings"
 
-	"dz-jobs-api/data/response"
 	"dz-jobs-api/helpers"
+	"dz-jobs-api/internal/dto/response"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -41,7 +41,7 @@ func handleErrors(ctx *gin.Context) {
 		switch {
 		case helpers.IsErrorType(e.Err, helpers.ErrEmailAlreadyExists):
 			ctx.JSON(http.StatusConflict, response.Response{
-				Code: http.StatusConflict,
+				Code:    http.StatusConflict,
 				Status:  "Conflict",
 				Message: "Email already exists",
 			})
