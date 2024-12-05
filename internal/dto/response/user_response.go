@@ -6,10 +6,10 @@ import (
 )
 
 type UserResponse struct {
-	ID        int       `json:"id"`
+	ID        int       `json:"userid"`
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
-	Role      string    `json:"role,omitempty"`
+	Role      string    `json:"role"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }
