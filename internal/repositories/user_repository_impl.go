@@ -24,13 +24,13 @@ func (r *SQLUserRepository) Create(user *models.User) error {
 	query := "INSERT INTO users (name, email, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING userid"
 
 	// Use QueryRow instead of Prepare for simple inserts
-	var id int
-	err := r.db.QueryRow(query, user.Name, user.Email, user.Password, user.Role).Scan(&id)
+	var userid int
+	err := r.db.QueryRow(query, user.Name, user.Email, user.Password, user.Role).Scan(&userid)
 	if err != nil {
 		return err
 	}
 
-	user.ID = id
+	user.ID = userid
 	return nil
 }
 
@@ -52,9 +52,9 @@ func (r *SQLUserRepository) GetByEmail(email string) (*models.User, error) {
 }
 
 // GetByID fetches a user by ID from the database.
-func (r *SQLUserRepository) GetByID(id int) (*models.User, error) {
+func (r *SQLUserRepository) GetByID(userid int) (*models.User, error) {
 	query := "SELECT userid, name, email, role, created_at, updated_at FROM users WHERE userid = $1"
-	row := r.db.QueryRow(query, id)
+	row := r.db.QueryRow(query, userid)
 
 	user := &models.User{}
 	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Role, &user.CreatedAt, &user.UpdatedAt)
@@ -93,10 +93,10 @@ func (r *SQLUserRepository) GetAll() ([]*models.User, error) {
 }
 
 // Update updates an existing user in the database.
-func (r *SQLUserRepository) Update(id int, user *models.User) error {
+func (r *SQLUserRepository) Update(userid int, user *models.User) error {
 	query := "UPDATE users SET name = $1, email = $2, password = $3, role = $4, updated_at = NOW() WHERE userid = $5"
 
-	result, err := r.db.Exec(query, user.Name, user.Email, user.Password, user.Role, id)
+	result, err := r.db.Exec(query, user.Name, user.Email, user.Password, user.Role, userid)
 	if err != nil {
 		return err
 	}
@@ -113,9 +113,9 @@ func (r *SQLUserRepository) Update(id int, user *models.User) error {
 }
 
 // Delete removes a user from the database by name.
-func (r *SQLUserRepository) Delete(id int) error {
+func (r *SQLUserRepository) Delete(userid int) error {
 	query := "DELETE FROM users WHERE userid = $1"
-	result, err := r.db.Exec(query, id)
+	result, err := r.db.Exec(query, userid)
 	if err != nil {
 		return err
 	}
