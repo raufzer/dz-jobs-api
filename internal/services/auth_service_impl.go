@@ -69,7 +69,7 @@ func (a *AuthServiceImpl) Register(user request.CreateUsersRequest) error {
 		Name:      user.Name,
 		Email:     user.Email,
 		Password:  hashedPassword,
-		Role:      "user",
+		Role:      user.Role,
 		CreatedAt: now,
 		UpdatedAt: now,
 	}

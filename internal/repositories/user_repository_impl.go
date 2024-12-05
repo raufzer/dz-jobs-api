@@ -24,6 +24,7 @@ func (r *SQLUserRepository) Create(user *models.User) error {
 	query := "INSERT INTO users (name, email, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING userid"
 
 	// Use QueryRow instead of Prepare for simple inserts
+
 	var userid int
 	err := r.db.QueryRow(query, user.Name, user.Email, user.Password, user.Role).Scan(&userid)
 	if err != nil {

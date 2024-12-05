@@ -8,9 +8,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"dz-jobs-api/helpers"
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/dto/response"
-	"dz-jobs-api/helpers"
 	"dz-jobs-api/internal/models"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
 	"dz-jobs-api/pkg/utils"
@@ -41,6 +41,7 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 		Name:      req.Name,
 		Email:     req.Email,
 		Password:  hashedPassword,
+		Role:      req.Role,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
