@@ -8,7 +8,7 @@ import (
 	"dz-jobs-api/data/request"
 	"dz-jobs-api/data/response"
 	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
-	"dz-jobs-api/pkg/helpers"
+	"dz-jobs-api/helpers"
 
 	"github.com/gin-gonic/gin"
 )

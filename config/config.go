@@ -1,7 +1,7 @@
 package config
 
 import (
-	"dz-jobs-api/pkg/helpers"
+	"dz-jobs-api/helpers"
 	"dz-jobs-api/pkg/utils"
 	"log"
 	"time"

@@ -3,10 +3,10 @@ package main
 import (
 	"dz-jobs-api/config"
 	"dz-jobs-api/internal/controllers"
-	"dz-jobs-api/internal/middleware"
+	"dz-jobs-api/internal/middlewares"
 	"dz-jobs-api/internal/repositories"
 	"dz-jobs-api/internal/services"
-	v1 "dz-jobs-api/routes/api/v1"
+	v1 "dz-jobs-api/internal/routes/api/v1"
 	"log"
 
 	"github.com/gin-contrib/cors"
@@ -61,7 +61,7 @@ func main() {
 
 	// Global middleware
 	server.Use(gin.Recovery())
-	server.Use(middleware.ErrorHandlingMiddleware()) // Add error handling middleware
+	server.Use(middlewares.ErrorHandlingMiddleware()) // Add error handling middleware
 
 	// Swagger setup
 	// Alternative configuration

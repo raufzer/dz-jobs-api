@@ -6,7 +6,7 @@ import (
 	"dz-jobs-api/internal/models"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
 	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
-	"dz-jobs-api/pkg/helpers"
+	"dz-jobs-api/helpers"
 	"dz-jobs-api/pkg/utils"
 	"time"
 

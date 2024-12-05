@@ -10,9 +10,9 @@ import (
 
 	"dz-jobs-api/data/request"
 	"dz-jobs-api/data/response"
+	"dz-jobs-api/helpers"
 	"dz-jobs-api/internal/models"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
-	"dz-jobs-api/pkg/helpers"
 	"dz-jobs-api/pkg/utils"
 )
 
