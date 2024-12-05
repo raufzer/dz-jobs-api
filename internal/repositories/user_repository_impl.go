@@ -21,7 +21,7 @@ func NewUserRepository(db *sql.DB) repositoryInterfaces.UserRepository {
 
 // Create a new user in the database.
 func (r *SQLUserRepository) Create(user *models.User) error {
-	query := "INSERT INTO users (name, email, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING id"
+	query := "INSERT INTO users (name, email, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING userid"
 
 	// Use QueryRow instead of Prepare for simple inserts
 	var id int
@@ -36,7 +36,7 @@ func (r *SQLUserRepository) Create(user *models.User) error {
 
 // GetByEmail fetches a user by name from the database.
 func (r *SQLUserRepository) GetByEmail(email string) (*models.User, error) {
-	query := "SELECT id, name, email, password, role, created_at, updated_at FROM users WHERE email = $1"
+	query := "SELECT userid, name, email, password, role, created_at, updated_at FROM users WHERE email = $1"
 	row := r.db.QueryRow(query, email)
 
 	user := &models.User{}
@@ -53,7 +53,7 @@ func (r *SQLUserRepository) GetByEmail(email string) (*models.User, error) {
 
 // GetByID fetches a user by ID from the database.
 func (r *SQLUserRepository) GetByID(id int) (*models.User, error) {
-	query := "SELECT id, name, email, role, created_at, updated_at FROM users WHERE id = $1"
+	query := "SELECT userid, name, email, role, created_at, updated_at FROM users WHERE userid = $1"
 	row := r.db.QueryRow(query, id)
 
 	user := &models.User{}
@@ -69,7 +69,7 @@ func (r *SQLUserRepository) GetByID(id int) (*models.User, error) {
 
 // GetAll fetches all users from the database.
 func (r *SQLUserRepository) GetAll() ([]*models.User, error) {
-	query := "SELECT id, name, email, role, created_at, updated_at FROM users"
+	query := "SELECT userid, name, email, role, created_at, updated_at FROM users"
 	rows, err := r.db.Query(query)
 	if err != nil {
 		return nil, err
@@ -94,7 +94,7 @@ func (r *SQLUserRepository) GetAll() ([]*models.User, error) {
 
 // Update updates an existing user in the database.
 func (r *SQLUserRepository) Update(id int, user *models.User) error {
-	query := "UPDATE users SET name = $1, email = $2, password = $3, role = $4, updated_at = NOW() WHERE id = $5"
+	query := "UPDATE users SET name = $1, email = $2, password = $3, role = $4, updated_at = NOW() WHERE userid = $5"
 
 	result, err := r.db.Exec(query, user.Name, user.Email, user.Password, user.Role, id)
 	if err != nil {
@@ -114,7 +114,7 @@ func (r *SQLUserRepository) Update(id int, user *models.User) error {
 
 // Delete removes a user from the database by name.
 func (r *SQLUserRepository) Delete(id int) error {
-	query := "DELETE FROM users WHERE id = $1"
+	query := "DELETE FROM users WHERE userid = $1"
 	result, err := r.db.Exec(query, id)
 	if err != nil {
 		return err
