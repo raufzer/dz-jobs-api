@@ -5,8 +5,6 @@ import (
 	"dz-jobs-api/internal/controllers"
 	"dz-jobs-api/internal/repositories"
 	"dz-jobs-api/internal/services"
-
-	"github.com/go-playground/validator/v10"
 )
 
 type AppDependencies struct {
@@ -14,21 +12,16 @@ type AppDependencies struct {
 	AuthController *controllers.AuthController
 }
 
-func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) { // Use 'AppConfig' type here
-	// Database connection
-	dbConfig := config.ConnectDatabase(cfg) // Pass 'cfg' directly
+func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 
-	// Validator
-	validate := validator.New()
+	dbConfig := config.ConnectDatabase(cfg)
 
-	// Repositories
 	userRepo := repositories.NewUserRepository(dbConfig.DB)
 
-	// Services
-	authService := services.NewAuthServiceImpl(userRepo, validate)
+	authService := services.NewAuthService(userRepo)
+	userService := services.NewUserService(userRepo)
 
-	// Controllers
-	userController := controllers.NewUserController(userRepo)
+	userController := controllers.NewUserController(userService)
 	authController := controllers.NewAuthController(authService, cfg)
 
 	return &AppDependencies{

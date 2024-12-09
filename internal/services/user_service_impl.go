@@ -1,0 +1,91 @@
+package services
+
+import (
+	"database/sql"
+	"dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/helpers"
+	"dz-jobs-api/internal/models"
+	"dz-jobs-api/internal/repositories/interfaces"
+	"dz-jobs-api/pkg/utils"
+	"net/http"
+	"time"
+)
+
+type UserService struct {
+	UserRepository interfaces.UserRepository
+}
+
+func NewUserService(userRepo interfaces.UserRepository) *UserService {
+	return &UserService{UserRepository: userRepo}
+}
+
+func (us *UserService) CreateUser(req request.CreateUsersRequest) (*models.User, error) {
+	hashedPassword, err := utils.HashPassword(req.Password)
+	if err != nil {
+		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Password hashing failed")
+	}
+
+	user := &models.User{
+		Name:      req.Name,
+		Email:     req.Email,
+		Password:  hashedPassword,
+		Role:      req.Role,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+
+	if err := us.UserRepository.Create(user); err != nil {
+		return nil, helpers.NewCustomError(http.StatusInternalServerError, "User creation failed")
+	}
+
+	return user, nil
+}
+
+func (us *UserService) GetUserByID(id int) (*models.User, error) {
+	user, err := us.UserRepository.GetByID(id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, helpers.NewCustomError(http.StatusNotFound, "User not found")
+		}
+		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Error fetching user")
+	}
+	return user, nil
+}
+
+func (us *UserService) UpdateUser(id int, req request.UpdateUserRequest) (*models.User, error) {
+	updatedUser := &models.User{
+		Name:      req.Name,
+		Email:     req.Email,
+		Password:  req.Password,
+		Role:      req.Role,
+		UpdatedAt: time.Now(),
+	}
+
+	if err := us.UserRepository.Update(id, updatedUser); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, helpers.NewCustomError(http.StatusNotFound, "User not found")
+		}
+		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to update user")
+	}
+
+	return us.UserRepository.GetByID(id)
+}
+
+func (us *UserService) GetAllUsers() ([]*models.User, error) {
+	users, err := us.UserRepository.GetAll()
+	if err != nil {
+		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to fetch users")
+	}
+	return users, nil
+}
+
+func (us *UserService) DeleteUser(id int) error {
+	err := us.UserRepository.Delete(id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return helpers.NewCustomError(http.StatusNotFound, "User not found")
+		}
+		return helpers.NewCustomError(http.StatusInternalServerError, "Failed to delete user")
+	}
+	return nil
+}

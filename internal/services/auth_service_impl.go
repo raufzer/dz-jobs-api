@@ -5,77 +5,63 @@ import (
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/helpers"
 	"dz-jobs-api/internal/models"
-	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
-	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
+	"dz-jobs-api/internal/repositories/interfaces"
 	"dz-jobs-api/pkg/utils"
-	"time"
-
-	"github.com/go-playground/validator/v10"
+	"net/http"
 )
 
-type AuthServiceImpl struct {
-	UserRepository repositoryInterfaces.UserRepository
-	Validate       *validator.Validate
+type AuthService struct {
+	userRepository interfaces.UserRepository
 }
 
-func NewAuthServiceImpl(userRepository repositoryInterfaces.UserRepository, validate *validator.Validate) serviceInterfaces.AuthService {
-	return &AuthServiceImpl{
-		UserRepository: userRepository,
-		Validate:       validate,
-	}
+func NewAuthService(userRepo interfaces.UserRepository) *AuthService {
+	return &AuthService{userRepository: userRepo}
 }
 
-func (a *AuthServiceImpl) Login(user request.LoginRequest) (string, error) {
-	newUser, userErr := a.UserRepository.GetByEmail(user.Email)
-	if userErr != nil {
-		return "", helpers.ErrInvalidCredentials
+func (s *AuthService) Login(req request.LoginRequest) (string, error) {
+	user, err := s.userRepository.GetByEmail(req.Email)
+	if err != nil || user == nil {
+		return "", helpers.NewCustomError(http.StatusUnauthorized, "Invalid email")
 	}
+
 	config, err := config.LoadConfig()
 	if err != nil {
-		return "", helpers.WrapError(err, "config loading failed")
+		return "", helpers.NewCustomError(http.StatusInternalServerError, "Config loading failed")
 	}
 
-	verifyErr := utils.VerifyPassword(newUser.Password, user.Password)
+	verifyErr := utils.VerifyPassword(user.Password, req.Password)
 	if verifyErr != nil {
-		return "", helpers.ErrInvalidCredentials
+		return "", helpers.NewCustomError(http.StatusUnauthorized, "Invalid password")
 	}
 
-	token, errToken := utils.GenerateToken(config.TokenExpiresIn, newUser.ID, config.TokenSecret)
-	if errToken != nil {
-		return "", helpers.ErrTokenGeneration
+	token, err := utils.GenerateToken(config.TokenExpiresIn, user.ID, config.TokenSecret)
+	if err != nil {
+		return "", helpers.NewCustomError(http.StatusInternalServerError, "Token generation failed")
 	}
 
 	return token, nil
 }
 
-func (a *AuthServiceImpl) Register(user request.CreateUsersRequest) error {
-
-	if err := a.Validate.Struct(user); err != nil {
-		return helpers.WrapError(err, "validation failed")
+func (s *AuthService) Register(req request.CreateUsersRequest) error {
+	existingUser, _ := s.userRepository.GetByEmail(req.Email)
+	if existingUser != nil {
+		return helpers.NewCustomError(http.StatusBadRequest, "User already exists")
 	}
 
-	existingUser, err := a.UserRepository.GetByEmail(user.Email)
-	if err == nil && existingUser != nil {
-		return helpers.ErrEmailAlreadyExists
-	}
-
-	hashedPassword, err := utils.HashPassword(user.Password)
+	hashedPassword, err := utils.HashPassword(req.Password)
 	if err != nil {
-		return helpers.WrapError(err, "password hashing failed")
+		return helpers.NewCustomError(http.StatusInternalServerError, "Failed to hash password")
 	}
 
-	now := time.Now()
-	newUser := models.User{
-		Name:      user.Name,
-		Email:     user.Email,
-		Password:  hashedPassword,
-		Role:      user.Role,
-		CreatedAt: now,
-		UpdatedAt: now,
+	user := &models.User{
+		Name:     req.Name,
+		Email:    req.Email,
+		Password: hashedPassword,
+		Role:     req.Role,
 	}
 
-	if err := a.UserRepository.Create(&newUser); err != nil {
-		return helpers.WrapError(err, "user creation failed")
+	if err := s.userRepository.Create(user); err != nil {
+		return helpers.NewCustomError(http.StatusInternalServerError, "Failed to create user")
 	}
 
 	return nil

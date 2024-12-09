@@ -2,40 +2,35 @@ package repositories
 
 import (
 	"database/sql"
+	"dz-jobs-api/internal/helpers"
 	"dz-jobs-api/internal/models"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
-	"errors"
+	"net/http"
 )
 
-// SQLUserRepository is the SQL implementation of the UserRepository interface.
 type SQLUserRepository struct {
 	db *sql.DB
 }
 
-// NewUserRepository initializes a new UserRepository with a database connection.
 func NewUserRepository(db *sql.DB) repositoryInterfaces.UserRepository {
 	return &SQLUserRepository{
 		db: db,
 	}
 }
 
-// Create a new user in the database.
 func (r *SQLUserRepository) Create(user *models.User) error {
 	query := "INSERT INTO users (name, email, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING userid"
-
-	// Use QueryRow instead of Prepare for simple inserts
 
 	var userid int
 	err := r.db.QueryRow(query, user.Name, user.Email, user.Password, user.Role).Scan(&userid)
 	if err != nil {
-		return err
+		return helpers.NewCustomError(http.StatusInternalServerError, "Failed to create user")
 	}
 
 	user.ID = userid
 	return nil
 }
 
-// GetByEmail fetches a user by name from the database.
 func (r *SQLUserRepository) GetByEmail(email string) (*models.User, error) {
 	query := "SELECT userid, name, email, password, role, created_at, updated_at FROM users WHERE email = $1"
 	row := r.db.QueryRow(query, email)
@@ -43,16 +38,15 @@ func (r *SQLUserRepository) GetByEmail(email string) (*models.User, error) {
 	user := &models.User{}
 	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Role, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil
+		if err == sql.ErrNoRows {
+			return nil, helpers.NewCustomError(http.StatusNotFound, "User not found")
 		}
-		return nil, err
+		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to fetch user by email")
 	}
 
 	return user, nil
 }
 
-// GetByID fetches a user by ID from the database.
 func (r *SQLUserRepository) GetByID(userid int) (*models.User, error) {
 	query := "SELECT userid, name, email, role, created_at, updated_at FROM users WHERE userid = $1"
 	row := r.db.QueryRow(query, userid)
@@ -60,20 +54,19 @@ func (r *SQLUserRepository) GetByID(userid int) (*models.User, error) {
 	user := &models.User{}
 	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Role, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil
+		if err == sql.ErrNoRows {
+			return nil, helpers.NewCustomError(http.StatusNotFound, "User not found")
 		}
-		return nil, err
+		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to fetch user by ID")
 	}
 	return user, nil
 }
 
-// GetAll fetches all users from the database.
 func (r *SQLUserRepository) GetAll() ([]*models.User, error) {
 	query := "SELECT userid, name, email, role, created_at, updated_at FROM users"
 	rows, err := r.db.Query(query)
 	if err != nil {
-		return nil, err
+		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to fetch users")
 	}
 	defer rows.Close()
 
@@ -81,52 +74,50 @@ func (r *SQLUserRepository) GetAll() ([]*models.User, error) {
 	for rows.Next() {
 		user := &models.User{}
 		if err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.Role, &user.CreatedAt, &user.UpdatedAt); err != nil {
-			return nil, err
+			return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to scan user data")
 		}
 		users = append(users, user)
 	}
 
 	if err := rows.Err(); err != nil {
-		return nil, err
+		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Error occurred while iterating users")
 	}
 
 	return users, nil
 }
 
-// Update updates an existing user in the database.
 func (r *SQLUserRepository) Update(userid int, user *models.User) error {
 	query := "UPDATE users SET name = $1, email = $2, password = $3, role = $4, updated_at = NOW() WHERE userid = $5"
 
 	result, err := r.db.Exec(query, user.Name, user.Email, user.Password, user.Role, userid)
 	if err != nil {
-		return err
+		return helpers.NewCustomError(http.StatusInternalServerError, "Failed to update user")
 	}
 
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
-		return err
+		return helpers.NewCustomError(http.StatusInternalServerError, "Failed to check rows affected")
 	}
 	if rowsAffected == 0 {
-		return errors.New("no user found or updated")
+		return helpers.NewCustomError(http.StatusNotFound, "No user found or updated")
 	}
 
 	return nil
 }
 
-// Delete removes a user from the database by name.
 func (r *SQLUserRepository) Delete(userid int) error {
 	query := "DELETE FROM users WHERE userid = $1"
 	result, err := r.db.Exec(query, userid)
 	if err != nil {
-		return err
+		return helpers.NewCustomError(http.StatusInternalServerError, "Failed to delete user")
 	}
 
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
-		return err
+		return helpers.NewCustomError(http.StatusInternalServerError, "Failed to check rows affected")
 	}
 	if rowsAffected == 0 {
-		return errors.New("no rows deleted")
+		return helpers.NewCustomError(http.StatusNotFound, "No rows deleted")
 	}
 
 	return nil

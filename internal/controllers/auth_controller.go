@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"errors"
 	"net/http"
 
 	"dz-jobs-api/config"
@@ -28,19 +27,16 @@ func NewAuthController(service serviceInterfaces.AuthService, config *config.App
 func (ac *AuthController) Login(ctx *gin.Context) {
 	var loginRequest request.LoginRequest
 	if err := ctx.ShouldBindJSON(&loginRequest); err != nil {
-		ctx.Error(helpers.ErrInvalidUserData)
+		ctx.Error(helpers.NewCustomError(http.StatusBadRequest, "Invalid login data"))
 		return
 	}
 
 	token, err := ac.authService.Login(loginRequest)
 	if err != nil {
-		if errors.Is(err, helpers.ErrInvalidCredentials) {
-			ctx.Error(helpers.ErrInvalidCredentials)
-		} else {
-			ctx.Error(helpers.ErrTokenGeneration)
-		}
+		ctx.Error(err)
 		return
 	}
+
 	isProduction := ac.config.ServerPort != "9090"
 	helpers.SetAuthCookie(ctx, token, ac.config.TokenMaxAge, ac.config.Domain, isProduction)
 
@@ -52,15 +48,13 @@ func (ac *AuthController) Login(ctx *gin.Context) {
 }
 
 func (ac *AuthController) Register(ctx *gin.Context) {
-
 	var createUserRequest request.CreateUsersRequest
 	if err := ctx.ShouldBindJSON(&createUserRequest); err != nil {
-		ctx.Error(err)
+		ctx.Error(helpers.NewCustomError(http.StatusBadRequest, "Invalid user data"))
 		return
 	}
 
-	err := ac.authService.Register(createUserRequest)
-	if err != nil {
+	if err := ac.authService.Register(createUserRequest); err != nil {
 		ctx.Error(err)
 		return
 	}

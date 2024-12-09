@@ -1,53 +1,35 @@
 package controllers
 
 import (
-	"errors"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
 
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/dto/response"
 	"dz-jobs-api/internal/helpers"
-	"dz-jobs-api/internal/models"
-	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
-	"dz-jobs-api/pkg/utils"
+	"dz-jobs-api/internal/services"
 )
 
 type UserController struct {
-	UserRepository repositoryInterfaces.UserRepository
+	UserService *services.UserService
 }
 
-func NewUserController(userRepository repositoryInterfaces.UserRepository) *UserController {
-	return &UserController{UserRepository: userRepository}
+func NewUserController(userService *services.UserService) *UserController {
+	return &UserController{UserService: userService}
 }
 
 func (uc *UserController) CreateUser(ctx *gin.Context) {
-	var req request.CreateUsersRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(helpers.ErrInvalidUserData)
+	var createUserRequest request.CreateUsersRequest
+	if err := ctx.ShouldBindJSON(&createUserRequest); err != nil {
+		ctx.Error(helpers.NewCustomError(http.StatusBadRequest, "Invalid user data"))
 		return
 	}
 
-	hashedPassword, err := utils.HashPassword(req.Password)
+	user, err := uc.UserService.CreateUser(createUserRequest)
 	if err != nil {
-		ctx.Error(helpers.WrapError(err, "password hashing failed"))
-		return
-	}
-
-	user := &models.User{
-		Name:      req.Name,
-		Email:     req.Email,
-		Password:  hashedPassword,
-		Role:      req.Role,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-	}
-
-	if err := uc.UserRepository.Create(user); err != nil {
-		ctx.Error(helpers.ErrUserCreationFailed)
+		ctx.Error(err)
 		return
 	}
 
@@ -57,19 +39,18 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 		Message: "User created successfully",
 		Data:    response.ToUserResponse(user),
 	})
-
 }
 
 func (uc *UserController) GetUser(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		ctx.Error(errors.New("invalid user ID"))
+		ctx.Error(err)
 		return
 	}
 
-	user, err := uc.UserRepository.GetByID(id)
-	if err != nil || user == nil {
-		ctx.Error(helpers.ErrUserNotFound)
+	user, err := uc.UserService.GetUserByID(id)
+	if err != nil {
+		ctx.Error(err)
 		return
 	}
 
@@ -84,32 +65,19 @@ func (uc *UserController) GetUser(ctx *gin.Context) {
 func (uc *UserController) UpdateUser(ctx *gin.Context) {
 	var req request.UpdateUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(helpers.ErrInvalidUserData)
+		ctx.Error(err)
 		return
 	}
 
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		ctx.Error(errors.New("invalid user ID"))
+		ctx.Error(err)
 		return
 	}
 
-	updatedUser := &models.User{
-		Name:      req.Name,
-		Email:     req.Email,
-		Password:  req.Password,
-		Role:      req.Role,
-		UpdatedAt: time.Now(),
-	}
-
-	if err := uc.UserRepository.Update(id, updatedUser); err != nil {
-		ctx.Error(helpers.WrapError(err, "failed to update user"))
-		return
-	}
-
-	user, err := uc.UserRepository.GetByID(id)
+	updatedUser, err := uc.UserService.UpdateUser(id, req)
 	if err != nil {
-		ctx.Error(helpers.WrapError(err, "failed to retrieve updated user"))
+		ctx.Error(err)
 		return
 	}
 
@@ -117,14 +85,14 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 		Code:    http.StatusOK,
 		Status:  "OK",
 		Message: "User updated successfully",
-		Data:    response.ToUserResponse(user),
+		Data:    response.ToUserResponse(updatedUser),
 	})
 }
 
 func (uc *UserController) GetAllUsers(ctx *gin.Context) {
-	users, err := uc.UserRepository.GetAll()
+	users, err := uc.UserService.GetAllUsers()
 	if err != nil {
-		ctx.Error(helpers.WrapError(err, "failed to fetch users"))
+		ctx.Error(err)
 		return
 	}
 
@@ -147,12 +115,13 @@ func (uc *UserController) GetAllUsers(ctx *gin.Context) {
 func (uc *UserController) DeleteUser(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		ctx.Error(errors.New("invalid user ID"))
+		ctx.Error(err)
 		return
 	}
 
-	if err := uc.UserRepository.Delete(id); err != nil {
-		ctx.Error(helpers.ErrUserNotFound)
+	err = uc.UserService.DeleteUser(id)
+	if err != nil {
+		ctx.Error(err)
 		return
 	}
 
