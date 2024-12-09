@@ -2,8 +2,8 @@ package services
 
 import (
 	"dz-jobs-api/config"
-	"dz-jobs-api/helpers"
 	"dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/helpers"
 	"dz-jobs-api/internal/models"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
 	serviceInterfaces "dz-jobs-api/internal/services/interfaces"

@@ -8,9 +8,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"dz-jobs-api/helpers"
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/dto/response"
+	"dz-jobs-api/internal/helpers"
 	"dz-jobs-api/internal/models"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
 	"dz-jobs-api/pkg/utils"

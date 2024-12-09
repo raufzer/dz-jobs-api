@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"dz-jobs-api/helpers"
+	"dz-jobs-api/internal/helpers"
 	"dz-jobs-api/internal/dto/response"
 
 	"github.com/gin-gonic/gin"
