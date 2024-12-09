@@ -2,16 +2,13 @@ package main
 
 import (
 	"dz-jobs-api/config"
-	"dz-jobs-api/internal/controllers"
+	"dz-jobs-api/internal/bootstrap"
 	"dz-jobs-api/internal/middlewares"
-	"dz-jobs-api/internal/repositories"
-	"dz-jobs-api/internal/services"
 	v1 "dz-jobs-api/internal/routes/api/v1"
 	"log"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
@@ -19,12 +16,6 @@ import (
 	_ "dz-jobs-api/docs"
 )
 
-// @title           DzJobs API
-// @version         1.0
-// @description     Complete API for DzJobs Platform
-// @host            dz-jobs-api-production.up.railway.app
-// @BasePath        /v1
-// @schemes         https
 func main() {
 	// Load configuration
 	appConfig, err := config.LoadConfig()
@@ -32,24 +23,14 @@ func main() {
 		log.Fatalf("Failed to load configuration: %v", err)
 	}
 
-	// Database connection
-	dbConfig := config.ConnectDatabase(appConfig)
-
-	// Validator
-	validate := validator.New()
-
-	// Repositories
-	userRepo := repositories.NewUserRepository(dbConfig.DB)
-
-	// Services
-	authService := services.NewAuthServiceImpl(userRepo, validate)
-
-	// Controllers
-	userController := controllers.NewUserController(userRepo)
-	authController := controllers.NewAuthController(authService, appConfig)
+	// Initialize dependencies
+	deps, err := bootstrap.InitializeDependencies(appConfig)
+	if err != nil {
+		log.Fatalf("Failed to initialize dependencies: %v", err)
+	}
 
 	// Gin setup
-	gin.SetMode(gin.ReleaseMode) // Production mode
+	gin.SetMode(gin.ReleaseMode)
 	server := gin.Default()
 
 	// CORS Configuration
@@ -61,17 +42,16 @@ func main() {
 
 	// Global middleware
 	server.Use(gin.Recovery())
-	server.Use(middlewares.ErrorHandlingMiddleware()) // Add error handling middleware
+	server.Use(middlewares.ErrorHandlingMiddleware())
 
 	// Swagger setup
-	// Alternative configuration
 	server.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler,
 		ginSwagger.URL(appConfig.Domain+"/docs/doc.json"),
 	))
+
 	// API Routes
 	basePath := server.Group("/v1")
-	v1.UserRoutes(basePath, userController)
-	v1.AuthRoutes(basePath, authController)
+	v1.RegisterRoutes(basePath, deps.UserController, deps.AuthController)
 
 	// Server startup
 	serverAddr := ":" + appConfig.ServerPort
