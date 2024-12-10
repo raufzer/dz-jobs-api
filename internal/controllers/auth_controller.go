@@ -3,13 +3,13 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/gin-gonic/gin"
+
 	"dz-jobs-api/config"
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/dto/response"
 	"dz-jobs-api/internal/helpers"
 	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
-
-	"github.com/gin-gonic/gin"
 )
 
 type AuthController struct {
@@ -27,7 +27,7 @@ func NewAuthController(service serviceInterfaces.AuthService, config *config.App
 func (ac *AuthController) Login(ctx *gin.Context) {
 	var loginRequest request.LoginRequest
 	if err := ctx.ShouldBindJSON(&loginRequest); err != nil {
-		ctx.Error(helpers.NewCustomError(http.StatusBadRequest, "Invalid login data"))
+        ctx.Error(err)
 		return
 	}
 
@@ -50,7 +50,7 @@ func (ac *AuthController) Login(ctx *gin.Context) {
 func (ac *AuthController) Register(ctx *gin.Context) {
 	var createUserRequest request.CreateUsersRequest
 	if err := ctx.ShouldBindJSON(&createUserRequest); err != nil {
-		ctx.Error(helpers.NewCustomError(http.StatusBadRequest, "Invalid user data"))
+        ctx.Error(err)
 		return
 	}
 

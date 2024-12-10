@@ -12,14 +12,22 @@ import (
 )
 
 type UserService struct {
-	UserRepository interfaces.UserRepository
+	userRepository interfaces.UserRepository
 }
 
 func NewUserService(userRepo interfaces.UserRepository) *UserService {
-	return &UserService{UserRepository: userRepo}
+	return &UserService{userRepository: userRepo}
 }
 
 func (us *UserService) CreateUser(req request.CreateUsersRequest) (*models.User, error) {
+	existingUser, err := us.userRepository.GetByEmail(req.Email)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Database error occurred")
+	}
+	if existingUser != nil {
+		return nil, helpers.NewCustomError(http.StatusBadRequest, "User already exists")
+	}
+
 	hashedPassword, err := utils.HashPassword(req.Password)
 	if err != nil {
 		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Password hashing failed")
@@ -34,7 +42,7 @@ func (us *UserService) CreateUser(req request.CreateUsersRequest) (*models.User,
 		UpdatedAt: time.Now(),
 	}
 
-	if err := us.UserRepository.Create(user); err != nil {
+	if err := us.userRepository.Create(user); err != nil {
 		return nil, helpers.NewCustomError(http.StatusInternalServerError, "User creation failed")
 	}
 
@@ -42,7 +50,7 @@ func (us *UserService) CreateUser(req request.CreateUsersRequest) (*models.User,
 }
 
 func (us *UserService) GetUserByID(id int) (*models.User, error) {
-	user, err := us.UserRepository.GetByID(id)
+	user, err := us.userRepository.GetByID(id)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, helpers.NewCustomError(http.StatusNotFound, "User not found")
@@ -61,18 +69,18 @@ func (us *UserService) UpdateUser(id int, req request.UpdateUserRequest) (*model
 		UpdatedAt: time.Now(),
 	}
 
-	if err := us.UserRepository.Update(id, updatedUser); err != nil {
+	if err := us.userRepository.Update(id, updatedUser); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, helpers.NewCustomError(http.StatusNotFound, "User not found")
 		}
 		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to update user")
 	}
 
-	return us.UserRepository.GetByID(id)
+	return us.userRepository.GetByID(id)
 }
 
 func (us *UserService) GetAllUsers() ([]*models.User, error) {
-	users, err := us.UserRepository.GetAll()
+	users, err := us.userRepository.GetAll()
 	if err != nil {
 		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to fetch users")
 	}
@@ -80,7 +88,7 @@ func (us *UserService) GetAllUsers() ([]*models.User, error) {
 }
 
 func (us *UserService) DeleteUser(id int) error {
-	err := us.UserRepository.Delete(id)
+	err := us.userRepository.Delete(id)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return helpers.NewCustomError(http.StatusNotFound, "User not found")

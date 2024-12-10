@@ -8,26 +8,27 @@ import (
 
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/dto/response"
-	"dz-jobs-api/internal/helpers"
-	"dz-jobs-api/internal/services"
+	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
 )
 
 type UserController struct {
-	UserService *services.UserService
+	userService serviceInterfaces.UserService
 }
 
-func NewUserController(userService *services.UserService) *UserController {
-	return &UserController{UserService: userService}
+func NewUserController(service serviceInterfaces.UserService) *UserController {
+	return &UserController{
+		userService: service,
+	}
 }
 
 func (uc *UserController) CreateUser(ctx *gin.Context) {
 	var createUserRequest request.CreateUsersRequest
 	if err := ctx.ShouldBindJSON(&createUserRequest); err != nil {
-		ctx.Error(helpers.NewCustomError(http.StatusBadRequest, "Invalid user data"))
+        ctx.Error(err)
 		return
 	}
 
-	user, err := uc.UserService.CreateUser(createUserRequest)
+	user, err := uc.userService.CreateUser(createUserRequest)
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -48,7 +49,7 @@ func (uc *UserController) GetUser(ctx *gin.Context) {
 		return
 	}
 
-	user, err := uc.UserService.GetUserByID(id)
+	user, err := uc.userService.GetUserByID(id)
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -65,7 +66,7 @@ func (uc *UserController) GetUser(ctx *gin.Context) {
 func (uc *UserController) UpdateUser(ctx *gin.Context) {
 	var req request.UpdateUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(err)
+        ctx.Error(err)
 		return
 	}
 
@@ -75,7 +76,7 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 		return
 	}
 
-	updatedUser, err := uc.UserService.UpdateUser(id, req)
+	updatedUser, err := uc.userService.UpdateUser(id, req)
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -90,7 +91,7 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 }
 
 func (uc *UserController) GetAllUsers(ctx *gin.Context) {
-	users, err := uc.UserService.GetAllUsers()
+	users, err := uc.userService.GetAllUsers()
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -119,7 +120,7 @@ func (uc *UserController) DeleteUser(ctx *gin.Context) {
 		return
 	}
 
-	err = uc.UserService.DeleteUser(id)
+	err = uc.userService.DeleteUser(id)
 	if err != nil {
 		ctx.Error(err)
 		return

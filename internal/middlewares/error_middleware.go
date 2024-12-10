@@ -12,7 +12,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
-
 func ErrorHandlingMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		defer func() {
@@ -34,7 +33,6 @@ func ErrorHandlingMiddleware() gin.HandlerFunc {
 		}
 	}
 }
-
 func handleErrors(ctx *gin.Context) {
 	for _, e := range ctx.Errors {
 		switch err := e.Err.(type) {
@@ -81,7 +79,7 @@ func handleValidationError(ctx *gin.Context, err validator.ValidationErrors) {
 
 	ctx.JSON(http.StatusBadRequest, response.Response{
 		Code:    http.StatusBadRequest,
-		Status:  "Validation Error",
+		Status:  "Bad Request",
 		Message: "Invalid input data",
 		Data:    strings.Join(errorDetails, "; "),
 	})
