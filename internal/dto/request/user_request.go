@@ -7,11 +7,6 @@ type CreateUsersRequest struct {
 	Role     string `json:"role" binding:"required,min=4"`
 }
 
-type LoginRequest struct {
-	Email    string `json:"email" validate:"required"`
-	Password string `json:"password" validate:"required"`
-}
-
 type UpdateUserRequest struct {
 	Name     string `json:"name,omitempty" validate:"omitempty,min=3,max=50"`
 	Email    string `json:"email,omitempty" validate:"omitempty,email"`
