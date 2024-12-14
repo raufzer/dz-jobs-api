@@ -10,7 +10,6 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// CreateServer initializes and returns a configured Gin server instance.
 func CreateServer(appConfig *config.AppConfig) *gin.Engine {
 	// Set Gin mode
 	gin.SetMode(gin.ReleaseMode)
