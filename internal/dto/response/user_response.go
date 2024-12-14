@@ -3,10 +3,12 @@ package response
 import (
 	"dz-jobs-api/internal/models"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type UserResponse struct {
-	ID        int       `json:"userid"`
+	ID        uuid.UUID `json:"userid"`
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
 	Role      string    `json:"role"`

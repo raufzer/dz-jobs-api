@@ -9,6 +9,8 @@ import (
 	"dz-jobs-api/pkg/utils"
 	"net/http"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type UserService struct {
@@ -49,7 +51,7 @@ func (us *UserService) CreateUser(req request.CreateUsersRequest) (*models.User,
 	return user, nil
 }
 
-func (us *UserService) GetUserByID(id int) (*models.User, error) {
+func (us *UserService) GetUserByID(id uuid.UUID) (*models.User, error) {
 	user, err := us.userRepository.GetByID(id)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -60,7 +62,7 @@ func (us *UserService) GetUserByID(id int) (*models.User, error) {
 	return user, nil
 }
 
-func (us *UserService) UpdateUser(id int, req request.UpdateUserRequest) (*models.User, error) {
+func (us *UserService) UpdateUser(id uuid.UUID, req request.UpdateUserRequest) (*models.User, error) {
 	updatedUser := &models.User{
 		Name:      req.Name,
 		Email:     req.Email,
@@ -87,7 +89,7 @@ func (us *UserService) GetAllUsers() ([]*models.User, error) {
 	return users, nil
 }
 
-func (us *UserService) DeleteUser(id int) error {
+func (us *UserService) DeleteUser(id uuid.UUID) error {
 	err := us.userRepository.Delete(id)
 	if err != nil {
 		if err == sql.ErrNoRows {
