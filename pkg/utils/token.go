@@ -2,8 +2,9 @@ package utils
 
 import (
 	"fmt"
+	"log"
 	"time"
-
+	"crypto/rand"
 	"github.com/golang-jwt/jwt"
 )
 
@@ -45,4 +46,23 @@ func ValidateToken(token string, signedJWTKey string) (interface{}, error) {
 	}
 
 	return claims["sub"], nil
+}
+
+func GenerateSecureOTP(length int) string {
+	const charset = "0123456789"
+	otp := make([]byte, length)
+
+	// Use crypto/rand for secure random generation
+	randomBytes := make([]byte, length)
+	_, err := rand.Read(randomBytes)
+	if err != nil {
+		log.Printf("Error generating OTP: %v", err)
+		return ""
+	}
+
+	for i := 0; i < length; i++ {
+		otp[i] = charset[int(randomBytes[i])%len(charset)]
+	}
+
+	return string(otp)
 }
