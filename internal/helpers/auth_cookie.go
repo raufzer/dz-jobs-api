@@ -1,14 +1,15 @@
 package helpers
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
-func SetAuthCookie(ctx *gin.Context, token string, maxAge time.Duration, domain string, isProduction bool) {
+func SetAuthCookie(ctx *gin.Context, tokenName string, token string, maxAge time.Duration, domain string, isProduction bool) {
 	cookie := &http.Cookie{
-		Name:     "token",
+		Name:     tokenName,
 		Value:    token,
 		Path:     "/",
 		Domain:   domain,

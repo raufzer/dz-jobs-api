@@ -7,6 +7,11 @@ import (
 )
 
 func AuthRoutes(rg *gin.RouterGroup, authController *controllers.AuthController) {
-	rg.POST("/sessions", authController.Login)
-	rg.POST("/users", authController.Register)
+	authRoute := rg.Group("/auth")
+	authRoute.POST("/login", authController.Login)
+	authRoute.POST("/logout", authController.Logout)
+	authRoute.POST("/register", authController.Register)
+	authRoute.POST("/send-reset-otp", authController.SendResetOTP)
+	authRoute.POST("/verify-otp", authController.VerifyOTP)
+	authRoute.POST("/reset-password", authController.ResetPassword)
 }
