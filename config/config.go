@@ -1,7 +1,6 @@
 package config
 
 import (
-	"dz-jobs-api/internal/helpers"
 	"dz-jobs-api/pkg/utils"
 	"log"
 	"time"
@@ -16,10 +15,11 @@ type AppConfig struct {
 	RedisURI                 string
 	RedisPassword            string
 	SendGridAPIKey           string
-	JWTSecret                string
-	TokenSecret              string
-	TokenExpiresIn           time.Duration
+	AccessTokenSecret        string
+	RefreshTokenSecret       string
+	ResetPasswordTokenSecret string
 	AccessTokenMaxAge        time.Duration
+	RefreshTokenMaxAge       time.Duration
 	ResetPasswordTokenMaxAge time.Duration
 }
 
@@ -28,21 +28,15 @@ func LoadConfig() (*AppConfig, error) {
 	if err != nil {
 		log.Println("Warning: No .env file found, using default environment variables.")
 	}
-	tokenExpriresInStr := utils.GetEnv("TOKEN_EXPIRES_IN")
-	tokenExpriresIn, err := time.ParseDuration(tokenExpriresInStr)
-	if err != nil {
-		return nil, helpers.NewCustomError(500, "parsing ACCESS_TOKEN_MAX_AGE")
-	}
 	accessTokenMaxAgeStr := utils.GetEnv("ACCESS_TOKEN_MAX_AGE")
 	accessTokenMaxAge, err := time.ParseDuration(accessTokenMaxAgeStr)
-	if err != nil {
-		return nil, helpers.NewCustomError(500, "parsing ACCESS_TOKEN_MAX_AGE")
-	}
+
+	refreshTokenMaxAgeStr := utils.GetEnv("REFRESH_TOKEN_MAX_AGE")
+	refreshTokenMaxAge, err := time.ParseDuration(refreshTokenMaxAgeStr)
+
 	resetPasswordTokenMaxAgeStr := utils.GetEnv("RESET_PASSWORD_TOKEN_MAX_AGE")
 	resetPasswordTokenMaxAge, err := time.ParseDuration(resetPasswordTokenMaxAgeStr)
-	if err != nil {
-		return nil, helpers.NewCustomError(500, "parsing RESET_PASSWORD_TOKEN_MAX_AGE")
-	}
+
 	config := &AppConfig{
 		Domain:                   utils.GetEnv("DOMAIN"),
 		ServerPort:               utils.GetEnv("SERVER_PORT"),
@@ -50,10 +44,11 @@ func LoadConfig() (*AppConfig, error) {
 		RedisURI:                 utils.GetEnv("REDIS_URI"),
 		RedisPassword:            utils.GetEnv("REDIS_PASSWORD"),
 		SendGridAPIKey:           utils.GetEnv("SENDGRID_API_KEY"),
-		JWTSecret:                utils.GetEnv("JWT_SECRET"),
-		TokenSecret:              utils.GetEnv("TOKEN_SECRET"),
-		TokenExpiresIn:           tokenExpriresIn,
+		AccessTokenSecret:        utils.GetEnv("ACCESS_TOKEN_SECRET"),
+		RefreshTokenSecret:       utils.GetEnv("REFRESH_TOKEN_SECRET"),
+		ResetPasswordTokenSecret: utils.GetEnv("RESET_PASSWORD_TOKEN_SECRET"),
 		AccessTokenMaxAge:        accessTokenMaxAge,
+		RefreshTokenMaxAge:       refreshTokenMaxAge,
 		ResetPasswordTokenMaxAge: resetPasswordTokenMaxAge,
 	}
 	return config, nil

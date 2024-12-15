@@ -23,12 +23,12 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 
 	// Initialize Repositories
 	userRepo := postgresql.NewUserRepository(dbConfig.DB)
-	redisRepo := redis.NewUserRepository(redisConfig.Client)
+	redisRepo := redis.NewRedisRepository(redisConfig.Client)
 
 	// Initialize Services
 	authService := services.NewAuthService(
 		userRepo,
-		redisRepo, 
+		redisRepo,
 	)
 	userService := services.NewUserService(userRepo)
 
