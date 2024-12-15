@@ -1,31 +1,46 @@
 package utils
 
 import (
-	"log"
+	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 )
 
-func SendOTP(email, otp, sendGridAPIKey string) error {
+func SendOTPEmail(email, otp, sendGridAPIKey string) error {
 	if sendGridAPIKey == "" {
-		log.Println("SendGrid API key is missing")
-		return nil
+		return fmt.Errorf("SendGrid API key is missing")
 	}
 
 	client := sendgrid.NewSendClient(sendGridAPIKey)
-	subject := "Your One-Time Password (OTP) for Dz Jobs"
+	subject := "Dz Jobs password assistance"
 
 	from := mail.NewEmail("Dz Jobs", "dzjobs.service@gmail.com")
 	to := mail.NewEmail(email, email)
-	message := mail.NewSingleEmail(from, subject, to, otp, otp)
+
+	templatePath := filepath.Join("internal", "templates", "otp_email_template.html")
+
+	templateBytes, err := os.ReadFile(templatePath)
+	if err != nil {
+		return fmt.Errorf("failed to read email template at %s: %w", templatePath, err)
+	}
+
+	emailBodyHTML := strings.ReplaceAll(string(templateBytes), "{{OTP}}", otp)
+	emailBodyPlainText := "Your OTP is: " + otp
+
+	message := mail.NewSingleEmail(from, subject, to, emailBodyPlainText, emailBodyHTML)
 
 	response, err := client.Send(message)
 	if err != nil {
-		log.Printf("Error sending email: %v", err)
-		return err
+		return fmt.Errorf("failed to send OTP email: %w", err)
 	}
 
-	log.Printf("OTP email sent to %s. Status code: %d", email, response.StatusCode)
+	if response.StatusCode >= 400 {
+		return fmt.Errorf("failed to send OTP email: received status code %d", response.StatusCode)
+	}
+
 	return nil
 }

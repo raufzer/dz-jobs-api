@@ -70,7 +70,7 @@ func (s *AuthService) SendOTP(email string) error {
 		return helpers.NewCustomError(http.StatusInternalServerError, "Failed to store OTP")
 	}
 	cfg, err := config.LoadConfig()
-	return utils.SendOTP(email, otp, cfg.SendGridAPIKey)
+	return utils.SendOTPEmail(email, otp, cfg.SendGridAPIKey)
 }
 func (s *AuthService) VerifyOTP(email, otp string) (string, error) {
 	storedOTP, err := s.redisRepository.GetOTP(email)
