@@ -65,13 +65,13 @@ func (ac *AuthController) Register(ctx *gin.Context) {
 		Message: "User successfully created!",
 	})
 }
-func (c *AuthController) SendResetOTP(ctx *gin.Context) {
+func (ac *AuthController) SendResetOTP(ctx *gin.Context) {
 	var req request.SendOTPRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
 		return
 	}
-	err := c.authService.SendOTP(req.Email)
+	err := ac.authService.SendOTP(req.Email)
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -101,7 +101,7 @@ func (ac *AuthController) VerifyOTP(ctx *gin.Context) {
 		Message: "OTP vefiy successfully!",
 	})
 }
-func (c *AuthController) ResetPassword(ctx *gin.Context) {
+func (ac *AuthController) ResetPassword(ctx *gin.Context) {
 	token, err := ctx.Cookie("reset_token")
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization token is missing"})
@@ -112,7 +112,7 @@ func (c *AuthController) ResetPassword(ctx *gin.Context) {
 		ctx.Error(err)
 		return
 	}
-	err = c.authService.ResetPassword(req.Email, token, req.NewPassword)
+	err = ac.authService.ResetPassword(req.Email, token, req.NewPassword)
 	if err != nil {
 		ctx.Error(err)
 		return
