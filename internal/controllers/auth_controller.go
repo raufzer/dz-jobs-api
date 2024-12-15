@@ -27,22 +27,51 @@ func (ac *AuthController) Login(ctx *gin.Context) {
 		ctx.Error(err)
 		return
 	}
-	token, err := ac.authService.Login(req)
+	accessToken, refreshToken, err := ac.authService.Login(req)
 	if err != nil {
 		ctx.Error(err)
 		return
 	}
 	isProduction := ac.config.ServerPort != "9090"
-	helpers.SetAuthCookie(ctx, "access_token", token, ac.config.AccessTokenMaxAge, ac.config.Domain, isProduction)
+	helpers.SetAuthCookie(ctx, "access_token", accessToken, ac.config.AccessTokenMaxAge, ac.config.Domain, isProduction)
+	helpers.SetAuthCookie(ctx, "refresh_token", refreshToken, ac.config.RefreshTokenMaxAge, ac.config.Domain, isProduction)
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",
 		Message: "Successfully logged in!",
 	})
 }
+func (ac *AuthController) RefreshToken(ctx *gin.Context) {
+	refreshToken, err := ctx.Cookie("refresh_token")
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+	var req request.RefreshTokenRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	accessToken, err := ac.authService.RefreshAccessToken(req.Email, refreshToken)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	isProduction := ac.config.ServerPort != "9090"
+	helpers.SetAuthCookie(ctx, "access_token", accessToken, ac.config.AccessTokenMaxAge, ac.config.Domain, isProduction)
+
+	ctx.JSON(http.StatusOK, response.Response{
+		Code:    http.StatusOK,
+		Status:  "OK",
+		Message: "Access token refreshed successfully!",
+	})
+}
 func (ac *AuthController) Logout(ctx *gin.Context) {
 	isProduction := ac.config.ServerPort != "9090"
 	helpers.SetAuthCookie(ctx, "access_token", "", -1, ac.config.Domain, isProduction)
+	helpers.SetAuthCookie(ctx, "refresh_token", "", -1, ac.config.Domain, isProduction)
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",
@@ -104,7 +133,7 @@ func (ac *AuthController) VerifyOTP(ctx *gin.Context) {
 func (ac *AuthController) ResetPassword(ctx *gin.Context) {
 	token, err := ctx.Cookie("reset_token")
 	if err != nil {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization token is missing"})
+		ctx.Error(err)
 		return
 	}
 	var req request.ResetPasswordRequest

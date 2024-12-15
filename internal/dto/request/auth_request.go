@@ -12,7 +12,9 @@ type VerifyOTPRequest struct {
 	Email string `json:"email" binding:"required,email"`
 	OTP   string `json:"otp" binding:"required,len=6"`
 }
-
+type RefreshTokenRequest struct {
+	Email string `json:"email" binding:"required,email"`
+}
 type ResetPasswordRequest struct {
 	Email       string `json:"email" binding:"required,email"`
 	// ResetToken  string `json:"reset_token" binding:"required"`
