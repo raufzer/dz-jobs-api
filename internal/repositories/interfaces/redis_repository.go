@@ -1,6 +1,8 @@
 package interfaces
 
-import "time"
+import (
+	"time"
+)
 
 type RedisRepository interface {
 	StoreOTP(email, otp string, expiry time.Duration) error
@@ -9,4 +11,10 @@ type RedisRepository interface {
 	StoreResetToken(email, token string, expiry time.Duration) error
 	GetResetToken(email string) (string, error)
 	DeleteResetToken(email string) error
+	StoreRefreshToken(email, refreshToken string, expiry time.Duration) error
+	GetRefreshToken(email string) (string, error)
+	DeleteRefreshToken(email string) error
+	StoreAccessToken(email, accessToken string, expiry time.Duration) error
+	GetAccessToken(email string) (string, error)
+	DeleteAccessToken(email string) error
 }
