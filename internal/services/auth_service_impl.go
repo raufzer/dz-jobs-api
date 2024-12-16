@@ -7,7 +7,7 @@ import (
 	"dz-jobs-api/internal/models"
 	"dz-jobs-api/internal/repositories/interfaces"
 	"dz-jobs-api/pkg/utils"
-	"log"
+
 	"net/http"
 	"time"
 
@@ -71,7 +71,7 @@ func (s *AuthService) Login(req request.LoginRequest) (string, string, error) {
 		return "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to generate refresh token")
 	}
 	refreshTokenTTL := config.RefreshTokenMaxAge
-	err = s.redisRepository.StoreRefreshToken(req.Email, refreshToken, refreshTokenTTL)
+	err = s.redisRepository.StoreRefreshToken(user.ID.String(), refreshToken, refreshTokenTTL)
 	if err != nil {
 		return "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to store refresh token")
 	}
@@ -79,11 +79,10 @@ func (s *AuthService) Login(req request.LoginRequest) (string, string, error) {
 	return accessToken, refreshToken, nil
 }
 
-func (s *AuthService) RefreshAccessToken(email, refreshToken string) (string, error) {
-	storedToken, err := s.redisRepository.GetRefreshToken(email)
+func (s *AuthService) RefreshAccessToken(userid, refreshToken string) (string, error) {
+	storedToken, err := s.redisRepository.GetRefreshToken(userid)
 	if err != nil {
 		if err == redis.Nil {
-			log.Printf("the error is %v", err)
 			return "", helpers.NewCustomError(http.StatusUnauthorized, "Refresh token expired or not found")
 		}
 		return "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to retrieve refresh token")
@@ -97,7 +96,7 @@ func (s *AuthService) RefreshAccessToken(email, refreshToken string) (string, er
 		return "", helpers.NewCustomError(http.StatusInternalServerError, "Config loading failed")
 	}
 
-	accessToken, err := utils.GenerateToken(config.AccessTokenMaxAge, email, config.AccessTokenSecret)
+	accessToken, err := utils.GenerateToken(config.AccessTokenMaxAge, userid, config.AccessTokenSecret)
 	if err != nil {
 		return "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to generate access token")
 	}
@@ -175,4 +174,16 @@ func (s *AuthService) ResetPassword(email, resetToken, newPassword string) error
 	_ = s.redisRepository.DeleteResetToken(email)
 
 	return nil
+}
+
+func (s *AuthService) ValidateToken(token string) (string, error) {
+	config, err := config.LoadConfig()
+	if err != nil {
+		return "", helpers.NewCustomError(http.StatusInternalServerError, "Config loading failed")
+	}
+	userID, err := utils.ValidateToken(token, config.RefreshTokenSecret)
+	if err != nil {
+		return "", helpers.NewCustomError(http.StatusUnauthorized, "Invalid or expired token")
+	}
+	return userID, nil
 }

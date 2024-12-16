@@ -11,28 +11,20 @@ import (
 func GenerateToken(ttl time.Duration, payload interface{}, secretJWTKey string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
-	// Current time (UTC)
 	now := time.Now().UTC()
 
-	// Create claims
 	claims := token.Claims.(jwt.MapClaims)
-
-	// Include the payload
 	claims["sub"] = payload
 	claims["exp"] = now.Add(ttl).Unix()
 	claims["iat"] = now.Unix()
 	claims["nbf"] = now.Unix()
+	claims["jti"] = fmt.Sprintf("%d-%x", now.UnixNano(), generateRandomBytes(16))
 
-	// Generate a unique JWT ID using current timestamp and random bytes
-	claims["jti"] = fmt.Sprintf("%d-%x", now.UnixNano(), generateRandomBytes(16)) // 16 bytes of randomness
-
-	// Generate the token
 	tokenString, err := token.SignedString([]byte(secretJWTKey))
 	if err != nil {
 		return "", fmt.Errorf("generating JWT Token failed: %w", err)
 	}
 
-	// Log token details (optional, for debugging)
 	fmt.Println("Generated Token:")
 	fmt.Println("Token String:", tokenString)
 	fmt.Println("Claims:", claims)
@@ -40,7 +32,6 @@ func GenerateToken(ttl time.Duration, payload interface{}, secretJWTKey string) 
 	return tokenString, nil
 }
 
-// Helper to generate random bytes for jti
 func generateRandomBytes(size int) []byte {
 	randomBytes := make([]byte, size)
 	_, err := rand.Read(randomBytes)
@@ -65,4 +56,39 @@ func GenerateSecureOTP(length int) string {
 	}
 
 	return string(otp)
+}
+
+type TokenClaims struct {
+	UserID string `json:"sub"`
+	jwt.StandardClaims
+}
+
+func ValidateToken(accrefToken string, secretKey string) (string, error) {
+	// Debug log to see the incoming token
+	log.Println("Received token for validation:", accrefToken)
+
+	// Parse the token with claims
+	token, err := jwt.ParseWithClaims(accrefToken, &TokenClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(secretKey), nil
+	})
+
+	// If error or invalid token, log and return
+	if err != nil || !token.Valid {
+		log.Println("Error parsing or invalid token:", err)
+		return "", fmt.Errorf("invalid token")
+	}
+
+	// Log claims extraction step to debug
+	if claims, ok := token.Claims.(*TokenClaims); ok {
+		log.Println("Successfully extracted claims:", claims)
+		log.Println("Extracted UserID:", claims.UserID)
+		return claims.UserID, nil
+	}
+
+	// If no claims, log that as well
+	log.Println("Failed to extract claims from token")
+	return "", fmt.Errorf("invalid token claims")
 }

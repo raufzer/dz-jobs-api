@@ -11,4 +11,5 @@ type AuthService interface {
 	SendOTP(email string) error
 	VerifyOTP(email, otp string) (string, error)
 	ResetPassword(email, resetToken, newPassword string) error
+	ValidateToken(token string) (string, error)
 }
