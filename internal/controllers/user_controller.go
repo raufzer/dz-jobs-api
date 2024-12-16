@@ -22,6 +22,7 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 	var req request.CreateUsersRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
+		ctx.Abort()
 		return
 	}
 	user, err := uc.userService.CreateUser(req)
@@ -40,6 +41,7 @@ func (uc *UserController) GetUser(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
+		ctx.Abort()
 		return
 	}
 	user, err := uc.userService.GetUserByID(id)
@@ -58,6 +60,7 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 	var req request.UpdateUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
+		ctx.Abort()
 		return
 	}
 	id, err := uuid.Parse(ctx.Param("id"))
@@ -68,6 +71,7 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 	updatedUser, err := uc.userService.UpdateUser(id, req)
 	if err != nil {
 		ctx.Error(err)
+		ctx.Abort()
 		return
 	}
 	ctx.JSON(http.StatusOK, response.Response{
@@ -101,6 +105,7 @@ func (uc *UserController) DeleteUser(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
+		ctx.Abort()
 		return
 	}
 	err = uc.userService.DeleteUser(id)
