@@ -31,7 +31,8 @@ func generateRandomBytes(size int) []byte {
 	randomBytes := make([]byte, size)
 	_, err := rand.Read(randomBytes)
 	if err != nil {
-		fmt.Errorf("error generating random bytes: %v", err)
+
+		return nil
 	}
 	return randomBytes
 }
@@ -42,7 +43,6 @@ func GenerateSecureOTP(length int) string {
 	randomBytes := make([]byte, length)
 	_, err := rand.Read(randomBytes)
 	if err != nil {
-		fmt.Errorf("error generating OTP: %v", err)
 		return ""
 	}
 
