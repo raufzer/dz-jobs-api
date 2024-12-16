@@ -60,13 +60,11 @@ func (s *AuthService) Login(req request.LoginRequest) (string, string, error) {
 	if err != nil {
 		return "", "", helpers.NewCustomError(http.StatusInternalServerError, "Config loading failed")
 	}
-
-	accessToken, err := utils.GenerateToken(config.AccessTokenMaxAge, user.ID, config.AccessTokenSecret)
+	accessToken, err := utils.GenerateToken(user.ID.String(), config.AccessTokenMaxAge, "access", user.Role, config.AccessTokenSecret)
 	if err != nil {
 		return "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to generate access token")
 	}
-
-	refreshToken, err := utils.GenerateToken(config.RefreshTokenMaxAge, user.ID, config.RefreshTokenSecret)
+	refreshToken, err := utils.GenerateToken(user.ID.String(), config.RefreshTokenMaxAge, "refresh", "", config.RefreshTokenSecret)
 	if err != nil {
 		return "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to generate refresh token")
 	}
@@ -79,8 +77,8 @@ func (s *AuthService) Login(req request.LoginRequest) (string, string, error) {
 	return accessToken, refreshToken, nil
 }
 
-func (s *AuthService) RefreshAccessToken(userid, refreshToken string) (string, error) {
-	storedToken, err := s.redisRepository.GetRefreshToken(userid)
+func (s *AuthService) RefreshAccessToken(userID, userRole, refreshToken string) (string, error) {
+	storedToken, err := s.redisRepository.GetRefreshToken(userID)
 	if err != nil {
 		if err == redis.Nil {
 			return "", helpers.NewCustomError(http.StatusUnauthorized, "Refresh token expired or not found")
@@ -95,8 +93,7 @@ func (s *AuthService) RefreshAccessToken(userid, refreshToken string) (string, e
 	if err != nil {
 		return "", helpers.NewCustomError(http.StatusInternalServerError, "Config loading failed")
 	}
-
-	accessToken, err := utils.GenerateToken(config.AccessTokenMaxAge, userid, config.AccessTokenSecret)
+	accessToken, err := utils.GenerateToken(userID, config.AccessTokenMaxAge, "access", userRole, config.AccessTokenSecret)
 	if err != nil {
 		return "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to generate access token")
 	}
@@ -134,8 +131,7 @@ func (s *AuthService) VerifyOTP(email, otp string) (string, error) {
 	if err != nil {
 		return "", helpers.NewCustomError(http.StatusInternalServerError, "Config loading failed")
 	}
-
-	resetToken, err := utils.GenerateToken(config.ResetPasswordTokenMaxAge, email, config.ResetPasswordTokenSecret)
+	resetToken, err := utils.GenerateToken(email, config.AccessTokenMaxAge, "reset_password", "", config.ResetPasswordTokenSecret)
 	if err != nil {
 		return "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to generate reset password token")
 	}
@@ -176,14 +172,14 @@ func (s *AuthService) ResetPassword(email, resetToken, newPassword string) error
 	return nil
 }
 
-func (s *AuthService) ValidateToken(token string) (string, error) {
+func (s *AuthService) ValidateToken(token string) (string, string, error) {
 	config, err := config.LoadConfig()
 	if err != nil {
-		return "", helpers.NewCustomError(http.StatusInternalServerError, "Config loading failed")
+		return "", "", helpers.NewCustomError(http.StatusInternalServerError, "Config loading failed")
 	}
-	userID, err := utils.ValidateToken(token, config.RefreshTokenSecret)
+	claims, err := utils.ValidateToken(token, config.RefreshTokenSecret, "refresh")
 	if err != nil {
-		return "", helpers.NewCustomError(http.StatusUnauthorized, "Invalid or expired token")
+		return "", "", helpers.NewCustomError(http.StatusUnauthorized, "Invalid or expired token")
 	}
-	return userID, nil
+	return claims.UserID, claims.Role, nil
 }
