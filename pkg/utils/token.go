@@ -4,7 +4,6 @@ import (
 	"crypto/rand"
 	"fmt"
 	"github.com/golang-jwt/jwt"
-	"log"
 	"time"
 )
 
@@ -25,10 +24,6 @@ func GenerateToken(ttl time.Duration, payload interface{}, secretJWTKey string) 
 		return "", fmt.Errorf("generating JWT Token failed: %w", err)
 	}
 
-	fmt.Println("Generated Token:")
-	fmt.Println("Token String:", tokenString)
-	fmt.Println("Claims:", claims)
-
 	return tokenString, nil
 }
 
@@ -36,7 +31,7 @@ func generateRandomBytes(size int) []byte {
 	randomBytes := make([]byte, size)
 	_, err := rand.Read(randomBytes)
 	if err != nil {
-		log.Printf("Error generating random bytes: %v", err)
+		fmt.Errorf("error generating random bytes: %v", err)
 	}
 	return randomBytes
 }
@@ -47,7 +42,7 @@ func GenerateSecureOTP(length int) string {
 	randomBytes := make([]byte, length)
 	_, err := rand.Read(randomBytes)
 	if err != nil {
-		log.Printf("Error generating OTP: %v", err)
+		fmt.Errorf("error generating OTP: %v", err)
 		return ""
 	}
 
@@ -64,10 +59,7 @@ type TokenClaims struct {
 }
 
 func ValidateToken(accrefToken string, secretKey string) (string, error) {
-	// Debug log to see the incoming token
-	log.Println("Received token for validation:", accrefToken)
 
-	// Parse the token with claims
 	token, err := jwt.ParseWithClaims(accrefToken, &TokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -75,20 +67,13 @@ func ValidateToken(accrefToken string, secretKey string) (string, error) {
 		return []byte(secretKey), nil
 	})
 
-	// If error or invalid token, log and return
 	if err != nil || !token.Valid {
-		log.Println("Error parsing or invalid token:", err)
 		return "", fmt.Errorf("invalid token")
 	}
 
-	// Log claims extraction step to debug
 	if claims, ok := token.Claims.(*TokenClaims); ok {
-		log.Println("Successfully extracted claims:", claims)
-		log.Println("Extracted UserID:", claims.UserID)
 		return claims.UserID, nil
 	}
 
-	// If no claims, log that as well
-	log.Println("Failed to extract claims from token")
 	return "", fmt.Errorf("invalid token claims")
 }
