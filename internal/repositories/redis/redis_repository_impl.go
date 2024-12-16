@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
+	"fmt"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -20,60 +21,84 @@ func NewRedisRepository(redisClient *redis.Client) repositoryInterfaces.RedisRep
 
 func (r *RedisRepository) StoreOTP(email, otp string, expiry time.Duration) error {
 	key := email + ":otp"
-	return r.redisClient.Set(context.Background(), key, otp, expiry).Err()
+	if err := r.redisClient.Set(context.Background(), key, otp, expiry).Err(); err != nil {
+		return fmt.Errorf("redis: failed to store OTP for email %s: %w", email, err)
+	}
+	return nil
 }
 
 func (r *RedisRepository) GetOTP(email string) (string, error) {
 	key := email + ":otp"
-	return r.redisClient.Get(context.Background(), key).Result()
+	result, err := r.redisClient.Get(context.Background(), key).Result()
+	if err != nil {
+		if err == redis.Nil {
+			return "", redis.Nil // Key not found
+		}
+		return "", fmt.Errorf("redis: failed to get OTP for email %s: %w", email, err)
+	}
+	return result, nil
 }
 
 func (r *RedisRepository) DeleteOTP(email string) error {
 	key := email + ":otp"
-	return r.redisClient.Del(context.Background(), key).Err()
+	if err := r.redisClient.Del(context.Background(), key).Err(); err != nil {
+		return fmt.Errorf("redis: failed to delete OTP for email %s: %w", email, err)
+	}
+	return nil
 }
 
 func (r *RedisRepository) StoreResetToken(email, token string, expiry time.Duration) error {
 	key := email + ":reset_token"
-	return r.redisClient.Set(context.Background(), key, token, expiry).Err()
+	if err := r.redisClient.Set(context.Background(), key, token, expiry).Err(); err != nil {
+		return fmt.Errorf("redis: failed to store reset token for email %s: %w", email, err)
+	}
+	return nil
 }
 
 func (r *RedisRepository) GetResetToken(email string) (string, error) {
 	key := email + ":reset_token"
-	return r.redisClient.Get(context.Background(), key).Result()
+	result, err := r.redisClient.Get(context.Background(), key).Result()
+	if err != nil {
+		if err == redis.Nil {
+			return "", redis.Nil
+		}
+		return "", fmt.Errorf("redis: failed to get reset token for email %s: %w", email, err)
+	}
+	return result, nil
 }
 
 func (r *RedisRepository) DeleteResetToken(email string) error {
 	key := email + ":reset_token"
-	return r.redisClient.Del(context.Background(), key).Err()
+	if err := r.redisClient.Del(context.Background(), key).Err(); err != nil {
+		return fmt.Errorf("redis: failed to delete reset token for email %s: %w", email, err)
+	}
+	return nil
 }
 
-func (r *RedisRepository) StoreRefreshToken(email, refreshToken string, expiry time.Duration) error {
-	key := email + ":refresh_token"
-	return r.redisClient.Set(context.Background(), key, refreshToken, expiry).Err()
+func (r *RedisRepository) StoreRefreshToken(userid, refreshToken string, expiry time.Duration) error {
+	key := userid + ":refresh_token"
+	if err := r.redisClient.Set(context.Background(), key, refreshToken, expiry).Err(); err != nil {
+		return fmt.Errorf("redis: failed to store refresh token for userid %s: %w", userid, err)
+	}
+	return nil
 }
 
-func (r *RedisRepository) GetRefreshToken(email string) (string, error) {
-	key := email + ":refresh_token"
-	return r.redisClient.Get(context.Background(), key).Result()
+func (r *RedisRepository) GetRefreshToken(userid string) (string, error) {
+	key := userid + ":refresh_token"
+	result, err := r.redisClient.Get(context.Background(), key).Result()
+	if err != nil {
+		if err == redis.Nil {
+			return "", redis.Nil
+		}
+		return "", fmt.Errorf("redis: failed to get refresh token for userid %s: %w", userid, err)
+	}
+	return result, nil
 }
 
-func (r *RedisRepository) DeleteRefreshToken(email string) error {
-	key := email + ":refresh_token"
-	return r.redisClient.Del(context.Background(), key).Err()
-}
-
-func (r *RedisRepository) StoreAccessToken(email, accessToken string, expiry time.Duration) error {
-	key := email + ":access_token"
-	return r.redisClient.Set(context.Background(), key, accessToken, expiry).Err()
-}
-
-func (r *RedisRepository) GetAccessToken(email string) (string, error) {
-	key := email + ":access_token"
-	return r.redisClient.Get(context.Background(), key).Result()
-}
-
-func (r *RedisRepository) DeleteAccessToken(email string) error {
-	key := email + ":access_token"
-	return r.redisClient.Del(context.Background(), key).Err()
+func (r *RedisRepository) DeleteRefreshToken(userid string) error {
+	key := userid + ":refresh_token"
+	if err := r.redisClient.Del(context.Background(), key).Err(); err != nil {
+		return fmt.Errorf("redis: failed to delete refresh token for userid %s: %w", userid, err)
+	}
+	return nil
 }
