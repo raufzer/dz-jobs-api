@@ -24,6 +24,7 @@ func CreateServer(appConfig *config.AppConfig) *gin.Engine {
 	server.Use(middlewares.ErrorHandlingMiddleware())
 	server.Use(middlewares.LoggingMiddleware())
 
+
 	// Swagger setup
 	server.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler,
 		ginSwagger.URL(appConfig.Domain+"/docs/doc.json"),

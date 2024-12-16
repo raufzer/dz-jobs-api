@@ -6,8 +6,9 @@ import (
 	"dz-jobs-api/internal/dto/response"
 	"dz-jobs-api/internal/helpers"
 	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type AuthController struct {
@@ -47,13 +48,13 @@ func (ac *AuthController) RefreshToken(ctx *gin.Context) {
 		ctx.Error(err)
 		return
 	}
-	var req request.RefreshTokenRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
+	userID, err := ac.authService.ValidateToken(refreshToken)
+	if err != nil {
 		ctx.Error(err)
 		return
 	}
 
-	accessToken, err := ac.authService.RefreshAccessToken(req.Email, refreshToken)
+	accessToken, err := ac.authService.RefreshAccessToken(userID, refreshToken)
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -61,13 +62,13 @@ func (ac *AuthController) RefreshToken(ctx *gin.Context) {
 
 	isProduction := ac.config.ServerPort != "9090"
 	helpers.SetAuthCookie(ctx, "access_token", accessToken, ac.config.AccessTokenMaxAge, ac.config.Domain, isProduction)
-
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",
 		Message: "Access token refreshed successfully!",
 	})
 }
+
 func (ac *AuthController) Logout(ctx *gin.Context) {
 	isProduction := ac.config.ServerPort != "9090"
 	helpers.SetAuthCookie(ctx, "access_token", "", -1, ac.config.Domain, isProduction)

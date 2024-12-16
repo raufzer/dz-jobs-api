@@ -6,9 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterRoutes(router *gin.RouterGroup, userController *controllers.UserController, authController *controllers.AuthController) {
-
-	UserRoutes(router, userController)
+func RegisterPublicRoutes(router *gin.RouterGroup, authController *controllers.AuthController) {
 
 	AuthRoutes(router, authController)
+}
+
+func RegisterPrivateRoutes(router *gin.RouterGroup, userController *controllers.UserController) {
+
+	UserRoutes(router, userController)
 }
