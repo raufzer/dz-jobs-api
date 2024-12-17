@@ -36,12 +36,10 @@ func (us *UserService) CreateUser(req request.CreateUsersRequest) (*models.User,
 	}
 
 	user := &models.User{
-		Name:      req.Name,
-		Email:     req.Email,
-		Password:  hashedPassword,
-		Role:      req.Role,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		Name:     req.Name,
+		Email:    req.Email,
+		Password: hashedPassword,
+		Role:     req.Role,
 	}
 
 	if err := us.userRepository.Create(user); err != nil {
