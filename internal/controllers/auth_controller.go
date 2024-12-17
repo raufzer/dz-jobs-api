@@ -6,11 +6,11 @@ import (
 	"dz-jobs-api/internal/dto/response"
 	"dz-jobs-api/internal/helpers"
 	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
-
-	"fmt"
+	"dz-jobs-api/pkg/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/oauth2"
 )
 
 type AuthController struct {
@@ -31,7 +31,7 @@ func (ac *AuthController) Login(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	accessToken, refreshToken, err := ac.authService.Login(req)
+	user, accessToken, refreshToken, err := ac.authService.Login(req)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -44,6 +44,7 @@ func (ac *AuthController) Login(ctx *gin.Context) {
 		Code:    http.StatusOK,
 		Status:  "OK",
 		Message: "Successfully logged in!",
+		Data:    response.ToUserResponse(user),
 	})
 }
 func (ac *AuthController) RefreshToken(ctx *gin.Context) {
@@ -53,7 +54,6 @@ func (ac *AuthController) RefreshToken(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	fmt.Println("Refresh token:", refreshToken)
 	userID, userRole, err := ac.authService.ValidateToken(refreshToken)
 	if err != nil {
 		ctx.Error(err)
@@ -94,7 +94,8 @@ func (ac *AuthController) Register(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	if err := ac.authService.Register(req); err != nil {
+	user, err := ac.authService.Register(req)
+	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
@@ -102,7 +103,8 @@ func (ac *AuthController) Register(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, response.Response{
 		Code:    http.StatusCreated,
 		Status:  "Created",
-		Message: "User successfully created!",
+		Message: "User created successfully",
+		Data:    response.ToUserResponse(user),
 	})
 }
 func (ac *AuthController) SendResetOTP(ctx *gin.Context) {
@@ -168,4 +170,52 @@ func (ac *AuthController) ResetPassword(ctx *gin.Context) {
 		Status:  "OK",
 		Message: "Password reset successfully!",
 	})
+}
+
+func (ac *AuthController) GoogleConnect(ctx *gin.Context) {
+	oauthConfig := utils.InitializeGoogleOAuthConfig(ac.config.GoogleClientID, ac.config.GoogleClientSecret, ac.config.GoogleRedirectURL)
+
+	authURL := oauthConfig.AuthCodeURL("", oauth2.AccessTypeOffline)
+
+	ctx.Redirect(http.StatusFound, authURL)
+}
+
+func (ac *AuthController) GoogleCallbackConnect(ctx *gin.Context) {
+
+	code := ctx.DefaultQuery("code", "")
+
+	if code == "" {
+		ctx.JSON(http.StatusBadRequest, response.Response{
+			Code:    http.StatusBadRequest,
+			Status:  "Bad Request",
+			Message: "Code is required",
+		})
+		return
+	}
+
+	user, accessToken, refreshToken, connect, err := ac.authService.GoogleConnect(code)
+	if err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
+	if connect == "register" {
+		ctx.JSON(http.StatusOK, response.Response{
+			Code:    http.StatusOK,
+			Status:  "OK",
+			Message: "User successfully created!",
+			Data:    user,
+		})
+	} else if connect == "login" {
+		isProduction := ac.config.ServerPort != "9090"
+		helpers.SetAuthCookie(ctx, "access_token", accessToken, ac.config.AccessTokenMaxAge, ac.config.Domain, isProduction)
+		helpers.SetAuthCookie(ctx, "refresh_token", refreshToken, ac.config.RefreshTokenMaxAge, ac.config.Domain, isProduction)
+		ctx.JSON(http.StatusOK, response.Response{
+			Code:    http.StatusOK,
+			Status:  "OK",
+			Message: "Successfully logged in!",
+			Data:    user,
+		})
+
+	}
 }

@@ -21,6 +21,9 @@ type AppConfig struct {
 	AccessTokenMaxAge        time.Duration
 	RefreshTokenMaxAge       time.Duration
 	ResetPasswordTokenMaxAge time.Duration
+	GoogleClientID           string
+	GoogleClientSecret       string
+	GoogleRedirectURL        string
 }
 
 func LoadConfig() (*AppConfig, error) {
@@ -30,12 +33,21 @@ func LoadConfig() (*AppConfig, error) {
 	}
 	accessTokenMaxAgeStr := utils.GetEnv("ACCESS_TOKEN_MAX_AGE")
 	accessTokenMaxAge, err := time.ParseDuration(accessTokenMaxAgeStr)
+	if err != nil {
+		log.Println("Failed: getting token failed")
+	}
 
 	refreshTokenMaxAgeStr := utils.GetEnv("REFRESH_TOKEN_MAX_AGE")
 	refreshTokenMaxAge, err := time.ParseDuration(refreshTokenMaxAgeStr)
+	if err != nil {
+		log.Println("Failed: getting token failed")
+	}
 
 	resetPasswordTokenMaxAgeStr := utils.GetEnv("RESET_PASSWORD_TOKEN_MAX_AGE")
 	resetPasswordTokenMaxAge, err := time.ParseDuration(resetPasswordTokenMaxAgeStr)
+	if err != nil {
+		log.Println("Failed: getting token failed")
+	}
 
 	config := &AppConfig{
 		Domain:                   utils.GetEnv("DOMAIN"),
@@ -50,6 +62,9 @@ func LoadConfig() (*AppConfig, error) {
 		AccessTokenMaxAge:        accessTokenMaxAge,
 		RefreshTokenMaxAge:       refreshTokenMaxAge,
 		ResetPasswordTokenMaxAge: resetPasswordTokenMaxAge,
+		GoogleClientID:           utils.GetEnv("GOOGLE_CLIENT_ID"),
+		GoogleClientSecret:       utils.GetEnv("GOOGLE_CLIENT_SECRET"),
+		GoogleRedirectURL:        utils.GetEnv("GOOGLE_REDIRECT_URL"),
 	}
 	return config, nil
 }

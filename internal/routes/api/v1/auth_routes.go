@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
 func AuthRoutes(rg *gin.RouterGroup, authController *controllers.AuthController) {
 	authRoute := rg.Group("/auth")
 	authRoute.POST("/register", authController.Register)
@@ -16,4 +15,7 @@ func AuthRoutes(rg *gin.RouterGroup, authController *controllers.AuthController)
 	authRoute.POST("/send-reset-otp", authController.SendResetOTP)
 	authRoute.POST("/verify-otp", authController.VerifyOTP)
 	authRoute.POST("/reset-password", authController.ResetPassword)
+	authRoute.GET("/google/connect", authController.GoogleConnect)
+	authRoute.GET("/google/callback", authController.GoogleCallbackConnect)
+
 }

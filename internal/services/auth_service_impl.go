@@ -1,13 +1,14 @@
 package services
 
 import (
+	"context"
+	"database/sql"
 	"dz-jobs-api/config"
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/helpers"
 	"dz-jobs-api/internal/models"
 	"dz-jobs-api/internal/repositories/interfaces"
 	"dz-jobs-api/pkg/utils"
-
 	"net/http"
 	"time"
 
@@ -25,14 +26,14 @@ func NewAuthService(userRepo interfaces.UserRepository, redisRepo interfaces.Red
 		redisRepository: redisRepo,
 	}
 }
-func (s *AuthService) Register(req request.CreateUsersRequest) error {
+func (s *AuthService) Register(req request.CreateUsersRequest) (*models.User, error) {
 	existingUser, _ := s.userRepository.GetByEmail(req.Email)
 	if existingUser != nil {
-		return helpers.NewCustomError(http.StatusBadRequest, "User already exists")
+		return nil, helpers.NewCustomError(http.StatusBadRequest, "User already exists")
 	}
 	hashedPassword, err := utils.HashPassword(req.Password)
 	if err != nil {
-		return helpers.NewCustomError(http.StatusInternalServerError, "Failed to hash password")
+		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to hash password")
 	}
 	user := &models.User{
 		Name:     req.Name,
@@ -41,40 +42,40 @@ func (s *AuthService) Register(req request.CreateUsersRequest) error {
 		Role:     req.Role,
 	}
 	if err := s.userRepository.Create(user); err != nil {
-		return helpers.NewCustomError(http.StatusInternalServerError, "Failed to create user")
+		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to create user")
 	}
-	return nil
+	return user, nil
 }
-func (s *AuthService) Login(req request.LoginRequest) (string, string, error) {
+func (s *AuthService) Login(req request.LoginRequest) (*models.User, string, string, error) {
 	user, err := s.userRepository.GetByEmail(req.Email)
 	if err != nil || user == nil {
-		return "", "", helpers.NewCustomError(http.StatusUnauthorized, "Invalid email")
+		return nil, "", "", helpers.NewCustomError(http.StatusUnauthorized, "Invalid email")
 	}
 
 	verifyErr := utils.VerifyPassword(user.Password, req.Password)
 	if verifyErr != nil {
-		return "", "", helpers.NewCustomError(http.StatusUnauthorized, "Invalid password")
+		return nil, "", "", helpers.NewCustomError(http.StatusUnauthorized, "Invalid password")
 	}
 
 	config, err := config.LoadConfig()
 	if err != nil {
-		return "", "", helpers.NewCustomError(http.StatusInternalServerError, "Config loading failed")
+		return nil, "", "", helpers.NewCustomError(http.StatusInternalServerError, "Config loading failed")
 	}
 	accessToken, err := utils.GenerateToken(user.ID.String(), config.AccessTokenMaxAge, "access", user.Role, config.AccessTokenSecret)
 	if err != nil {
-		return "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to generate access token")
+		return nil, "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to generate access token")
 	}
 	refreshToken, err := utils.GenerateToken(user.ID.String(), config.RefreshTokenMaxAge, "refresh", "", config.RefreshTokenSecret)
 	if err != nil {
-		return "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to generate refresh token")
+		return nil, "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to generate refresh token")
 	}
 	refreshTokenTTL := config.RefreshTokenMaxAge
 	err = s.redisRepository.StoreRefreshToken(user.ID.String(), refreshToken, refreshTokenTTL)
 	if err != nil {
-		return "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to store refresh token")
+		return nil, "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to store refresh token")
 	}
 
-	return accessToken, refreshToken, nil
+	return user, accessToken, refreshToken, nil
 }
 
 func (s *AuthService) RefreshAccessToken(userID, userRole, refreshToken string) (string, error) {
@@ -182,4 +183,59 @@ func (s *AuthService) ValidateToken(token string) (string, string, error) {
 		return "", "", helpers.NewCustomError(http.StatusUnauthorized, "Invalid or expired token")
 	}
 	return claims.UserID, claims.Role, nil
+}
+
+func (s *AuthService) GoogleConnect(code string) (*models.User, string, string, string, error) {
+
+	config, err := config.LoadConfig()
+	if err != nil {
+		return nil, "", "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to load configuration")
+	}
+
+	oauthConfig := utils.InitializeGoogleOAuthConfig(config.GoogleClientID, config.GoogleClientSecret, config.GoogleRedirectURL)
+
+	token, err := oauthConfig.Exchange(context.Background(), code)
+	if err != nil {
+		return nil, "", "", "", helpers.NewCustomError(http.StatusBadRequest, "Failed to exchange authorization code for token")
+	}
+
+	userInfo, err := utils.FetchGoogleUserInfo(oauthConfig, token)
+	if err != nil {
+		return nil, "", "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to fetch user information from Google")
+	}
+
+	existingUser, err := s.userRepository.GetByEmail(userInfo.Email)
+	if err != nil {
+
+		if err == sql.ErrNoRows {
+
+			newUser := &models.User{
+				Name:  userInfo.Name,
+				Email: userInfo.Email,
+				Role:  "Candidate",
+			}
+
+			if err := s.userRepository.Create(newUser); err != nil {
+				return nil, "", "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to create new user")
+			}
+
+			return newUser, "", "", "register", nil
+		}
+
+		return nil, "", "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to check user existence")
+	}
+	accessToken, err := utils.GenerateToken(userInfo.ID, config.AccessTokenMaxAge, "access", "Candidate", config.AccessTokenSecret)
+	if err != nil {
+		return nil, "", "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to generate access token")
+	}
+	refreshToken, err := utils.GenerateToken(userInfo.ID, config.RefreshTokenMaxAge, "refresh", "", config.RefreshTokenSecret)
+	if err != nil {
+		return nil, "", "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to generate refresh token")
+	}
+	refreshTokenTTL := config.RefreshTokenMaxAge
+	err = s.redisRepository.StoreRefreshToken(userInfo.ID, refreshToken, refreshTokenTTL)
+	if err != nil {
+		return nil, "", "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to store refresh token")
+	}
+	return existingUser, accessToken, refreshToken, "login", nil
 }
