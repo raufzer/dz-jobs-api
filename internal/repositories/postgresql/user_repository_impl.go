@@ -21,17 +21,17 @@ func NewUserRepository(db *sql.DB) repositoryInterfaces.UserRepository {
 	}
 }
 func (r *SQLUserRepository) Create(user *models.User) error {
-	query := "INSERT INTO users (name, email, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING userid"
-	var userid uuid.UUID
-	err := r.db.QueryRow(query, user.Name, user.Email, user.Password, user.Role).Scan(&userid)
+	query := "INSERT INTO users (name, email, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING user_id"
+	var user_id uuid.UUID
+	err := r.db.QueryRow(query, user.Name, user.Email, user.Password, user.Role).Scan(&user_id)
 	if err != nil {
 		return fmt.Errorf("repository: failed to create user: %w", err)
 	}
-	user.ID = userid
+	user.ID = user_id
 	return nil
 }
 func (r *SQLUserRepository) GetByEmail(email string) (*models.User, error) {
-	query := "SELECT userid, name, email, password, role, created_at, updated_at FROM users WHERE email = $1"
+	query := "SELECT user_id, name, email, password, role, created_at, updated_at FROM users WHERE email = $1"
 	row := r.db.QueryRow(query, email)
 	user := &models.User{}
 	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Role, &user.CreatedAt, &user.UpdatedAt)
@@ -43,9 +43,9 @@ func (r *SQLUserRepository) GetByEmail(email string) (*models.User, error) {
 	}
 	return user, nil
 }
-func (r *SQLUserRepository) GetByID(userid uuid.UUID) (*models.User, error) {
-	query := "SELECT userid, name, email, role, created_at, updated_at FROM users WHERE userid = $1"
-	row := r.db.QueryRow(query, userid)
+func (r *SQLUserRepository) GetByID(user_id uuid.UUID) (*models.User, error) {
+	query := "SELECT user_id, name, email, role, created_at, updated_at FROM users WHERE user_id = $1"
+	row := r.db.QueryRow(query, user_id)
 	user := &models.User{}
 	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Role, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
@@ -57,7 +57,7 @@ func (r *SQLUserRepository) GetByID(userid uuid.UUID) (*models.User, error) {
 	return user, nil
 }
 func (r *SQLUserRepository) GetAll() ([]*models.User, error) {
-	query := "SELECT userid, name, email, role, created_at, updated_at FROM users"
+	query := "SELECT user_id, name, email, role, created_at, updated_at FROM users"
 	rows, err := r.db.Query(query)
 	if err != nil {
 		return nil, fmt.Errorf("repository: failed to fetch users: %w", err)
@@ -76,9 +76,9 @@ func (r *SQLUserRepository) GetAll() ([]*models.User, error) {
 	}
 	return users, nil
 }
-func (r *SQLUserRepository) Update(userid uuid.UUID, user *models.User) error {
-	query := "UPDATE users SET name = $1, email = $2, password = $3, role = $4, updated_at = NOW() WHERE userid = $5"
-	result, err := r.db.Exec(query, user.Name, user.Email, user.Password, user.Role, userid)
+func (r *SQLUserRepository) Update(user_id uuid.UUID, user *models.User) error {
+	query := "UPDATE users SET name = $1, email = $2, password = $3, role = $4, updated_at = NOW() WHERE user_id = $5"
+	result, err := r.db.Exec(query, user.Name, user.Email, user.Password, user.Role, user_id)
 	if err != nil {
 		return fmt.Errorf("repository: failed to update user: %w", err)
 	}
@@ -106,9 +106,9 @@ func (r *SQLUserRepository) UpdatePassword(email, hashedPassword string) error {
 	}
 	return nil
 }
-func (r *SQLUserRepository) Delete(userid uuid.UUID) error {
-	query := "DELETE FROM users WHERE userid = $1"
-	result, err := r.db.Exec(query, userid)
+func (r *SQLUserRepository) Delete(user_id uuid.UUID) error {
+	query := "DELETE FROM users WHERE user_id = $1"
+	result, err := r.db.Exec(query, user_id)
 	if err != nil {
 		return fmt.Errorf("repository: failed to delete user: %w", err)
 	}
