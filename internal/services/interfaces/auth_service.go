@@ -13,5 +13,5 @@ type AuthService interface {
 	VerifyOTP(email, otp string) (string, error)
 	ResetPassword(email, resetToken, newPassword string) error
 	ValidateToken(token string) (string, string, error)
-	GoogleConnect(code string) (*models.User, string, string, string, error)
+	GoogleConnect(code string, role string) (*models.User, string, string, string, error)
 }

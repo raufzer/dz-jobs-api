@@ -185,7 +185,7 @@ func (s *AuthService) ValidateToken(token string) (string, string, error) {
 	return claims.UserID, claims.Role, nil
 }
 
-func (s *AuthService) GoogleConnect(code string) (*models.User, string, string, string, error) {
+func (s *AuthService) GoogleConnect(code string, role string) (*models.User, string, string, string, error) {
 
 	config, err := config.LoadConfig()
 	if err != nil {
@@ -208,23 +208,26 @@ func (s *AuthService) GoogleConnect(code string) (*models.User, string, string, 
 	if err != nil {
 
 		if err == sql.ErrNoRows {
-
+			hashedPassword, err := utils.HashPassword(utils.GenerateRandomPassword())
+			if err != nil {
+				return nil, "", "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to hash password")
+			}
 			newUser := &models.User{
-				Name:  userInfo.Name,
-				Email: userInfo.Email,
-				Role:  "Candidate",
+				Name:     userInfo.Name,
+				Email:    userInfo.Email,
+				Role:     role,
+				Password: hashedPassword,
 			}
 
 			if err := s.userRepository.Create(newUser); err != nil {
 				return nil, "", "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to create new user")
 			}
-
 			return newUser, "", "", "register", nil
 		}
 
 		return nil, "", "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to check user existence")
 	}
-	accessToken, err := utils.GenerateToken(userInfo.ID, config.AccessTokenMaxAge, "access", "Candidate", config.AccessTokenSecret)
+	accessToken, err := utils.GenerateToken(userInfo.ID, config.AccessTokenMaxAge, "access", role, config.AccessTokenSecret)
 	if err != nil {
 		return nil, "", "", "", helpers.NewCustomError(http.StatusInternalServerError, "Failed to generate access token")
 	}

@@ -173,6 +173,8 @@ func (ac *AuthController) ResetPassword(ctx *gin.Context) {
 }
 
 func (ac *AuthController) GoogleConnect(ctx *gin.Context) {
+	role := ctx.DefaultQuery("role", "candidate")
+	ctx.SetCookie("role", role, 3600, "/", ac.config.Domain, false, true)
 	oauthConfig := utils.InitializeGoogleOAuthConfig(ac.config.GoogleClientID, ac.config.GoogleClientSecret, ac.config.GoogleRedirectURL)
 
 	authURL := oauthConfig.AuthCodeURL("", oauth2.AccessTypeOffline)
@@ -181,6 +183,15 @@ func (ac *AuthController) GoogleConnect(ctx *gin.Context) {
 }
 
 func (ac *AuthController) GoogleCallbackConnect(ctx *gin.Context) {
+	role, err := ctx.Cookie("role")
+	if err != nil || role == "" {
+		ctx.JSON(http.StatusBadRequest, response.Response{
+			Code:    http.StatusBadRequest,
+			Status:  "Bad Request",
+			Message: "Role is missing or expired",
+		})
+		return
+	}
 
 	code := ctx.DefaultQuery("code", "")
 
@@ -193,7 +204,7 @@ func (ac *AuthController) GoogleCallbackConnect(ctx *gin.Context) {
 		return
 	}
 
-	user, accessToken, refreshToken, connect, err := ac.authService.GoogleConnect(code)
+	user, accessToken, refreshToken, connect, err := ac.authService.GoogleConnect(code, role)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -204,7 +215,7 @@ func (ac *AuthController) GoogleCallbackConnect(ctx *gin.Context) {
 			Code:    http.StatusOK,
 			Status:  "OK",
 			Message: "User successfully created!",
-			Data:    user,
+			Data:    response.ToUserResponse(user),
 		})
 	} else if connect == "login" {
 		isProduction := ac.config.ServerPort != "9090"
@@ -214,7 +225,7 @@ func (ac *AuthController) GoogleCallbackConnect(ctx *gin.Context) {
 			Code:    http.StatusOK,
 			Status:  "OK",
 			Message: "Successfully logged in!",
-			Data:    user,
+			Data:    response.ToUserResponse(user),
 		})
 
 	}
