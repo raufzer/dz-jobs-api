@@ -15,9 +15,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/auth/login": {
-            "post": {
-                "description": "Authenticate user and generate access token",
+        "/auth/google/callback": {
+            "get": {
+                "description": "Handles the Google OAuth callback and logs the user in or registers the user",
                 "consumes": [
                     "application/json"
                 ],
@@ -25,12 +25,73 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Authentication"
+                    "Auth"
                 ],
-                "summary": "User Login",
+                "summary": "Handle Google OAuth callback",
                 "parameters": [
                     {
-                        "description": "Login Credentials",
+                        "type": "string",
+                        "description": "OAuth code",
+                        "name": "code",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully connected via Google",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Error in OAuth callback",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/google/connect": {
+            "get": {
+                "description": "Initiates the Google OAuth flow",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Connect with Google OAuth",
+                "responses": {
+                    "302": {
+                        "description": "Redirecting to Google OAuth",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "description": "Logs the user in and returns access and refresh tokens",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login to the system",
+                "parameters": [
+                    {
+                        "description": "Login request",
                         "name": "loginRequest",
                         "in": "body",
                         "required": true,
@@ -41,25 +102,36 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successfully logged in",
+                        "description": "Login successful",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/response.LoginResponse"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
-                        "description": "Invalid username or password",
+                        "description": "Invalid input",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "description": "Logs the user out and removes authentication cookies",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout the user",
+                "responses": {
+                    "200": {
+                        "description": "Logged out successfully",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -69,7 +141,7 @@ const docTemplate = `{
         },
         "/auth/register": {
             "post": {
-                "description": "Register a new user in the system",
+                "description": "Creates a new user in the system",
                 "consumes": [
                     "application/json"
                 ],
@@ -77,92 +149,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Authentication"
+                    "Auth"
                 ],
-                "summary": "User Registration",
+                "summary": "Register a new user",
                 "parameters": [
                     {
-                        "description": "User Registration Details",
-                        "name": "userRequest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.CreateUsersRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully created user",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid registration details",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/users": {
-            "get": {
-                "description": "Retrieves a list of all users in the system",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "List all users",
-                "responses": {
-                    "200": {
-                        "description": "Users retrieved successfully",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/response.UserResponse"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Creates a new user with the provided details",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Create a new user",
-                "parameters": [
-                    {
-                        "description": "User Creation Request",
-                        "name": "user",
+                        "description": "User registration request",
+                        "name": "createUserRequest",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -174,29 +167,11 @@ const docTemplate = `{
                     "201": {
                         "description": "User created successfully",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/response.UserResponse"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request - invalid input",
-                        "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
                     },
-                    "500": {
-                        "description": "Internal server error",
+                    "400": {
+                        "description": "Error in user creation",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -204,54 +179,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/{name}": {
-            "get": {
-                "description": "Fetches user details for a specific username",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Retrieve a user by username",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Username",
-                        "name": "name",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User found",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/response.UserResponse"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "404": {
-                        "description": "User not found",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Updates user details by username",
+        "/auth/reset-password": {
+            "post": {
+                "description": "Resets the user's password using the provided token and new password",
                 "consumes": [
                     "application/json"
                 ],
@@ -259,90 +189,109 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Users"
+                    "Auth"
                 ],
-                "summary": "Update an existing user",
+                "summary": "Reset the user's password",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Username",
-                        "name": "name",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "User Update Request",
-                        "name": "user",
+                        "description": "Reset password request",
+                        "name": "resetPasswordRequest",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.UpdateUserRequest"
+                            "$ref": "#/definitions/request.ResetPasswordRequest"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "User updated successfully",
+                        "description": "Password reset successfully",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/response.UserResponse"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
-                        "description": "Bad request - invalid input",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "User not found",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
+                        "description": "Error in password reset",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
-            },
-            "delete": {
-                "description": "Deletes a user by username",
-                "tags": [
-                    "Users"
+            }
+        },
+        "/auth/send-reset-otp": {
+            "post": {
+                "description": "Sends an OTP to the user's email for password reset",
+                "consumes": [
+                    "application/json"
                 ],
-                "summary": "Delete a user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Send OTP for password reset",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Username",
-                        "name": "name",
-                        "in": "path",
-                        "required": true
+                        "description": "Send OTP request",
+                        "name": "sendOTPRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.SendOTPRequest"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "User deleted successfully",
+                        "description": "OTP sent successfully",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
                     },
-                    "404": {
-                        "description": "User not found",
+                    "400": {
+                        "description": "Error in sending OTP",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/verify-otp": {
+            "post": {
+                "description": "Verifies the OTP sent to the user's email for password reset",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Verify OTP for password reset",
+                "parameters": [
+                    {
+                        "description": "Verify OTP request",
+                        "name": "verifyOTPRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.VerifyOTPRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OTP verified successfully",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Error in OTP verification",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -357,7 +306,8 @@ const docTemplate = `{
             "required": [
                 "email",
                 "name",
-                "password"
+                "password",
+                "role"
             ],
             "properties": {
                 "email": {
@@ -369,51 +319,67 @@ const docTemplate = `{
                 "password": {
                     "type": "string",
                     "minLength": 8
+                },
+                "role": {
+                    "type": "string",
+                    "minLength": 4
                 }
             }
         },
         "request.LoginRequest": {
             "type": "object",
             "required": [
-                "name",
+                "email",
                 "password"
             ],
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                }
-            }
-        },
-        "request.UpdateUserRequest": {
-            "type": "object",
             "properties": {
                 "email": {
                     "type": "string"
                 },
-                "name": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "minLength": 3
-                },
                 "password": {
-                    "type": "string",
-                    "minLength": 6
-                },
-                "role": {
                     "type": "string"
                 }
             }
         },
-        "response.LoginResponse": {
+        "request.ResetPasswordRequest": {
             "type": "object",
+            "required": [
+                "email",
+                "new_password"
+            ],
             "properties": {
-                "token": {
+                "email": {
                     "type": "string"
                 },
-                "token_type": {
+                "new_password": {
+                    "description": "ResetToken  string ` + "`" + `json:\"reset_token\" binding:\"required\"` + "`" + `",
+                    "type": "string",
+                    "minLength": 8
+                }
+            }
+        },
+        "request.SendOTPRequest": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.VerifyOTPRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "otp"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "otp": {
                     "type": "string"
                 }
             }
@@ -432,29 +398,6 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
-        },
-        "response.UserResponse": {
-            "type": "object",
-            "properties": {
-                "createdAt": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "role": {
-                    "type": "string"
-                },
-                "updatedAt": {
-                    "type": "string"
-                }
-            }
         }
     }
 }`
@@ -462,11 +405,11 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "dz-jobs-api-production.up.railway.app",
-	BasePath:         "/v1",
-	Schemes:          []string{"https"},
-	Title:            "DzJobs API",
-	Description:      "Complete API for DzJobs Platform",
+	Host:             "https://dz-jobs-api-production.up.railway.app",
+	BasePath:         "/api/v1",
+	Schemes:          []string{},
+	Title:            "DZ Jobs API",
+	Description:      "This is the API documentation for the DZ Jobs portal.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

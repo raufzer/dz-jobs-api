@@ -3,9 +3,14 @@ package v1
 import (
 	"dz-jobs-api/config"
 	"dz-jobs-api/internal/controllers"
+	"dz-jobs-api/internal/dto/response"
 	"dz-jobs-api/internal/middlewares"
+	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // RegisterRoutes sets up all public and protected routes
@@ -61,3 +66,23 @@ func RegisterAdminRoutes(router *gin.RouterGroup, userController *controllers.Us
 // 	router.POST("/job", recruiterController.PostJob)
 // 	router.GET("/applications", recruiterController.GetApplications)
 // }
+
+func RegisterSwaggerRoutes(server *gin.Engine) {
+	server.GET("/docs/*any", ginSwagger.WrapHandler(
+		swaggerFiles.Handler,
+		ginSwagger.URL("/v1/docs/swagger.json"),
+	))
+
+	server.GET("/v1/docs/swagger.json", func(ctx *gin.Context) {
+		swaggerContent, err := os.ReadFile("./docs/swagger.json")
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, response.Response{
+				Code:    http.StatusNotFound,
+				Status:  "Not Found",
+				Message: "Swagger documentation not found",
+			})
+			return
+		}
+		ctx.Data(http.StatusOK, "application/json", swaggerContent)
+	})
+}

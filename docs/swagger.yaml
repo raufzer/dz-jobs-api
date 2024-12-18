@@ -1,4 +1,4 @@
-basePath: /v1
+basePath: /api/v1
 definitions:
   request.CreateUsersRequest:
     properties:
@@ -9,41 +9,53 @@ definitions:
       password:
         minLength: 8
         type: string
+      role:
+        minLength: 4
+        type: string
     required:
     - email
     - name
     - password
+    - role
     type: object
   request.LoginRequest:
     properties:
-      name:
+      email:
         type: string
       password:
         type: string
     required:
-    - name
+    - email
     - password
     type: object
-  request.UpdateUserRequest:
+  request.ResetPasswordRequest:
     properties:
       email:
         type: string
-      name:
-        maxLength: 50
-        minLength: 3
+      new_password:
+        description: ResetToken  string `json:"reset_token" binding:"required"`
+        minLength: 8
         type: string
-      password:
-        minLength: 6
-        type: string
-      role:
-        type: string
+    required:
+    - email
+    - new_password
     type: object
-  response.LoginResponse:
+  request.SendOTPRequest:
     properties:
-      token:
+      email:
         type: string
-      token_type:
+    required:
+    - email
+    type: object
+  request.VerifyOTPRequest:
+    properties:
+      email:
         type: string
+      otp:
+        type: string
+    required:
+    - email
+    - otp
     type: object
   response.Response:
     properties:
@@ -55,35 +67,61 @@ definitions:
       status:
         type: string
     type: object
-  response.UserResponse:
-    properties:
-      createdAt:
-        type: string
-      email:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-      role:
-        type: string
-      updatedAt:
-        type: string
-    type: object
-host: dz-jobs-api-production.up.railway.app
+host: https://dz-jobs-api-production.up.railway.app
 info:
   contact: {}
-  description: Complete API for DzJobs Platform
-  title: DzJobs API
+  description: This is the API documentation for the DZ Jobs portal.
+  title: DZ Jobs API
   version: "1.0"
 paths:
+  /auth/google/callback:
+    get:
+      consumes:
+      - application/json
+      description: Handles the Google OAuth callback and logs the user in or registers
+        the user
+      parameters:
+      - description: OAuth code
+        in: query
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully connected via Google
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Error in OAuth callback
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Handle Google OAuth callback
+      tags:
+      - Auth
+  /auth/google/connect:
+    get:
+      consumes:
+      - application/json
+      description: Initiates the Google OAuth flow
+      produces:
+      - application/json
+      responses:
+        "302":
+          description: Redirecting to Google OAuth
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Connect with Google OAuth
+      tags:
+      - Auth
   /auth/login:
     post:
       consumes:
       - application/json
-      description: Authenticate user and generate access token
+      description: Logs the user in and returns access and refresh tokens
       parameters:
-      - description: Login Credentials
+      - description: Login request
         in: body
         name: loginRequest
         required: true
@@ -93,79 +131,40 @@ paths:
       - application/json
       responses:
         "200":
-          description: Successfully logged in
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.LoginResponse'
-              type: object
-        "400":
-          description: Invalid username or password
+          description: Login successful
           schema:
             $ref: '#/definitions/response.Response'
-      summary: User Login
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Login to the system
       tags:
-      - Authentication
+      - Auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Logs the user out and removes authentication cookies
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Logged out successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Logout the user
+      tags:
+      - Auth
   /auth/register:
     post:
       consumes:
       - application/json
-      description: Register a new user in the system
+      description: Creates a new user in the system
       parameters:
-      - description: User Registration Details
+      - description: User registration request
         in: body
-        name: userRequest
-        required: true
-        schema:
-          $ref: '#/definitions/request.CreateUsersRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully created user
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid registration details
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: User Registration
-      tags:
-      - Authentication
-  /users:
-    get:
-      description: Retrieves a list of all users in the system
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Users retrieved successfully
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  items:
-                    $ref: '#/definitions/response.UserResponse'
-                  type: array
-              type: object
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: List all users
-      tags:
-      - Users
-    post:
-      consumes:
-      - application/json
-      description: Creates a new user with the provided details
-      parameters:
-      - description: User Creation Request
-        in: body
-        name: user
+        name: createUserRequest
         required: true
         schema:
           $ref: '#/definitions/request.CreateUsersRequest'
@@ -175,114 +174,90 @@ paths:
         "201":
           description: User created successfully
           schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.UserResponse'
-              type: object
+            $ref: '#/definitions/response.Response'
         "400":
-          description: Bad request - invalid input
+          description: Error in user creation
           schema:
             $ref: '#/definitions/response.Response'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Create a new user
+      summary: Register a new user
       tags:
-      - Users
-  /users/{name}:
-    delete:
-      description: Deletes a user by username
-      parameters:
-      - description: Username
-        in: path
-        name: name
-        required: true
-        type: string
-      responses:
-        "200":
-          description: User deleted successfully
-          schema:
-            $ref: '#/definitions/response.Response'
-        "404":
-          description: User not found
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Delete a user
-      tags:
-      - Users
-    get:
-      description: Fetches user details for a specific username
-      parameters:
-      - description: Username
-        in: path
-        name: name
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: User found
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.UserResponse'
-              type: object
-        "404":
-          description: User not found
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Retrieve a user by username
-      tags:
-      - Users
-    put:
+      - Auth
+  /auth/reset-password:
+    post:
       consumes:
       - application/json
-      description: Updates user details by username
+      description: Resets the user's password using the provided token and new password
       parameters:
-      - description: Username
-        in: path
-        name: name
-        required: true
-        type: string
-      - description: User Update Request
+      - description: Reset password request
         in: body
-        name: user
+        name: resetPasswordRequest
         required: true
         schema:
-          $ref: '#/definitions/request.UpdateUserRequest'
+          $ref: '#/definitions/request.ResetPasswordRequest'
       produces:
       - application/json
       responses:
         "200":
-          description: User updated successfully
+          description: Password reset successfully
           schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.UserResponse'
-              type: object
+            $ref: '#/definitions/response.Response'
         "400":
-          description: Bad request - invalid input
+          description: Error in password reset
           schema:
             $ref: '#/definitions/response.Response'
-        "404":
-          description: User not found
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Update an existing user
+      summary: Reset the user's password
       tags:
-      - Users
-schemes:
-- https
+      - Auth
+  /auth/send-reset-otp:
+    post:
+      consumes:
+      - application/json
+      description: Sends an OTP to the user's email for password reset
+      parameters:
+      - description: Send OTP request
+        in: body
+        name: sendOTPRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.SendOTPRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OTP sent successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Error in sending OTP
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Send OTP for password reset
+      tags:
+      - Auth
+  /auth/verify-otp:
+    post:
+      consumes:
+      - application/json
+      description: Verifies the OTP sent to the user's email for password reset
+      parameters:
+      - description: Verify OTP request
+        in: body
+        name: verifyOTPRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.VerifyOTPRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OTP verified successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Error in OTP verification
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Verify OTP for password reset
+      tags:
+      - Auth
 swagger: "2.0"

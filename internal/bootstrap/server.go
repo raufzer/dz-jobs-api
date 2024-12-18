@@ -3,11 +3,10 @@ package bootstrap
 import (
 	"dz-jobs-api/config"
 	"dz-jobs-api/internal/middlewares"
+	v1 "dz-jobs-api/internal/routes/api/v1"
 	"dz-jobs-api/pkg/utils"
 
 	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func CreateServer(appConfig *config.AppConfig) *gin.Engine {
@@ -24,11 +23,7 @@ func CreateServer(appConfig *config.AppConfig) *gin.Engine {
 	server.Use(middlewares.ErrorHandlingMiddleware())
 	server.Use(middlewares.LoggingMiddleware())
 
-
-	// Swagger setup
-	server.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler,
-		ginSwagger.URL(appConfig.Domain+"/docs/doc.json"),
-	))
-
+	// Set-up Docs
+	v1.RegisterSwaggerRoutes(server)
 	return server
 }

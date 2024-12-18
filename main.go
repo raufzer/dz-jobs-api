@@ -7,6 +7,11 @@ import (
 	"log"
 )
 
+// @title DZ Jobs API
+// @version 1.0
+// @description This is the API documentation for the DZ Jobs portal.
+// @host https://dz-jobs-api-production.up.railway.app
+// @BasePath /api/v1
 func main() {
 
 	// Load app configuration
