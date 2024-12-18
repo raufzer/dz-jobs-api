@@ -6,7 +6,7 @@
         "contact": {},
         "version": "1.0"
     },
-    "host": "https://dz-jobs-api-production.up.railway.app",
+    "host": "dz-jobs-api-production.up.railway.app",
     "basePath": "/api/v1",
     "paths": {
         "/auth/google/callback": {
