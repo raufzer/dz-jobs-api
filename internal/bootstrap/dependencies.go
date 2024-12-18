@@ -29,6 +29,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	authService := services.NewAuthService(
 		userRepo,
 		redisRepo,
+		cfg,
 	)
 	userService := services.NewUserService(userRepo)
 
