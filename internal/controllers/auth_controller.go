@@ -254,15 +254,6 @@ func (ac *AuthController) GoogleConnect(ctx *gin.Context) {
 	ctx.Redirect(http.StatusFound, authURL)
 }
 
-// @Summary Handle Google OAuth callback
-// @Description Handles the Google OAuth callback and logs the user in or registers the user
-// @Tags Auth
-// @Accept json
-// @Produce json
-// @Param code query string true "OAuth code"
-// @Success 200 {object} response.Response "Successfully connected via Google"
-// @Failure 400 {object} response.Response "Error in OAuth callback"
-// @Router /auth/google/callback [get]
 func (ac *AuthController) GoogleCallbackConnect(ctx *gin.Context) {
 	role, err := ctx.Cookie("role")
 	if err != nil || role == "" {

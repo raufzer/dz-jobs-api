@@ -15,44 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/auth/google/callback": {
-            "get": {
-                "description": "Handles the Google OAuth callback and logs the user in or registers the user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Handle Google OAuth callback",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "OAuth code",
-                        "name": "code",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully connected via Google",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Error in OAuth callback",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
         "/auth/google/connect": {
             "get": {
                 "description": "Initiates the Google OAuth flow",
@@ -406,7 +368,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "dz-jobs-api-production.up.railway.app",
-	BasePath:         "/api/v1",
+	BasePath:         "v1",
 	Schemes:          []string{},
 	Title:            "DZ Jobs API",
 	Description:      "This is the API documentation for the DZ Jobs portal.",

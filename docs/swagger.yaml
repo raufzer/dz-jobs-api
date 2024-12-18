@@ -1,4 +1,4 @@
-basePath: /api/v1
+basePath: v1
 definitions:
   request.CreateUsersRequest:
     properties:
@@ -74,32 +74,6 @@ info:
   title: DZ Jobs API
   version: "1.0"
 paths:
-  /auth/google/callback:
-    get:
-      consumes:
-      - application/json
-      description: Handles the Google OAuth callback and logs the user in or registers
-        the user
-      parameters:
-      - description: OAuth code
-        in: query
-        name: code
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully connected via Google
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Error in OAuth callback
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Handle Google OAuth callback
-      tags:
-      - Auth
   /auth/google/connect:
     get:
       consumes:
