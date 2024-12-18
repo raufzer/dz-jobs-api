@@ -368,7 +368,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "dz-jobs-api-production.up.railway.app",
-	BasePath:         "v1",
+	BasePath:         "/v1",
 	Schemes:          []string{},
 	Title:            "DZ Jobs API",
 	Description:      "This is the API documentation for the DZ Jobs portal.",

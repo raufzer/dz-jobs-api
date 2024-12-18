@@ -7,7 +7,7 @@
         "version": "1.0"
     },
     "host": "dz-jobs-api-production.up.railway.app",
-    "basePath": "v1",
+    "basePath": "/v1",
     "paths": {
         "/auth/google/connect": {
             "get": {
