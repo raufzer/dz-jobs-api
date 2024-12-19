@@ -1,9 +1,13 @@
 package candidate
 
+import "github.com/google/uuid"
+
 type AddSkillRequest struct {
-	Skill string `json:"skill" binding:"required"`
+	CandidateID uuid.UUID `json:"candidate_id" binding:"required"`
+	Skill       string    `json:"skill" binding:"required"`
 }
 
 type RemoveSkillRequest struct {
-	Skill string `json:"skill" binding:"required"`
+	CandidateID uuid.UUID `json:"candidate_id" binding:"required"`
+	Skill       string    `json:"skill" binding:"required"`
 }
