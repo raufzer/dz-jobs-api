@@ -1,4 +1,4 @@
-package request
+package candidate
 
 type UpdateCandidatePersonalInfoRequest struct {
 	Name    string `json:"name" binding:"required"`

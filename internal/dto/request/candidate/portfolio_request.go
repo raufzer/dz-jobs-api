@@ -1,4 +1,4 @@
-package request
+package candidate
 
 type AddPortfolioRequest struct {
 	ProjectName string `json:"project_name" binding:"required"`

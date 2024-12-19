@@ -1,4 +1,4 @@
-package request
+package candidate
 
 type AddSkillRequest struct {
 	Skill string `json:"skill" binding:"required"`

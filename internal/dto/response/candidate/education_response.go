@@ -1,4 +1,4 @@
-package response
+package candidate
 
 import (
 	models "dz-jobs-api/internal/models/candidate"
