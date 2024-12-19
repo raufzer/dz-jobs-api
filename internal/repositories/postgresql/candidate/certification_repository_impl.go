@@ -12,7 +12,7 @@ type SQLCandidateCertificationRepository struct {
 	db *sql.DB
 }
 
-func NewCandidateCertificationRepository(db *sql.DB) repositoryInterfaces.CandidateCertificationRepository {
+func NewCandidateCertificationRepository(db *sql.DB) repositoryInterfaces.CandidateCertificationsRepository {
 	return &SQLCandidateCertificationRepository{db: db}
 }
 
