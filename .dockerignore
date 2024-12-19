@@ -1,0 +1,59 @@
+# Binaries
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Compiled object files
+*.o
+*.a
+*.out
+
+# Build directories
+/build/
+bin/
+
+# Dependency directories
+/vendor/
+node_modules/
+
+# Configuration files
+*.env
+config/local.yaml
+
+# Version control
+.git/
+.gitignore
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+
+# Logs and temp files
+*.log
+*.tmp
+*.bak
+*.pid
+*.gz
+*.tgz
+*.zip
+
+# Docker-related files
+Dockerfile~
+
+# Test artifacts
+*.cover
+*.test
+
+# Cache
+*.cache/
+.cache/
+
+# Output of 'go test'
+testdata/
+coverage.out
+
+# OS generated files
+.DS_Store
+Thumbs.db
