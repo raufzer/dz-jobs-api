@@ -17,12 +17,10 @@ require (
 	github.com/swaggo/swag v1.16.4
 	golang.org/x/crypto v0.29.0
 	golang.org/x/oauth2 v0.24.0
+	golang.org/x/time v0.8.0
 )
 
-require (
-	cloud.google.com/go/compute/metadata v0.3.0 // indirect
-	golang.org/x/time v0.8.0 // indirect
-)
+require cloud.google.com/go/compute/metadata v0.3.0 // indirect
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
