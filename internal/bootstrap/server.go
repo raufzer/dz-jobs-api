@@ -22,6 +22,7 @@ func CreateServer(appConfig *config.AppConfig) *gin.Engine {
 	server.Use(gin.Recovery())
 	server.Use(middlewares.ErrorHandlingMiddleware())
 	server.Use(middlewares.LoggingMiddleware())
+	server.Use(middlewares.RateLimiter(20, 10))
 
 	// Set-up Docs
 	v1.RegisterSwaggerRoutes(server)
