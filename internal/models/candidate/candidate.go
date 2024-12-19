@@ -1,4 +1,4 @@
-package models
+package candidate
 
 import (
 	"github.com/google/uuid"

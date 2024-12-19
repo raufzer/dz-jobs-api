@@ -1,4 +1,4 @@
-package models
+package candidate
 
 import (
 	"time"
