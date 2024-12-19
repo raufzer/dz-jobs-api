@@ -15,32 +15,26 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/auth/google/connect": {
+        "/auth/google-connect": {
             "get": {
-                "description": "Initiates the Google OAuth flow",
-                "consumes": [
-                    "application/json"
-                ],
+                "description": "Connect with Google OAuth",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Auth"
+                    "auth"
                 ],
-                "summary": "Connect with Google OAuth",
+                "summary": "Google OAuth Connect",
                 "responses": {
                     "302": {
-                        "description": "Redirecting to Google OAuth",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
+                        "description": "Found"
                     }
                 }
             }
         },
         "/auth/login": {
             "post": {
-                "description": "Logs the user in and returns access and refresh tokens",
+                "description": "Login user with email and password",
                 "consumes": [
                     "application/json"
                 ],
@@ -48,13 +42,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Auth"
+                    "auth"
                 ],
-                "summary": "Login to the system",
+                "summary": "Login user",
                 "parameters": [
                     {
                         "description": "Login request",
-                        "name": "loginRequest",
+                        "name": "request",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -64,13 +58,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Login successful",
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
-                        "description": "Invalid input",
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -80,20 +74,43 @@ const docTemplate = `{
         },
         "/auth/logout": {
             "post": {
-                "description": "Logs the user out and removes authentication cookies",
-                "consumes": [
-                    "application/json"
-                ],
+                "description": "Logout user and clear cookies",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Auth"
+                    "auth"
                 ],
-                "summary": "Logout the user",
+                "summary": "Logout user",
                 "responses": {
                     "200": {
-                        "description": "Logged out successfully",
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/refresh-token": {
+            "post": {
+                "description": "Refresh access token using refresh token",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Refresh access token",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -103,7 +120,7 @@ const docTemplate = `{
         },
         "/auth/register": {
             "post": {
-                "description": "Creates a new user in the system",
+                "description": "Register a new user",
                 "consumes": [
                     "application/json"
                 ],
@@ -111,13 +128,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Auth"
+                    "auth"
                 ],
-                "summary": "Register a new user",
+                "summary": "Register user",
                 "parameters": [
                     {
-                        "description": "User registration request",
-                        "name": "createUserRequest",
+                        "description": "Register request",
+                        "name": "request",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -127,13 +144,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "User created successfully",
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
-                        "description": "Error in user creation",
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -143,7 +160,7 @@ const docTemplate = `{
         },
         "/auth/reset-password": {
             "post": {
-                "description": "Resets the user's password using the provided token and new password",
+                "description": "Reset user's password using reset token",
                 "consumes": [
                     "application/json"
                 ],
@@ -151,13 +168,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Auth"
+                    "auth"
                 ],
-                "summary": "Reset the user's password",
+                "summary": "Reset password",
                 "parameters": [
                     {
                         "description": "Reset password request",
-                        "name": "resetPasswordRequest",
+                        "name": "request",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -167,13 +184,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Password reset successfully",
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
-                        "description": "Error in password reset",
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -183,7 +200,7 @@ const docTemplate = `{
         },
         "/auth/send-reset-otp": {
             "post": {
-                "description": "Sends an OTP to the user's email for password reset",
+                "description": "Send OTP to user's email for password reset",
                 "consumes": [
                     "application/json"
                 ],
@@ -191,13 +208,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Auth"
+                    "auth"
                 ],
                 "summary": "Send OTP for password reset",
                 "parameters": [
                     {
                         "description": "Send OTP request",
-                        "name": "sendOTPRequest",
+                        "name": "request",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -207,13 +224,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OTP sent successfully",
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
-                        "description": "Error in sending OTP",
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -223,7 +240,7 @@ const docTemplate = `{
         },
         "/auth/verify-otp": {
             "post": {
-                "description": "Verifies the OTP sent to the user's email for password reset",
+                "description": "Verify OTP and generate reset token",
                 "consumes": [
                     "application/json"
                 ],
@@ -231,13 +248,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Auth"
+                    "auth"
                 ],
-                "summary": "Verify OTP for password reset",
+                "summary": "Verify OTP",
                 "parameters": [
                     {
                         "description": "Verify OTP request",
-                        "name": "verifyOTPRequest",
+                        "name": "request",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -247,13 +264,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OTP verified successfully",
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
-                        "description": "Error in OTP verification",
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }

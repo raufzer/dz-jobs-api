@@ -74,30 +74,26 @@ info:
   title: DZ Jobs API
   version: "1.0"
 paths:
-  /auth/google/connect:
+  /auth/google-connect:
     get:
-      consumes:
-      - application/json
-      description: Initiates the Google OAuth flow
+      description: Connect with Google OAuth
       produces:
       - application/json
       responses:
         "302":
-          description: Redirecting to Google OAuth
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Connect with Google OAuth
+          description: Found
+      summary: Google OAuth Connect
       tags:
-      - Auth
+      - auth
   /auth/login:
     post:
       consumes:
       - application/json
-      description: Logs the user in and returns access and refresh tokens
+      description: Login user with email and password
       parameters:
       - description: Login request
         in: body
-        name: loginRequest
+        name: request
         required: true
         schema:
           $ref: '#/definitions/request.LoginRequest'
@@ -105,40 +101,55 @@ paths:
       - application/json
       responses:
         "200":
-          description: Login successful
+          description: OK
           schema:
             $ref: '#/definitions/response.Response'
         "400":
-          description: Invalid input
+          description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: Login to the system
+      summary: Login user
       tags:
-      - Auth
+      - auth
   /auth/logout:
     post:
-      consumes:
-      - application/json
-      description: Logs the user out and removes authentication cookies
+      description: Logout user and clear cookies
       produces:
       - application/json
       responses:
         "200":
-          description: Logged out successfully
+          description: OK
           schema:
             $ref: '#/definitions/response.Response'
-      summary: Logout the user
+      summary: Logout user
       tags:
-      - Auth
+      - auth
+  /auth/refresh-token:
+    post:
+      description: Refresh access token using refresh token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Refresh access token
+      tags:
+      - auth
   /auth/register:
     post:
       consumes:
       - application/json
-      description: Creates a new user in the system
+      description: Register a new user
       parameters:
-      - description: User registration request
+      - description: Register request
         in: body
-        name: createUserRequest
+        name: request
         required: true
         schema:
           $ref: '#/definitions/request.CreateUsersRequest'
@@ -146,25 +157,25 @@ paths:
       - application/json
       responses:
         "201":
-          description: User created successfully
+          description: Created
           schema:
             $ref: '#/definitions/response.Response'
         "400":
-          description: Error in user creation
+          description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: Register a new user
+      summary: Register user
       tags:
-      - Auth
+      - auth
   /auth/reset-password:
     post:
       consumes:
       - application/json
-      description: Resets the user's password using the provided token and new password
+      description: Reset user's password using reset token
       parameters:
       - description: Reset password request
         in: body
-        name: resetPasswordRequest
+        name: request
         required: true
         schema:
           $ref: '#/definitions/request.ResetPasswordRequest'
@@ -172,25 +183,25 @@ paths:
       - application/json
       responses:
         "200":
-          description: Password reset successfully
+          description: OK
           schema:
             $ref: '#/definitions/response.Response'
         "400":
-          description: Error in password reset
+          description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: Reset the user's password
+      summary: Reset password
       tags:
-      - Auth
+      - auth
   /auth/send-reset-otp:
     post:
       consumes:
       - application/json
-      description: Sends an OTP to the user's email for password reset
+      description: Send OTP to user's email for password reset
       parameters:
       - description: Send OTP request
         in: body
-        name: sendOTPRequest
+        name: request
         required: true
         schema:
           $ref: '#/definitions/request.SendOTPRequest'
@@ -198,25 +209,25 @@ paths:
       - application/json
       responses:
         "200":
-          description: OTP sent successfully
+          description: OK
           schema:
             $ref: '#/definitions/response.Response'
         "400":
-          description: Error in sending OTP
+          description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
       summary: Send OTP for password reset
       tags:
-      - Auth
+      - auth
   /auth/verify-otp:
     post:
       consumes:
       - application/json
-      description: Verifies the OTP sent to the user's email for password reset
+      description: Verify OTP and generate reset token
       parameters:
       - description: Verify OTP request
         in: body
-        name: verifyOTPRequest
+        name: request
         required: true
         schema:
           $ref: '#/definitions/request.VerifyOTPRequest'
@@ -224,14 +235,14 @@ paths:
       - application/json
       responses:
         "200":
-          description: OTP verified successfully
+          description: OK
           schema:
             $ref: '#/definitions/response.Response'
         "400":
-          description: Error in OTP verification
+          description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: Verify OTP for password reset
+      summary: Verify OTP
       tags:
-      - Auth
+      - auth
 swagger: "2.0"

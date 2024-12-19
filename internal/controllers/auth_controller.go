@@ -13,11 +13,13 @@ import (
 	"golang.org/x/oauth2"
 )
 
+// AuthController handles authentication related operations
 type AuthController struct {
 	authService serviceInterfaces.AuthService
 	config      *config.AppConfig
 }
 
+// NewAuthController creates a new AuthController
 func NewAuthController(service serviceInterfaces.AuthService, config *config.AppConfig) *AuthController {
 	return &AuthController{
 		authService: service,
@@ -25,14 +27,15 @@ func NewAuthController(service serviceInterfaces.AuthService, config *config.App
 	}
 }
 
-// @Summary Login to the system
-// @Description Logs the user in and returns access and refresh tokens
-// @Tags Auth
+// Login godoc
+// @Summary Login user
+// @Description Login user with email and password
+// @Tags auth
 // @Accept json
 // @Produce json
-// @Param loginRequest body request.LoginRequest true "Login request"
-// @Success 200 {object} response.Response "Login successful"
-// @Failure 400 {object} response.Response "Invalid input"
+// @Param request body request.LoginRequest true "Login request"
+// @Success 200 {object} response.Response
+// @Failure 400 {object} response.Response
 // @Router /auth/login [post]
 func (ac *AuthController) Login(ctx *gin.Context) {
 	var req request.LoginRequest
@@ -58,13 +61,14 @@ func (ac *AuthController) Login(ctx *gin.Context) {
 	})
 }
 
-// @Summary Refresh the access token
-// @Description Refreshes the user's access token using the refresh token stored in cookies
-// @Tags Auth
-// @Accept json
+// RefreshToken godoc
+// @Summary Refresh access token
+// @Description Refresh access token using refresh token
+// @Tags auth
 // @Produce json
-// @Success 200 {object} response.Response "Access token refreshed"
-// @Failure 400 {object} response.Response "Error
+// @Success 200 {object} response.Response
+// @Failure 400 {object} response.Response
+// @Router /auth/refresh-token [post]
 func (ac *AuthController) RefreshToken(ctx *gin.Context) {
 	refreshToken, err := ctx.Cookie("refresh_token")
 	if err != nil {
@@ -95,12 +99,12 @@ func (ac *AuthController) RefreshToken(ctx *gin.Context) {
 	})
 }
 
-// @Summary Logout the user
-// @Description Logs the user out and removes authentication cookies
-// @Tags Auth
-// @Accept json
+// Logout godoc
+// @Summary Logout user
+// @Description Logout user and clear cookies
+// @Tags auth
 // @Produce json
-// @Success 200 {object} response.Response "Logged out successfully"
+// @Success 200 {object} response.Response
 // @Router /auth/logout [post]
 func (ac *AuthController) Logout(ctx *gin.Context) {
 	isProduction := ac.config.ServerPort != "9090"
@@ -113,14 +117,15 @@ func (ac *AuthController) Logout(ctx *gin.Context) {
 	})
 }
 
-// @Summary Register a new user
-// @Description Creates a new user in the system
-// @Tags Auth
+// Register godoc
+// @Summary Register user
+// @Description Register a new user
+// @Tags auth
 // @Accept json
 // @Produce json
-// @Param createUserRequest body request.CreateUsersRequest true "User registration request"
-// @Success 201 {object} response.Response "User created successfully"
-// @Failure 400 {object} response.Response "Error in user creation"
+// @Param request body request.CreateUsersRequest true "Register request"
+// @Success 201 {object} response.Response
+// @Failure 400 {object} response.Response
 // @Router /auth/register [post]
 func (ac *AuthController) Register(ctx *gin.Context) {
 	var req request.CreateUsersRequest
@@ -143,14 +148,15 @@ func (ac *AuthController) Register(ctx *gin.Context) {
 	})
 }
 
+// SendResetOTP godoc
 // @Summary Send OTP for password reset
-// @Description Sends an OTP to the user's email for password reset
-// @Tags Auth
+// @Description Send OTP to user's email for password reset
+// @Tags auth
 // @Accept json
 // @Produce json
-// @Param sendOTPRequest body request.SendOTPRequest true "Send OTP request"
-// @Success 200 {object} response.Response "OTP sent successfully"
-// @Failure 400 {object} response.Response "Error in sending OTP"
+// @Param request body request.SendOTPRequest true "Send OTP request"
+// @Success 200 {object} response.Response
+// @Failure 400 {object} response.Response
 // @Router /auth/send-reset-otp [post]
 func (ac *AuthController) SendResetOTP(ctx *gin.Context) {
 	var req request.SendOTPRequest
@@ -172,14 +178,15 @@ func (ac *AuthController) SendResetOTP(ctx *gin.Context) {
 	})
 }
 
-// @Summary Verify OTP for password reset
-// @Description Verifies the OTP sent to the user's email for password reset
-// @Tags Auth
+// VerifyOTP godoc
+// @Summary Verify OTP
+// @Description Verify OTP and generate reset token
+// @Tags auth
 // @Accept json
 // @Produce json
-// @Param verifyOTPRequest body request.VerifyOTPRequest true "Verify OTP request"
-// @Success 200 {object} response.Response "OTP verified successfully"
-// @Failure 400 {object} response.Response "Error in OTP verification"
+// @Param request body request.VerifyOTPRequest true "Verify OTP request"
+// @Success 200 {object} response.Response
+// @Failure 400 {object} response.Response
 // @Router /auth/verify-otp [post]
 func (ac *AuthController) VerifyOTP(ctx *gin.Context) {
 	var req request.VerifyOTPRequest
@@ -198,18 +205,19 @@ func (ac *AuthController) VerifyOTP(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",
-		Message: "OTP vefiy successfully!",
+		Message: "OTP verify successfully!",
 	})
 }
 
-// @Summary Reset the user's password
-// @Description Resets the user's password using the provided token and new password
-// @Tags Auth
+// ResetPassword godoc
+// @Summary Reset password
+// @Description Reset user's password using reset token
+// @Tags auth
 // @Accept json
 // @Produce json
-// @Param resetPasswordRequest body request.ResetPasswordRequest true "Reset password request"
-// @Success 200 {object} response.Response "Password reset successfully"
-// @Failure 400 {object} response.Response "Error in password reset"
+// @Param request body request.ResetPasswordRequest true "Reset password request"
+// @Success 200 {object} response.Response
+// @Failure 400 {object} response.Response
 // @Router /auth/reset-password [post]
 func (ac *AuthController) ResetPassword(ctx *gin.Context) {
 	token, err := ctx.Cookie("reset_token")
@@ -237,13 +245,13 @@ func (ac *AuthController) ResetPassword(ctx *gin.Context) {
 	})
 }
 
-// @Summary Connect with Google OAuth
-// @Description Initiates the Google OAuth flow
-// @Tags Auth
-// @Accept json
+// GoogleConnect godoc
+// @Summary Google OAuth Connect
+// @Description Connect with Google OAuth
+// @Tags auth
 // @Produce json
-// @Success 302 {object} response.Response "Redirecting to Google OAuth"
-// @Router /auth/google/connect [get]
+// @Success 302
+// @Router /auth/google-connect [get]
 func (ac *AuthController) GoogleConnect(ctx *gin.Context) {
 	role := ctx.DefaultQuery("role", "candidate")
 	ctx.SetCookie("role", role, 3600, "/", ac.config.Domain, false, true)
