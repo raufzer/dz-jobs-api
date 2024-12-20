@@ -56,7 +56,6 @@ func ValidateToken(tokenString string, secretKey string, expectedPurpose string)
 		if claims.Purpose != expectedPurpose {
 			return nil, fmt.Errorf("token purpose mismatch")
 		}
-		fmt.Println("Claims extracted from token:", claims)
 		return claims, nil
 	}
 
