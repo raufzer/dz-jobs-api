@@ -3,8 +3,10 @@ package v1
 import (
 	"dz-jobs-api/config"
 	"dz-jobs-api/internal/controllers"
+	candidateControllers "dz-jobs-api/internal/controllers/candidate"
 	"dz-jobs-api/internal/dto/response"
 	"dz-jobs-api/internal/middlewares"
+	v1 "dz-jobs-api/internal/routes/api/v1/candidate"
 	"net/http"
 	"os"
 
@@ -14,7 +16,7 @@ import (
 )
 
 // RegisterRoutes sets up all public and protected routes
-func RegisterRoutes(router *gin.Engine, authController *controllers.AuthController, userController *controllers.UserController, appConfig *config.AppConfig) {
+func RegisterRoutes(router *gin.Engine, authController *controllers.AuthController, userController *controllers.UserController, candidateController *candidateControllers.CandidateController, personalInfoController *candidateControllers.CandidatePersonalInfoController, educationController *candidateControllers.CandidateEducationController, experienceController *candidateControllers.CandidateExperienceController, appConfig *config.AppConfig) {
 	// Base path
 	basePath := router.Group("/v1")
 
@@ -24,7 +26,7 @@ func RegisterRoutes(router *gin.Engine, authController *controllers.AuthControll
 	// Protected routes (authentication required)
 	protected := basePath.Group("/")
 	protected.Use(middlewares.AuthMiddleware(appConfig))
-	RegisterProtectedRoutes(protected, userController)
+	RegisterProtectedRoutes(protected, userController, candidateController, personalInfoController, educationController, experienceController)
 }
 
 // RegisterPublicRoutes handles routes that don't require authentication
@@ -33,16 +35,16 @@ func RegisterPublicRoutes(router *gin.RouterGroup, authController *controllers.A
 }
 
 // RegisterProtectedRoutes handles routes that require authentication
-func RegisterProtectedRoutes(router *gin.RouterGroup, userController *controllers.UserController) {
+func RegisterProtectedRoutes(router *gin.RouterGroup, userController *controllers.UserController, candidateController *candidateControllers.CandidateController, personalInfoController *candidateControllers.CandidatePersonalInfoController, educationController *candidateControllers.CandidateEducationController, experienceController *candidateControllers.CandidateExperienceController) {
 	// Admin-specific routes
 	adminGroup := router.Group("/admin")
 	adminGroup.Use(middlewares.RoleMiddleware("admin"))
 	RegisterAdminRoutes(adminGroup, userController)
 
-	// Candidate-specific routes (Future Implementation)
-	// candidateGroup := router.Group("/candidate")
-	// candidateGroup.Use(middlewares.RoleMiddleware("candidate"))
-	// RegisterCandidateRoutes(candidateGroup, candidateController)
+	// Candidate-specific routes
+	candidateGroup := router.Group("/candidate")
+	candidateGroup.Use(middlewares.RoleMiddleware("candidate"))
+	RegisterCandidateRoutes(candidateGroup, candidateController, personalInfoController, educationController, experienceController)
 
 	// Recruiter-specific routes (Future Implementation)
 	// recruiterGroup := router.Group("/recruiter")
@@ -56,10 +58,12 @@ func RegisterAdminRoutes(router *gin.RouterGroup, userController *controllers.Us
 }
 
 // RegisterCandidateRoutes handles routes accessible only to candidates
-// func RegisterCandidateRoutes(router *gin.RouterGroup, candidateController *controllers.CandidateController) {
-// 	router.GET("/profile", candidateController.GetProfile)
-// 	router.POST("/apply", candidateController.ApplyForJob)
-// }
+func RegisterCandidateRoutes(router *gin.RouterGroup, candidateController *candidateControllers.CandidateController, personalInfoController *candidateControllers.CandidatePersonalInfoController, educationController *candidateControllers.CandidateEducationController, experienceController *candidateControllers.CandidateExperienceController) {
+	v1.CandidateRoutes(router, candidateController)
+	v1.PersonalInfoRoutes(router, personalInfoController)
+	v1.ExperienceRoutes(router, experienceController)
+	v1.EducationRoutes(router, educationController)
+}
 
 // RegisterRecruiterRoutes handles routes accessible only to recruiters
 // func RegisterRecruiterRoutes(router *gin.RouterGroup, recruiterController *controllers.RecruiterController) {
@@ -86,3 +90,54 @@ func RegisterSwaggerRoutes(server *gin.Engine) {
 		ctx.Data(http.StatusOK, "application/json", swaggerContent)
 	})
 }
+
+// package v1
+
+// import (
+// 	controllers "dz-jobs-api/internal/controllers/candidate"
+// 	"github.com/gin-gonic/gin"
+// )
+
+// func CandidateSkillsRoutes(rg *gin.RouterGroup, candidateSkillsController *controllers.CandidateSkillsController) {
+// 	skillsRoute := rg.Group("/candidates/:candidate_id/skills")
+// 	{
+// 		skillsRoute.POST("/", candidateSkillsController.CreateSkill)
+// 		skillsRoute.GET("/", candidateSkillsController.GetSkillsByID)
+// 		skillsRoute.PUT("/", candidateSkillsController.UpdateSkill)
+// 		skillsRoute.DELETE("/", candidateSkillsController.DeleteSkill)
+// 	}
+// }
+
+// package v1
+
+// import (
+// 	controllers "dz-jobs-api/internal/controllers/candidate"
+// 	"github.com/gin-gonic/gin"
+// )
+
+// func CandidateCertificationRoutes(rg *gin.RouterGroup, candidateCertificationController *controllers.CandidateCertificationController) {
+// 	certificationRoute := rg.Group("/candidates/:candidate_id/certifications")
+// 	{
+// 		certificationRoute.POST("/", candidateCertificationController.CreateCertification)
+// 		certificationRoute.GET("/", candidateCertificationController.GetCertificationByID)
+// 		certificationRoute.PUT("/", candidateCertificationController.UpdateCertification)
+// 		certificationRoute.DELETE("/", candidateCertificationController.DeleteCertification)
+// 	}
+// }
+
+// package v1
+
+// import (
+// 	controllers "dz-jobs-api/internal/controllers/candidate"
+// 	"github.com/gin-gonic/gin"
+// )
+
+// func CandidatePortfolioRoutes(rg *gin.RouterGroup, candidatePortfolioController *controllers.CandidatePortfolioController) {
+// 	portfolioRoute := rg.Group("/candidates/:candidate_id/portfolio")
+// 	{
+// 		portfolioRoute.POST("/", candidatePortfolioController.CreatePortfolio)
+// 		portfolioRoute.GET("/", candidatePortfolioController.GetPortfolioByID)
+// 		portfolioRoute.PUT("/", candidatePortfolioController.UpdatePortfolio)
+// 		portfolioRoute.DELETE("/", candidatePortfolioController.DeletePortfolio)
+// 	}
+// }
