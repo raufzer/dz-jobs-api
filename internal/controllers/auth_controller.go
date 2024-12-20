@@ -4,7 +4,7 @@ import (
 	"dz-jobs-api/config"
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/dto/response"
-	"dz-jobs-api/internal/helpers"
+	"dz-jobs-api/internal/integrations"
 	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
 	"dz-jobs-api/pkg/utils"
 	"net/http"
@@ -51,8 +51,8 @@ func (ac *AuthController) Login(ctx *gin.Context) {
 		return
 	}
 	isProduction := ac.config.ServerPort != "9090"
-	helpers.SetAuthCookie(ctx, "access_token", accessToken, ac.config.AccessTokenMaxAge, ac.config.Domain, isProduction)
-	helpers.SetAuthCookie(ctx, "refresh_token", refreshToken, ac.config.RefreshTokenMaxAge, ac.config.Domain, isProduction)
+	utils.SetAuthCookie(ctx, "access_token", accessToken, ac.config.AccessTokenMaxAge, ac.config.Domain, isProduction)
+	utils.SetAuthCookie(ctx, "refresh_token", refreshToken, ac.config.RefreshTokenMaxAge, ac.config.Domain, isProduction)
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",
@@ -91,7 +91,7 @@ func (ac *AuthController) RefreshToken(ctx *gin.Context) {
 	}
 
 	isProduction := ac.config.ServerPort != "9090"
-	helpers.SetAuthCookie(ctx, "access_token", accessToken, ac.config.AccessTokenMaxAge, ac.config.Domain, isProduction)
+	utils.SetAuthCookie(ctx, "access_token", accessToken, ac.config.AccessTokenMaxAge, ac.config.Domain, isProduction)
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",
@@ -108,8 +108,8 @@ func (ac *AuthController) RefreshToken(ctx *gin.Context) {
 // @Router /auth/logout [post]
 func (ac *AuthController) Logout(ctx *gin.Context) {
 	isProduction := ac.config.ServerPort != "9090"
-	helpers.SetAuthCookie(ctx, "access_token", "", -1, ac.config.Domain, isProduction)
-	helpers.SetAuthCookie(ctx, "refresh_token", "", -1, ac.config.Domain, isProduction)
+	utils.SetAuthCookie(ctx, "access_token", "", -1, ac.config.Domain, isProduction)
+	utils.SetAuthCookie(ctx, "refresh_token", "", -1, ac.config.Domain, isProduction)
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",
@@ -201,7 +201,7 @@ func (ac *AuthController) VerifyOTP(ctx *gin.Context) {
 		return
 	}
 	isProduction := ac.config.ServerPort != "9090"
-	helpers.SetAuthCookie(ctx, "reset_token", resetToken, ac.config.ResetPasswordTokenMaxAge, ac.config.Domain, isProduction)
+	utils.SetAuthCookie(ctx, "reset_token", resetToken, ac.config.ResetPasswordTokenMaxAge, ac.config.Domain, isProduction)
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",
@@ -255,7 +255,7 @@ func (ac *AuthController) ResetPassword(ctx *gin.Context) {
 func (ac *AuthController) GoogleConnect(ctx *gin.Context) {
 	role := ctx.DefaultQuery("role", "candidate")
 	ctx.SetCookie("role", role, 3600, "/", ac.config.Domain, false, true)
-	oauthConfig := utils.InitializeGoogleOAuthConfig(ac.config.GoogleClientID, ac.config.GoogleClientSecret, ac.config.GoogleRedirectURL)
+	oauthConfig := integrations.InitializeGoogleOAuthConfig(ac.config.GoogleClientID, ac.config.GoogleClientSecret, ac.config.GoogleRedirectURL)
 
 	authURL := oauthConfig.AuthCodeURL("", oauth2.AccessTypeOffline)
 
@@ -299,8 +299,8 @@ func (ac *AuthController) GoogleCallbackConnect(ctx *gin.Context) {
 		})
 	} else if connect == "login" {
 		isProduction := ac.config.ServerPort != "9090"
-		helpers.SetAuthCookie(ctx, "access_token", accessToken, ac.config.AccessTokenMaxAge, ac.config.Domain, isProduction)
-		helpers.SetAuthCookie(ctx, "refresh_token", refreshToken, ac.config.RefreshTokenMaxAge, ac.config.Domain, isProduction)
+		utils.SetAuthCookie(ctx, "access_token", accessToken, ac.config.AccessTokenMaxAge, ac.config.Domain, isProduction)
+		utils.SetAuthCookie(ctx, "refresh_token", refreshToken, ac.config.RefreshTokenMaxAge, ac.config.Domain, isProduction)
 		ctx.JSON(http.StatusOK, response.Response{
 			Code:    http.StatusOK,
 			Status:  "OK",

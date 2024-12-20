@@ -2,7 +2,7 @@ package candidate
 
 import (
 	request "dz-jobs-api/internal/dto/request/candidate"
-	"dz-jobs-api/internal/helpers"
+	"dz-jobs-api/pkg/utils"
 	models "dz-jobs-api/internal/models/candidate"
 	interfaces "dz-jobs-api/internal/repositories/interfaces/candidate"
 	"net/http"
@@ -29,7 +29,7 @@ func (s *candidatePortfolioService) AddPortfolio(request request.AddPortfolioReq
 
 	err := s.portfolioRepo.CreatePortfolio(*portfolio)
 	if err != nil {
-		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to add portfolio project")
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to add portfolio project")
 	}
 
 	return portfolio, nil
@@ -38,7 +38,7 @@ func (s *candidatePortfolioService) AddPortfolio(request request.AddPortfolioReq
 func (s *candidatePortfolioService) GetPortfolioByCandidateID(candidateID uuid.UUID) ([]models.CandidatePortfolio, error) {
 	portfolio, err := s.portfolioRepo.GetPortfolioByCandidateID(candidateID)
 	if err != nil {
-		return nil, helpers.NewCustomError(http.StatusNotFound, "No portfolio projects found")
+		return nil, utils.NewCustomError(http.StatusNotFound, "No portfolio projects found")
 	}
 
 	return portfolio, nil
@@ -47,7 +47,7 @@ func (s *candidatePortfolioService) GetPortfolioByCandidateID(candidateID uuid.U
 func (s *candidatePortfolioService) DeletePortfolio(projectID uuid.UUID, projectName string) error {
 	err := s.portfolioRepo.DeletePortfolio(projectID, projectName)
 	if err != nil {
-		return helpers.NewCustomError(http.StatusInternalServerError, "Failed to delete portfolio project")
+		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete portfolio project")
 	}
 
 	return nil

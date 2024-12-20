@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"dz-jobs-api/config"
-	"dz-jobs-api/internal/helpers"
 	"dz-jobs-api/pkg/utils"
 
 	"net/http"
@@ -15,14 +14,14 @@ func AuthMiddleware(config *config.AppConfig) gin.HandlerFunc {
 
 		accessToken, err := c.Cookie("access_token")
 		if err != nil {
-			c.Error(helpers.NewCustomError(http.StatusUnauthorized, "No access token found"))
+			c.Error(utils.NewCustomError(http.StatusUnauthorized, "No access token found"))
 			c.Abort()
 			return
 		}
 
 		claims, err := utils.ValidateToken(accessToken, config.AccessTokenSecret, "access")
 		if err != nil {
-			c.Error(helpers.NewCustomError(http.StatusUnauthorized, "Invalid or expired access token"))
+			c.Error(utils.NewCustomError(http.StatusUnauthorized, "Invalid or expired access token"))
 			c.Abort()
 			return
 		}

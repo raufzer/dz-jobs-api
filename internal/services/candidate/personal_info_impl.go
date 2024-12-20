@@ -2,7 +2,7 @@ package candidate
 
 import (
 	request "dz-jobs-api/internal/dto/request/candidate"
-	"dz-jobs-api/internal/helpers"
+	"dz-jobs-api/pkg/utils"
 	models "dz-jobs-api/internal/models/candidate"
 	interfaces "dz-jobs-api/internal/repositories/interfaces/candidate"
 	"net/http"
@@ -28,7 +28,7 @@ func (s *candidatePersonalInfoService) UpdatePersonalInfo(id uuid.UUID,request r
 
 	err := s.personalInfoRepo.UpdatePersonalInfo(*info)
 	if err != nil {
-		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to update personal info")
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to update personal info")
 	}
 	return s.GetPersonalInfo(id)
 }
@@ -36,7 +36,7 @@ func (s *candidatePersonalInfoService) UpdatePersonalInfo(id uuid.UUID,request r
 func (s *candidatePersonalInfoService) GetPersonalInfo(candidateID uuid.UUID) (*models.CandidatePersonalInfo, error) {
 	info, err := s.personalInfoRepo.GetPersonalInfoByCandidateID(candidateID)
 	if err != nil {
-		return nil, helpers.NewCustomError(http.StatusNotFound, "Personal info not found")
+		return nil, utils.NewCustomError(http.StatusNotFound, "Personal info not found")
 	}
 
 	return &info, nil

@@ -2,7 +2,7 @@ package candidate
 
 import (
 	request "dz-jobs-api/internal/dto/request/candidate"
-	"dz-jobs-api/internal/helpers"
+	"dz-jobs-api/pkg/utils"
 	models "dz-jobs-api/internal/models/candidate"
 	interfaces "dz-jobs-api/internal/repositories/interfaces/candidate"
 	"net/http"
@@ -30,7 +30,7 @@ func (s *candidateEducationService) AddEducation(request request.AddEducationReq
 
 	err := s.educationRepo.CreateEducation(*education)
 	if err != nil {
-		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to add education")
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to add education")
 	}
 
 	return education, nil
@@ -39,7 +39,7 @@ func (s *candidateEducationService) AddEducation(request request.AddEducationReq
 func (s *candidateEducationService) GetEducationByCandidateID(candidateID uuid.UUID) ([]models.CandidateEducation, error) {
 	educations, err := s.educationRepo.GetEducationByCandidateID(candidateID)
 	if err != nil {
-		return nil, helpers.NewCustomError(http.StatusNotFound, "No education records found")
+		return nil, utils.NewCustomError(http.StatusNotFound, "No education records found")
 	}
 
 	return educations, nil
@@ -48,7 +48,7 @@ func (s *candidateEducationService) GetEducationByCandidateID(candidateID uuid.U
 func (s *candidateEducationService) DeleteEducation(educationID uuid.UUID) error {
 	err := s.educationRepo.DeleteEducation(educationID)
 	if err != nil {
-		return helpers.NewCustomError(http.StatusInternalServerError, "Failed to delete education")
+		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete education")
 	}
 
 	return nil

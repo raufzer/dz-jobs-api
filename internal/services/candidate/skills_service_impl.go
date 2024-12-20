@@ -2,7 +2,7 @@ package candidate
 
 import (
 	request "dz-jobs-api/internal/dto/request/candidate"
-	"dz-jobs-api/internal/helpers"
+	"dz-jobs-api/pkg/utils"
 	models "dz-jobs-api/internal/models/candidate"
 	interfaces "dz-jobs-api/internal/repositories/interfaces/candidate"
 	"net/http"
@@ -25,7 +25,7 @@ func (s *candidateSkillsService) AddSkill(request request.AddSkillRequest) (*mod
 
 	err := s.skillsRepo.CreateSkill(*skill)
 	if err != nil {
-		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to add skill")
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to add skill")
 	}
 
 	return skill, nil
@@ -34,7 +34,7 @@ func (s *candidateSkillsService) AddSkill(request request.AddSkillRequest) (*mod
 func (s *candidateSkillsService) GetSkillsByCandidateID(candidateID uuid.UUID) ([]models.CandidateSkills, error) {
 	skills, err := s.skillsRepo.GetSkillsByCandidateID(candidateID)
 	if err != nil {
-		return nil, helpers.NewCustomError(http.StatusNotFound, "No skills found")
+		return nil, utils.NewCustomError(http.StatusNotFound, "No skills found")
 	}
 
 	return skills, nil
@@ -43,7 +43,7 @@ func (s *candidateSkillsService) GetSkillsByCandidateID(candidateID uuid.UUID) (
 func (s *candidateSkillsService) DeleteSkill(candidateID uuid.UUID, skill string) error {
 	err := s.skillsRepo.DeleteSkill(candidateID, skill)
 	if err != nil {
-		return helpers.NewCustomError(http.StatusInternalServerError, "Failed to delete skill")
+		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete skill")
 	}
 
 	return nil

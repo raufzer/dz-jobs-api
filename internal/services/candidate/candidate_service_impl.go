@@ -3,7 +3,7 @@ package candidate
 import (
 	"database/sql"
 	request "dz-jobs-api/internal/dto/request/candidate"
-	"dz-jobs-api/internal/helpers"
+		"dz-jobs-api/pkg/utils"
 	models "dz-jobs-api/internal/models/candidate"
 	interfaces "dz-jobs-api/internal/repositories/interfaces/candidate"
 	"net/http"
@@ -27,7 +27,7 @@ func (s *CandidateService) CreateCandidate(request request.CreateCandidateReques
 
 	_, err := s.candidateRepo.CreateCandidate(*newCandidate)
 	if err != nil {
-		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to create candidate")
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to create candidate")
 	}
 
 	return newCandidate, nil
@@ -36,7 +36,7 @@ func (s *CandidateService) CreateCandidate(request request.CreateCandidateReques
 func (s *CandidateService) GetCandidateByID(candidateID uuid.UUID) (*models.Candidate, error) {
 	candidate, err := s.candidateRepo.GetCandidateByID(candidateID)
 	if err != nil {
-		return nil, helpers.NewCustomError(http.StatusNotFound, "Candidate not found")
+		return nil, utils.NewCustomError(http.StatusNotFound, "Candidate not found")
 	}
 
 	return &candidate, nil
@@ -50,9 +50,9 @@ func (s *CandidateService) UpdateCandidate(candidateID uuid.UUID, req request.Up
 
 	if err := s.candidateRepo.UpdateCandidate(candidateID, *updatedCandidate); err != nil {
 		if err == sql.ErrNoRows {
-			return nil, helpers.NewCustomError(http.StatusNotFound, "Candidate not found")
+			return nil, utils.NewCustomError(http.StatusNotFound, "Candidate not found")
 		}
-		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to update candidate")
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to update candidate")
 	}
 
 	return s.GetCandidateByID(candidateID)
@@ -60,7 +60,7 @@ func (s *CandidateService) UpdateCandidate(candidateID uuid.UUID, req request.Up
 
 func (s *CandidateService) DeleteCandidate(candidateID uuid.UUID) error {
 	if err := s.candidateRepo.DeleteCandidate(candidateID); err != nil {
-		return helpers.NewCustomError(http.StatusInternalServerError, "Failed to delete candidate")
+		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete candidate")
 	}
 
 	return nil

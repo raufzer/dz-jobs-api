@@ -2,7 +2,7 @@ package candidate
 
 import (
 	request "dz-jobs-api/internal/dto/request/candidate"
-	"dz-jobs-api/internal/helpers"
+	"dz-jobs-api/pkg/utils"
 	models "dz-jobs-api/internal/models/candidate"
 	interfaces "dz-jobs-api/internal/repositories/interfaces/candidate"
 	"net/http"
@@ -29,7 +29,7 @@ func (s *candidateCertificationsService) AddCertification(request request.AddCer
 
 	err := s.certificationsRepo.CreateCertification(*certification)
 	if err != nil {
-		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to add certification")
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to add certification")
 	}
 
 	return certification, nil
@@ -38,7 +38,7 @@ func (s *candidateCertificationsService) AddCertification(request request.AddCer
 func (s *candidateCertificationsService) GetCertificationsByCandidateID(candidateID uuid.UUID) ([]models.CandidateCertification, error) {
 	certifications, err := s.certificationsRepo.GetCertificationsByCandidateID(candidateID)
 	if err != nil {
-		return nil, helpers.NewCustomError(http.StatusNotFound, "No certifications found")
+		return nil, utils.NewCustomError(http.StatusNotFound, "No certifications found")
 	}
 
 	return certifications, nil
@@ -47,7 +47,7 @@ func (s *candidateCertificationsService) GetCertificationsByCandidateID(candidat
 func (s *candidateCertificationsService) DeleteCertification(certificationID uuid.UUID, certificationName string) error {
 	err := s.certificationsRepo.DeleteCertification(certificationID, certificationName)
 	if err != nil {
-		return helpers.NewCustomError(http.StatusInternalServerError, "Failed to delete certification")
+		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete certification")
 	}
 
 	return nil

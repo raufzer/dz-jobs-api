@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"dz-jobs-api/internal/dto/response"
-	"dz-jobs-api/internal/helpers"
+	"dz-jobs-api/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -36,7 +36,7 @@ func ErrorHandlingMiddleware() gin.HandlerFunc {
 func handleErrors(ctx *gin.Context) {
 	for _, e := range ctx.Errors {
 		switch err := e.Err.(type) {
-		case *helpers.CustomError:
+		case *utils.CustomError:
 
 			ctx.JSON(err.StatusCode, response.Response{
 				Code:    err.StatusCode,

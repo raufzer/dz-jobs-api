@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"dz-jobs-api/internal/helpers"
+	"dz-jobs-api/pkg/utils"
 	"net/http"
 	"strings"
 
@@ -14,14 +14,14 @@ func RoleMiddleware(allowedRoles ...string) gin.HandlerFunc {
 
 		userRole, exists := c.Get("role")
 		if !exists {
-			c.Error(helpers.NewCustomError(http.StatusUnauthorized, "Unauthorized: No role found"))
+			c.Error(utils.NewCustomError(http.StatusUnauthorized, "Unauthorized: No role found"))
 			c.Abort()
 			return
 		}
 
 		roleStr, ok := userRole.(string)
 		if !ok {
-			c.Error(helpers.NewCustomError(http.StatusInternalServerError, "Invalid role format"))
+			c.Error(utils.NewCustomError(http.StatusInternalServerError, "Invalid role format"))
 			c.Abort()
 			return
 		}
@@ -34,7 +34,7 @@ func RoleMiddleware(allowedRoles ...string) gin.HandlerFunc {
 			}
 		}
 
-		c.Error(helpers.NewCustomError(http.StatusForbidden, "Forbidden: Access denied"))
+		c.Error(utils.NewCustomError(http.StatusForbidden, "Forbidden: Access denied"))
 		c.Abort()
 	}
 }
