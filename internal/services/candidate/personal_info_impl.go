@@ -18,9 +18,8 @@ func NewCandidatePersonalInfoService(repo interfaces.CandidatePersonalInfoReposi
 	return &candidatePersonalInfoService{personalInfoRepo: repo}
 }
 
-func (s *candidatePersonalInfoService) UpdatePersonalInfo(request request.UpdateCandidatePersonalInfoRequest) error {
+func (s *candidatePersonalInfoService) UpdatePersonalInfo(id uuid.UUID,request request.UpdateCandidatePersonalInfoRequest) (*models.CandidatePersonalInfo, error) {
 	info := &models.CandidatePersonalInfo{
-		CandidateID: request.CandidateID,
 		Name:        request.Name,
 		Email:       request.Email,
 		Phone:       request.Phone,
@@ -29,10 +28,9 @@ func (s *candidatePersonalInfoService) UpdatePersonalInfo(request request.Update
 
 	err := s.personalInfoRepo.UpdatePersonalInfo(*info)
 	if err != nil {
-		return helpers.NewCustomError(http.StatusInternalServerError, "Failed to update personal info")
+		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to update personal info")
 	}
-
-	return nil
+	return s.GetPersonalInfo(id)
 }
 
 func (s *candidatePersonalInfoService) GetPersonalInfo(candidateID uuid.UUID) (*models.CandidatePersonalInfo, error) {

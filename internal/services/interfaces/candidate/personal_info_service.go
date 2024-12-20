@@ -7,6 +7,6 @@ import (
 )
 
 type CandidatePersonalInfoService interface {
-	UpdatePersonalInfo(request request.UpdateCandidatePersonalInfoRequest) error
+	UpdatePersonalInfo(id uuid.UUID,request request.UpdateCandidatePersonalInfoRequest) (*models.CandidatePersonalInfo, error)
 	GetPersonalInfo(candidateID uuid.UUID) (*models.CandidatePersonalInfo, error)
 }

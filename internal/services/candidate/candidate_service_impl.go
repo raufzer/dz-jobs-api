@@ -1,6 +1,7 @@
 package candidate
 
 import (
+	"database/sql"
 	request "dz-jobs-api/internal/dto/request/candidate"
 	"dz-jobs-api/internal/helpers"
 	models "dz-jobs-api/internal/models/candidate"
@@ -20,13 +21,12 @@ func NewCandidateService(repo interfaces.CandidateRepository) *CandidateService 
 
 func (s *CandidateService) CreateCandidate(request request.CreateCandidateRequest) (*models.Candidate, error) {
 	newCandidate := &models.Candidate{
-		CandidateID:    uuid.New(),
 		Resume:         request.Resume,
 		ProfilePicture: request.ProfilePicture,
 	}
 
-	_, err := s.candidateRepo.CreateCandidate(*newCandidate);
-	 if err != nil {
+	_, err := s.candidateRepo.CreateCandidate(*newCandidate)
+	if err != nil {
 		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to create candidate")
 	}
 
@@ -42,15 +42,20 @@ func (s *CandidateService) GetCandidateByID(candidateID uuid.UUID) (*models.Cand
 	return &candidate, nil
 }
 
-func (s *CandidateService) UpdateCandidate(candidateID uuid.UUID, updatedCandidate models.Candidate) error {
-	updatedCandidate.CandidateID = candidateID
-
-	err := s.candidateRepo.UpdateCandidate(updatedCandidate); 
-	if err != nil {
-		return helpers.NewCustomError(http.StatusInternalServerError, "Failed to update candidate")
+func (s *CandidateService) UpdateCandidate(candidateID uuid.UUID, req request.UpdateCandidateRequest) (*models.Candidate, error) {
+	updatedCandidate := &models.Candidate{
+		Resume:         req.Resume,
+		ProfilePicture: req.ProfilePicture,
 	}
 
-	return nil
+	if err := s.candidateRepo.UpdateCandidate(candidateID, *updatedCandidate); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, helpers.NewCustomError(http.StatusNotFound, "Candidate not found")
+		}
+		return nil, helpers.NewCustomError(http.StatusInternalServerError, "Failed to update candidate")
+	}
+
+	return s.GetCandidateByID(candidateID)
 }
 
 func (s *CandidateService) DeleteCandidate(candidateID uuid.UUID) error {

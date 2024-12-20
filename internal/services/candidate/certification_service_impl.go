@@ -21,7 +21,6 @@ func NewCandidateCertificationsService(repo interfaces.CandidateCertificationsRe
 func (s *candidateCertificationsService) AddCertification(request request.AddCertificationRequest) (*models.CandidateCertification, error) {
 	certification := &models.CandidateCertification{
 		CertificationID:   uuid.New(),
-		CandidateID:       request.CandidateID,
 		CertificationName: request.CertificationName,
 		IssuedBy:          request.IssuedBy,
 		IssueDate:         request.IssueDate,

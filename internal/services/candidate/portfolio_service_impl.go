@@ -21,7 +21,6 @@ func NewCandidatePortfolioService(repo interfaces.CandidatePortfolioRepository) 
 func (s *candidatePortfolioService) AddPortfolio(request request.AddPortfolioRequest) (*models.CandidatePortfolio, error) {
 	portfolio := &models.CandidatePortfolio{
 		ProjectID:   uuid.New(),
-		CandidateID: request.CandidateID,
 		ProjectName: request.ProjectName,
 		ProjectLink: request.ProjectLink,
 		Category:    request.Category,

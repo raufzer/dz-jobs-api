@@ -20,7 +20,6 @@ func NewCandidateSkillsService(repo interfaces.CandidateSkillsRepository) *candi
 
 func (s *candidateSkillsService) AddSkill(request request.AddSkillRequest) (*models.CandidateSkills, error) {
 	skill := &models.CandidateSkills{
-		CandidateID: request.CandidateID,
 		Skill:       request.Skill,
 	}
 
