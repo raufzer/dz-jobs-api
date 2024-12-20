@@ -1,10 +1,10 @@
 package candidate
 
 import (
-	request "dz-jobs-api/internal/dto/request/candidate"
 	"dz-jobs-api/internal/dto/response"
 	responseCandidate "dz-jobs-api/internal/dto/response/candidate"
 	serviceInterfaces "dz-jobs-api/internal/services/interfaces/candidate"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,18 +20,26 @@ func NewCandidateController(service serviceInterfaces.CandidateService) *Candida
 }
 
 func (c *CandidateController) CreateCandidate(ctx *gin.Context) {
-	var req request.CreateCandidateRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
-
-	candidate, err := c.service.CreateCandidate(req)
+	// Log the request headers
+	fmt.Println("Request Headers: ", ctx.Request.Header)
+	profilePictureFile, err := ctx.FormFile("profile_picture")
 	if err != nil {
 		ctx.Error(err)
 		return
 	}
+
+	resumeFile, err := ctx.FormFile("resume")
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	candidate, err := c.service.CreateCandidate(profilePictureFile, resumeFile)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
 	ctx.JSON(http.StatusCreated, response.Response{
 		Code:    http.StatusCreated,
 		Status:  "Created",
@@ -58,12 +66,7 @@ func (c *CandidateController) GetCandidateByID(ctx *gin.Context) {
 }
 
 func (c *CandidateController) UpdateCandidate(ctx *gin.Context) {
-	var req request.UpdateCandidateRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
+
 	idParam := ctx.Param("id")
 	candidateID, err := uuid.Parse(idParam)
 	if err != nil {
@@ -71,7 +74,19 @@ func (c *CandidateController) UpdateCandidate(ctx *gin.Context) {
 		return
 	}
 
-	updatedCandidate, err := c.service.UpdateCandidate(candidateID, req)
+	profilePictureFile, err := ctx.FormFile("profile_picture")
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	resumeFile, err := ctx.FormFile("resume")
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	updatedCandidate, err := c.service.UpdateCandidate(candidateID, profilePictureFile, resumeFile)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()

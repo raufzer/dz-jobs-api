@@ -7,11 +7,10 @@ import (
 )
 
 func CandidateRoutes(rg *gin.RouterGroup, candidateController *controllers.CandidateController) {
-	candidateRoute := rg.Group("/candidates")
 
-	candidateRoute.POST("/", candidateController.CreateCandidate)
-	candidateRoute.GET("/:id", candidateController.GetCandidateByID)
-	candidateRoute.PUT("/:id", candidateController.UpdateCandidate)
-	candidateRoute.DELETE("/:id", candidateController.DeleteCandidate)
+	rg.POST("/", candidateController.CreateCandidate)
+	rg.GET("/:id", candidateController.GetCandidateByID)
+	rg.PUT("/:id", candidateController.UpdateCandidate)
+	rg.DELETE("/:id", candidateController.DeleteCandidate)
 
 }

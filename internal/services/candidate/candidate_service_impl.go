@@ -2,10 +2,11 @@ package candidate
 
 import (
 	"database/sql"
-	request "dz-jobs-api/internal/dto/request/candidate"
-		"dz-jobs-api/pkg/utils"
+	"dz-jobs-api/internal/integrations"
 	models "dz-jobs-api/internal/models/candidate"
 	interfaces "dz-jobs-api/internal/repositories/interfaces/candidate"
+	"dz-jobs-api/pkg/utils"
+	"mime/multipart"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -19,13 +20,29 @@ func NewCandidateService(repo interfaces.CandidateRepository) *CandidateService 
 	return &CandidateService{candidateRepo: repo}
 }
 
-func (s *CandidateService) CreateCandidate(request request.CreateCandidateRequest) (*models.Candidate, error) {
-	newCandidate := &models.Candidate{
-		Resume:         request.Resume,
-		ProfilePicture: request.ProfilePicture,
+func (s *CandidateService) CreateCandidate(profilePictureFile, resumeFile *multipart.FileHeader) (*models.Candidate, error) {
+	if profilePictureFile == nil {
+		return nil, utils.NewCustomError(http.StatusBadRequest, "Profile picture is required")
+	}
+	if resumeFile == nil {
+		return nil, utils.NewCustomError(http.StatusBadRequest, "Resume is required")
+	}
+	profilePictureURL, err := integrations.UploadImage(profilePictureFile)
+	if err != nil {
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to upload profile picture")
 	}
 
-	_, err := s.candidateRepo.CreateCandidate(*newCandidate)
+	resumeURL, err := integrations.UploadPDF(resumeFile)
+	if err != nil {
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to upload resume")
+	}
+
+	newCandidate := &models.Candidate{
+		Resume:         resumeURL,
+		ProfilePicture: profilePictureURL,
+	}
+
+	_, err = s.candidateRepo.CreateCandidate(*newCandidate)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to create candidate")
 	}
@@ -42,10 +59,27 @@ func (s *CandidateService) GetCandidateByID(candidateID uuid.UUID) (*models.Cand
 	return &candidate, nil
 }
 
-func (s *CandidateService) UpdateCandidate(candidateID uuid.UUID, req request.UpdateCandidateRequest) (*models.Candidate, error) {
+func (s *CandidateService) UpdateCandidate(candidateID uuid.UUID, profilePictureFile, resumeFile *multipart.FileHeader) (*models.Candidate, error) {
+
+	profilePictureURL, err := integrations.UploadImage(profilePictureFile)
+	if err != nil {
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to upload profile picture")
+	}
+	if profilePictureFile == nil {
+		return nil, utils.NewCustomError(http.StatusBadRequest, "Profile picture is required")
+	}
+
+	resumeURL, err := integrations.UploadPDF(resumeFile)
+	if err != nil {
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to upload resume")
+	}
+	if resumeFile == nil {
+		return nil, utils.NewCustomError(http.StatusBadRequest, "Resume is required")
+	}
+
 	updatedCandidate := &models.Candidate{
-		Resume:         req.Resume,
-		ProfilePicture: req.ProfilePicture,
+		Resume:         resumeURL,
+		ProfilePicture: profilePictureURL,
 	}
 
 	if err := s.candidateRepo.UpdateCandidate(candidateID, *updatedCandidate); err != nil {
