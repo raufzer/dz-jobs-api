@@ -4,7 +4,6 @@ import (
 	"dz-jobs-api/internal/dto/response"
 	responseCandidate "dz-jobs-api/internal/dto/response/candidate"
 	serviceInterfaces "dz-jobs-api/internal/services/interfaces/candidate"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,8 +19,18 @@ func NewCandidateController(service serviceInterfaces.CandidateService) *Candida
 }
 
 func (c *CandidateController) CreateCandidate(ctx *gin.Context) {
-	// Log the request headers
-	fmt.Println("Request Headers: ", ctx.Request.Header)
+	accessToken, err := ctx.Cookie("access_token")
+	if err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
+	userID, err := c.service.ExtractTokenDetails(accessToken)
+	if err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
 	profilePictureFile, err := ctx.FormFile("profile_picture")
 	if err != nil {
 		ctx.Error(err)
@@ -33,10 +42,9 @@ func (c *CandidateController) CreateCandidate(ctx *gin.Context) {
 		ctx.Error(err)
 		return
 	}
-
-	candidate, err := c.service.CreateCandidate(profilePictureFile, resumeFile)
+	candidate, err := c.service.CreateCandidate(userID, profilePictureFile, resumeFile)
 	if err != nil {
-		ctx.Error(err)
+		ctx.JSON(http.StatusInternalServerError, "Error creating candidate")
 		return
 	}
 

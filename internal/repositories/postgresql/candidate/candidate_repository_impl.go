@@ -18,30 +18,32 @@ func NewCandidateRepository(db *sql.DB) repositoryInterfaces.CandidateRepository
 	}
 }
 
-func (r *SQLCandidateRepository) CreateCandidate(candidate models.Candidate) (uuid.UUID, error) {
+func (r *SQLCandidateRepository) CreateCandidate(candidate *models.Candidate) (uuid.UUID, error) {
 	query := `INSERT INTO candidates (candidate_id, resume, profile_picture) VALUES ($1, $2, $3) RETURNING candidate_id`
-	id := uuid.New()
-	err := r.db.QueryRow(query, id, candidate.Resume, candidate.ProfilePicture).Scan(&id)
+
+	err := r.db.QueryRow(query, candidate.CandidateID, candidate.Resume, candidate.ProfilePicture).Scan(&candidate.CandidateID)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("unable to create candidate: %w", err)
 	}
-	return id, nil
+
+	return candidate.CandidateID, nil
 }
 
-func (r *SQLCandidateRepository) GetCandidateByID(id uuid.UUID) (models.Candidate, error) {
-	var candidate models.Candidate
+func (r *SQLCandidateRepository) GetCandidateByID(id uuid.UUID) (*models.Candidate, error) {
 	query := `SELECT candidate_id, resume, profile_picture FROM candidates WHERE candidate_id = $1`
-	err := r.db.QueryRow(query, id).Scan(&candidate.CandidateID, &candidate.Resume, &candidate.ProfilePicture)
+	row := r.db.QueryRow(query, id)
+	candidate := &models.Candidate{}
+	err := row.Scan(&candidate.CandidateID, &candidate.Resume, &candidate.ProfilePicture)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return models.Candidate{}, fmt.Errorf("candidate not found: %w", err)
+			return nil, fmt.Errorf("candidate not found: %w", err)
 		}
-		return models.Candidate{}, fmt.Errorf("unable to fetch candidate: %w", err)
+		return nil, fmt.Errorf("unable to fetch candidate: %w", err)
 	}
 	return candidate, nil
 }
 
-func (r *SQLCandidateRepository) UpdateCandidate(candidate_id uuid.UUID, candidate models.Candidate) error {
+func (r *SQLCandidateRepository) UpdateCandidate(candidate_id uuid.UUID, candidate *models.Candidate) error {
 	query := `UPDATE candidates SET resume = $1, profile_picture = $2 WHERE candidate_id = $3`
 	result, err := r.db.Exec(query, candidate.Resume, candidate.ProfilePicture, candidate_id)
 	if err != nil {

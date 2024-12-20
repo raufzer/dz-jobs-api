@@ -2,6 +2,7 @@ package candidate
 
 import (
 	"database/sql"
+	"dz-jobs-api/config"
 	"dz-jobs-api/internal/integrations"
 	models "dz-jobs-api/internal/models/candidate"
 	interfaces "dz-jobs-api/internal/repositories/interfaces/candidate"
@@ -14,13 +15,22 @@ import (
 
 type CandidateService struct {
 	candidateRepo interfaces.CandidateRepository
+	config        *config.AppConfig
 }
 
-func NewCandidateService(repo interfaces.CandidateRepository) *CandidateService {
-	return &CandidateService{candidateRepo: repo}
+func NewCandidateService(repo interfaces.CandidateRepository, config *config.AppConfig) *CandidateService {
+	return &CandidateService{candidateRepo: repo,
+		config: config}
 }
 
-func (s *CandidateService) CreateCandidate(profilePictureFile, resumeFile *multipart.FileHeader) (*models.Candidate, error) {
+func (s *CandidateService) CreateCandidate(userID string, profilePictureFile, resumeFile *multipart.FileHeader) (*models.Candidate, error) {
+	existingCandidate, err := s.candidateRepo.GetCandidateByID(uuid.MustParse(userID))
+	if err != nil && err != sql.ErrNoRows {
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Database error occurred")
+	}
+	if existingCandidate != nil {
+		return nil, utils.NewCustomError(http.StatusBadRequest, "Candidate already exists")
+	}
 	if profilePictureFile == nil {
 		return nil, utils.NewCustomError(http.StatusBadRequest, "Profile picture is required")
 	}
@@ -31,32 +41,33 @@ func (s *CandidateService) CreateCandidate(profilePictureFile, resumeFile *multi
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to upload profile picture")
 	}
-
 	resumeURL, err := integrations.UploadPDF(resumeFile)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to upload resume")
 	}
-
 	newCandidate := &models.Candidate{
+		CandidateID:    uuid.MustParse(userID),
 		Resume:         resumeURL,
 		ProfilePicture: profilePictureURL,
 	}
 
-	_, err = s.candidateRepo.CreateCandidate(*newCandidate)
+	_, err = s.candidateRepo.CreateCandidate(newCandidate)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to create candidate")
 	}
-
 	return newCandidate, nil
 }
 
 func (s *CandidateService) GetCandidateByID(candidateID uuid.UUID) (*models.Candidate, error) {
 	candidate, err := s.candidateRepo.GetCandidateByID(candidateID)
 	if err != nil {
-		return nil, utils.NewCustomError(http.StatusNotFound, "Candidate not found")
+		if err == sql.ErrNoRows {
+			return nil, utils.NewCustomError(http.StatusNotFound, "User not found")
+		}
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Error fetching user")
 	}
 
-	return &candidate, nil
+	return candidate, nil
 }
 
 func (s *CandidateService) UpdateCandidate(candidateID uuid.UUID, profilePictureFile, resumeFile *multipart.FileHeader) (*models.Candidate, error) {
@@ -82,14 +93,14 @@ func (s *CandidateService) UpdateCandidate(candidateID uuid.UUID, profilePicture
 		ProfilePicture: profilePictureURL,
 	}
 
-	if err := s.candidateRepo.UpdateCandidate(candidateID, *updatedCandidate); err != nil {
+	if err := s.candidateRepo.UpdateCandidate(candidateID, updatedCandidate); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, utils.NewCustomError(http.StatusNotFound, "Candidate not found")
 		}
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to update candidate")
 	}
 
-	return s.GetCandidateByID(candidateID)
+	return s.candidateRepo.GetCandidateByID(candidateID)
 }
 
 func (s *CandidateService) DeleteCandidate(candidateID uuid.UUID) error {
@@ -98,4 +109,13 @@ func (s *CandidateService) DeleteCandidate(candidateID uuid.UUID) error {
 	}
 
 	return nil
+}
+
+func (s *CandidateService) ExtractTokenDetails(token string) (string, error) {
+
+	claims, err := utils.ExtractTokenDetails(token, s.config.AccessTokenSecret)
+	if err != nil {
+		return "", utils.NewCustomError(http.StatusUnauthorized, "Invalid or expired token")
+	}
+	return claims.UserID, nil
 }
