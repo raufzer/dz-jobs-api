@@ -13,7 +13,7 @@ import (
 
 var cld *cloudinary.Cloudinary
 
-func Init(cfg *config.AppConfig) {
+func InitCloudinary(cfg *config.AppConfig) {
 	var err error
 	cld, err = cloudinary.NewFromParams(cfg.CloudinaryCloudName, cfg.CloudinaryAPIKey, cfg.CloudinaryAPISecret)
 	if err != nil {

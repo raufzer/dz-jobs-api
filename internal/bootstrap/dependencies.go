@@ -34,7 +34,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	utils.InitLogger()
 
 	// Initialize Cloudinary
-	integrations.Init(cfg)
+	integrations.InitCloudinary(cfg)
 
 	// Initialize Repositories
 	userRepo := postgresql.NewUserRepository(dbConfig.DB)
