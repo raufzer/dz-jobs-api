@@ -24,6 +24,9 @@ type AppConfig struct {
 	GoogleClientID           string
 	GoogleClientSecret       string
 	GoogleRedirectURL        string
+	CloudinaryCloudName      string
+	CloudinaryAPIKey         string
+	CloudinaryAPISecret      string
 }
 
 func LoadConfig() (*AppConfig, error) {
@@ -65,6 +68,9 @@ func LoadConfig() (*AppConfig, error) {
 		GoogleClientID:           utils.GetEnv("GOOGLE_CLIENT_ID"),
 		GoogleClientSecret:       utils.GetEnv("GOOGLE_CLIENT_SECRET"),
 		GoogleRedirectURL:        utils.GetEnv("GOOGLE_REDIRECT_URL"),
+		CloudinaryCloudName:      utils.GetEnv("CLOUDINARY_CLOUD_NAME"),
+		CloudinaryAPIKey:         utils.GetEnv("CLOUDINARY_API_KEY"),
+		CloudinaryAPISecret:      utils.GetEnv("CLOUDINARY_API_SECRET"),
 	}
 	return config, nil
 }
