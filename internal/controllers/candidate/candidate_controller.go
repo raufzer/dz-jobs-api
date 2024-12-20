@@ -44,7 +44,7 @@ func (c *CandidateController) CreateCandidate(ctx *gin.Context) {
 	}
 	candidate, err := c.service.CreateCandidate(userID, profilePictureFile, resumeFile)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, "Error creating candidate")
+		ctx.Error(err)
 		return
 	}
 

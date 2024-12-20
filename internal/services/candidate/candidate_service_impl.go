@@ -24,10 +24,7 @@ func NewCandidateService(repo interfaces.CandidateRepository, config *config.App
 }
 
 func (s *CandidateService) CreateCandidate(userID string, profilePictureFile, resumeFile *multipart.FileHeader) (*models.Candidate, error) {
-	existingCandidate, err := s.candidateRepo.GetCandidateByID(uuid.MustParse(userID))
-	if err != nil && err != sql.ErrNoRows {
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Database error occurred")
-	}
+	existingCandidate, _ := s.candidateRepo.GetCandidateByID(uuid.MustParse(userID))
 	if existingCandidate != nil {
 		return nil, utils.NewCustomError(http.StatusBadRequest, "Candidate already exists")
 	}
