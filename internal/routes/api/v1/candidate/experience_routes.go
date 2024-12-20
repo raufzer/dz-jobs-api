@@ -6,7 +6,7 @@ import (
 )
 
 func ExperienceRoutes(rg *gin.RouterGroup, candidateExperienceController *controllers.CandidateExperienceController) {
-	experienceRoute := rg.Group("/candidates/:id/experience")
+	experienceRoute := rg.Group("/:id/experience")
 	
 		experienceRoute.POST("/", candidateExperienceController.CreateExperience)
 		experienceRoute.GET("/", candidateExperienceController.GetExperienceByID)

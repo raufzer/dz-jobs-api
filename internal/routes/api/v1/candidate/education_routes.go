@@ -6,7 +6,7 @@ import (
 )
 
 func EducationRoutes(rg *gin.RouterGroup, candidateEducationController *controllers.CandidateEducationController) {
-	educationRoute := rg.Group("/candidates/:id/education")
+	educationRoute := rg.Group("/:id/education")
 
 	educationRoute.POST("/", candidateEducationController.CreateEducation)
 	educationRoute.GET("/", candidateEducationController.GetEducationByID)

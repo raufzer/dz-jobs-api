@@ -6,7 +6,7 @@ import (
 )
 
 func PersonalInfoRoutes(rg *gin.RouterGroup, candidatePersonalInfoController *controllers.CandidatePersonalInfoController) {
-	personalInfoRoute := rg.Group("/candidates/:id/personal_info")
+	personalInfoRoute := rg.Group("/:id/personal_info")
 	
 		// personalInfoRoute.POST("/", candidatePersonalInfoControlller.CreatePersonalInfo)
 		personalInfoRoute.GET("/", candidatePersonalInfoController.GetPersonalInfoByID)

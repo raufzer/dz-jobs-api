@@ -42,12 +42,12 @@ func RegisterProtectedRoutes(router *gin.RouterGroup, userController *controller
 	RegisterAdminRoutes(adminGroup, userController)
 
 	// Candidate-specific routes
-	candidateGroup := router.Group("/candidate")
+	candidateGroup := router.Group("/candidates")
 	candidateGroup.Use(middlewares.RoleMiddleware("candidate"))
 	RegisterCandidateRoutes(candidateGroup, candidateController, personalInfoController, educationController, experienceController)
 
 	// Recruiter-specific routes (Future Implementation)
-	// recruiterGroup := router.Group("/recruiter")
+	// recruiterGroup := router.Group("/recruiters")
 	// recruiterGroup.Use(middlewares.RoleMiddleware("recruiter"))
 	// RegisterRecruiterRoutes(recruiterGroup, recruiterController)
 }
