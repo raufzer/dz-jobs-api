@@ -18,7 +18,7 @@ func NewCandidatePersonalInfoRepository(db *sql.DB) repositoryInterfaces.Candida
 	}
 }
 
-func (r *SQLCandidatePersonalInfoRepository) CreatePersonalInfo(info models.CandidatePersonalInfo) error {
+func (r *SQLCandidatePersonalInfoRepository) CreatePersonalInfo(info *models.CandidatePersonalInfo) error {
 	query := `INSERT INTO candidate_personal_info (candidate_id, name, email, phone, address) VALUES ($1, $2, $3, $4, $5)`
 	_, err := r.db.Exec(query, info.CandidateID, info.Name, info.Email, info.Phone, info.Address)
 	if err != nil {
@@ -27,20 +27,20 @@ func (r *SQLCandidatePersonalInfoRepository) CreatePersonalInfo(info models.Cand
 	return nil
 }
 
-func (r *SQLCandidatePersonalInfoRepository) GetPersonalInfoByCandidateID(id uuid.UUID) (models.CandidatePersonalInfo, error) {
+func (r *SQLCandidatePersonalInfoRepository) GetPersonalInfoByCandidateID(id uuid.UUID) (*models.CandidatePersonalInfo, error) {
 	var info models.CandidatePersonalInfo
 	query := `SELECT candidate_id, name, email, phone, address FROM candidate_personal_info WHERE candidate_id = $1`
 	err := r.db.QueryRow(query, id).Scan(&info.CandidateID, &info.Name, &info.Email, &info.Phone, &info.Address)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return models.CandidatePersonalInfo{}, fmt.Errorf("personal info not found: %w", err)
+			return &models.CandidatePersonalInfo{}, fmt.Errorf("personal info not found: %w", err)
 		}
-		return models.CandidatePersonalInfo{}, fmt.Errorf("unable to fetch personal info: %w", err)
+		return &models.CandidatePersonalInfo{}, fmt.Errorf("unable to fetch personal info: %w", err)
 	}
-	return info, nil
+	return &info, nil
 }
 
-func (r *SQLCandidatePersonalInfoRepository) UpdatePersonalInfo(info models.CandidatePersonalInfo) error {
+func (r *SQLCandidatePersonalInfoRepository) UpdatePersonalInfo(info *models.CandidatePersonalInfo) error {
 	query := `UPDATE candidate_personal_info SET name = $1, email = $2, phone = $3, address = $4 WHERE candidate_id = $5`
 	_, err := r.db.Exec(query, info.Name, info.Email, info.Phone, info.Address, info.CandidateID)
 	if err != nil {
