@@ -41,11 +41,18 @@ func (r *SQLCandidateRepository) GetCandidateByID(id uuid.UUID) (models.Candidat
 	return candidate, nil
 }
 
-func (r *SQLCandidateRepository) UpdateCandidate(candidate models.Candidate) error {
+func (r *SQLCandidateRepository) UpdateCandidate(candidate_id uuid.UUID, candidate models.Candidate) error {
 	query := `UPDATE candidates SET resume = $1, profile_picture = $2 WHERE candidate_id = $3`
-	_, err := r.db.Exec(query, candidate.Resume, candidate.ProfilePicture, candidate.CandidateID)
+	result, err := r.db.Exec(query, candidate.Resume, candidate.ProfilePicture, candidate_id)
 	if err != nil {
-		return fmt.Errorf("unable to update candidate: %w", err)
+		return fmt.Errorf("repository: failed to update user: %w", err)
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("repository: failed to check rows affected: %w", err)
+	}
+	if rowsAffected == 0 {
+		return sql.ErrNoRows
 	}
 	return nil
 }
