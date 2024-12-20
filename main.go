@@ -19,7 +19,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to load configuration: %v", err)
 	}
-
 	// Initialize dependencies
 	deps, err := bootstrap.InitializeDependencies(appConfig)
 	if err != nil {

@@ -4,11 +4,13 @@ import (
 	"dz-jobs-api/config"
 	"dz-jobs-api/internal/controllers"
 	candidateControllers "dz-jobs-api/internal/controllers/candidate"
+	"dz-jobs-api/internal/integrations"
 	"dz-jobs-api/internal/repositories/postgresql"
 	candidatePostgresql "dz-jobs-api/internal/repositories/postgresql/candidate"
 	"dz-jobs-api/internal/repositories/redis"
 	"dz-jobs-api/internal/services"
 	candidateServices "dz-jobs-api/internal/services/candidate"
+	"dz-jobs-api/pkg/utils"
 )
 
 type AppDependencies struct {
@@ -28,6 +30,12 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	// Initialize Redis
 	redisConfig := config.ConnectRedis(cfg)
 
+	// Initialize logger
+	utils.InitLogger()
+
+	// Initialize Cloudinary
+	integrations.Init(cfg)
+
 	// Initialize Repositories
 	userRepo := postgresql.NewUserRepository(dbConfig.DB)
 	redisRepo := redis.NewRedisRepository(redisConfig.Client)
@@ -43,7 +51,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 		cfg,
 	)
 	userService := services.NewUserService(userRepo)
-	candidateService := candidateServices.NewCandidateService(candidateRepo)
+	candidateService := candidateServices.NewCandidateService(candidateRepo, cfg)
 	personalInfoService := candidateServices.NewCandidatePersonalInfoService(personalInfoRepo)
 	educationService := candidateServices.NewCandidateEducationService(educationRepo)
 	experienceService := candidateServices.NewCandidateExperienceService(experienceRepo)
