@@ -49,15 +49,6 @@ func (r *SQLCandidateExperienceRepository) GetExperienceByCandidateID(id uuid.UU
 	return experiences, nil
 }
 
-func (r *SQLCandidateExperienceRepository) UpdateExperience(experience *models.CandidateExperience) error {
-	query := `UPDATE candidate_experience SET job_title = $1, company = $2, start_date = $3, end_date = $4, description = $5 WHERE experience_id = $6`
-	_, err := r.db.Exec(query, experience.JobTitle, experience.Company, experience.StartDate, experience.EndDate, experience.Description, experience.ExperienceID)
-	if err != nil {
-		return fmt.Errorf("unable to update experience: %w", err)
-	}
-	return nil
-}
-
 func (r *SQLCandidateExperienceRepository) DeleteExperience(id uuid.UUID) error {
 	query := `DELETE FROM candidate_experience WHERE experience_id = $1`
 	_, err := r.db.Exec(query, id)

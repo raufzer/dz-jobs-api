@@ -11,7 +11,6 @@ func CertificationsRoutes(rg *gin.RouterGroup, candidateCertificationsController
 
 	certificationsRoute.POST("/", candidateCertificationsController.CreateCertification)
 	certificationsRoute.GET("/", candidateCertificationsController.GetCertifications)
-	// educationRoute.PUT("/", candidateEducationController.UpdateEducation)
 	certificationsRoute.DELETE("/:certification_id", candidateCertificationsController.DeleteCertification)
 
 }

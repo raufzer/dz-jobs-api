@@ -47,20 +47,6 @@ func (r *SQLCandidateCertificationRepository) GetCertificationsByCandidateID(id 
 	}
 	return certifications, nil
 }
-func (r *SQLCandidateCertificationRepository) UpdateCertification(certification models.CandidateCertification) error {
-
-	query := `
-		UPDATE candidate_certifications
-		SET certification_name = $1, issued_by = $2, issue_date = $3, expiration_date = $4
-		WHERE candidate_id = $5 AND certification_name = $6
-	`
-	_, err := r.db.Exec(query, certification.CertificationName, certification.IssuedBy, certification.IssueDate, certification.ExpirationDate, certification.CandidateID, certification.CertificationName)
-	if err != nil {
-		return fmt.Errorf("unable to update certification: %w", err)
-	}
-	return nil
-}
-
 func (r *SQLCandidateCertificationRepository) DeleteCertification(id uuid.UUID, certificationName string) error {
 	query := `DELETE FROM candidate_certifications WHERE candidate_id = $1 AND certification_name = $2`
 	_, err := r.db.Exec(query, id, certificationName)

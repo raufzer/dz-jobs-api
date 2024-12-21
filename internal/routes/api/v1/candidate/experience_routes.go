@@ -10,7 +10,6 @@ func ExperienceRoutes(rg *gin.RouterGroup, candidateExperienceController *contro
 	
 		experienceRoute.POST("/", candidateExperienceController.CreateExperience)
 		experienceRoute.GET("/", candidateExperienceController.GetExperienceByID)
-		// experienceRoute.PUT("/", candidateExperienceController.UpdateExperience)
 		experienceRoute.DELETE("/", candidateExperienceController.DeleteExperience)
 	
 }

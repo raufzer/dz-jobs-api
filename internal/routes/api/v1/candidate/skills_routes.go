@@ -11,7 +11,6 @@ func SkillsRoutes(rg *gin.RouterGroup, candidateSkillsController *controllers.Ca
 
 	skillsRoute.POST("/", candidateSkillsController.CreateSkill)
 	skillsRoute.GET("/", candidateSkillsController.GetSkillsByID)
-	// educationRoute.PUT("/", candidateEducationController.UpdateEducation)
 	skillsRoute.DELETE("/:skill", candidateSkillsController.DeleteSkill)
 
 }

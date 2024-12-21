@@ -10,7 +10,6 @@ func EducationRoutes(rg *gin.RouterGroup, candidateEducationController *controll
 
 	educationRoute.POST("/", candidateEducationController.CreateEducation)
 	educationRoute.GET("/", candidateEducationController.GetEducationByID)
-	// educationRoute.PUT("/", candidateEducationController.UpdateEducation)
 	educationRoute.DELETE("/", candidateEducationController.DeleteEducation)
 
 }

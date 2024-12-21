@@ -8,6 +8,5 @@ import (
 type CandidatePortfolioRepository interface {
 	CreateProject(project *models.CandidatePortfolio) error
 	GetPortfolioByCandidateID(id uuid.UUID) ([]models.CandidatePortfolio, error)
-	UpdateProject(project models.CandidatePortfolio) error
 	DeleteProject(id uuid.UUID, projectName string) error
 }

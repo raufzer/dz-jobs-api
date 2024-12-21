@@ -49,15 +49,6 @@ func (r *SQLCandidateEducationRepository) GetEducationByCandidateID(id uuid.UUID
 	return educations, nil
 }
 
-func (r *SQLCandidateEducationRepository) UpdateEducation(education *models.CandidateEducation) error {
-	query := `UPDATE candidate_education SET degree = $1, institution = $2, start_date = $3, end_date = $4, description = $5 WHERE education_id = $6`
-	_, err := r.db.Exec(query, education.Degree, education.Institution, education.StartDate, education.EndDate, education.Description, education.EducationID)
-	if err != nil {
-		return fmt.Errorf("unable to update education: %w", err)
-	}
-	return nil
-}
-
 func (r *SQLCandidateEducationRepository) DeleteEducation(id uuid.UUID) error {
 	query := `DELETE FROM candidate_education WHERE education_id = $1`
 	_, err := r.db.Exec(query, id)

@@ -49,19 +49,6 @@ func (r *SQLCandidatePortfolioRepository) GetPortfolioByCandidateID(id uuid.UUID
 	}
 	return portfolios, nil
 }
-func (r *SQLCandidatePortfolioRepository) UpdateProject(portfolio models.CandidatePortfolio) error {
-
-	query := `
-		UPDATE candidate_portfolio
-		SET project_id = $1, project_name = $2, project_link = $3, category = $4, description = $5
-		WHERE candidate_id = $6 AND project_name = $7
-	`
-	_, err := r.db.Exec(query, portfolio.ProjectID, portfolio.ProjectName, portfolio.ProjectLink, portfolio.Category, portfolio.Description, portfolio.CandidateID, portfolio.ProjectName)
-	if err != nil {
-		return fmt.Errorf("unable to update portfolio: %w", err)
-	}
-	return nil
-}
 
 func (r *SQLCandidatePortfolioRepository) DeleteProject(id uuid.UUID, projectName string) error {
 	query := `DELETE FROM candidate_portfolio WHERE candidate_id = $1 AND project_name = $2`

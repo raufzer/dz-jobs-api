@@ -11,7 +11,6 @@ func PortfolioRoutes(rg *gin.RouterGroup, candidatePortfolioController *controll
 
 	portfolioRoute.POST("/", candidatePortfolioController.CreateProject)
 	portfolioRoute.GET("/", candidatePortfolioController.GetProjectsByCandidateID)
-	// educationRoute.PUT("/", candidateEducationController.UpdateEducation)
 	portfolioRoute.DELETE("/:project_id", candidatePortfolioController.DeleteProject)
 
 }
