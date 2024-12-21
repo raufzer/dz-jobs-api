@@ -18,16 +18,17 @@ func NewCandidateCertificationsService(repo interfaces.CandidateCertificationsRe
 	return &candidateCertificationsService{certificationsRepo: repo}
 }
 
-func (s *candidateCertificationsService) AddCertification(request request.AddCertificationRequest) (*models.CandidateCertification, error) {
+func (s *candidateCertificationsService) AddCertification(candidateID uuid.UUID, request request.AddCertificationRequest) (*models.CandidateCertification, error) {
 	certification := &models.CandidateCertification{
 		CertificationID:   uuid.New(),
+		CandidateID:       candidateID,
 		CertificationName: request.CertificationName,
 		IssuedBy:          request.IssuedBy,
 		IssueDate:         request.IssueDate,
 		ExpirationDate:    request.ExpirationDate,
 	}
 
-	err := s.certificationsRepo.CreateCertification(*certification)
+	err := s.certificationsRepo.CreateCertification(certification)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to add certification")
 	}

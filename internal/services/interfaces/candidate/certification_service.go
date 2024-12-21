@@ -7,7 +7,7 @@ import (
 )
 
 type CandidateCertificationsService interface {
-	AddCertification(request request.AddCertificationRequest) (*models.CandidateCertification, error)
+	AddCertification(candidateID uuid.UUID, request request.AddCertificationRequest) (*models.CandidateCertification, error)
 	GetCertificationsByCandidateID(candidateID uuid.UUID) ([]models.CandidateCertification, error)
 	DeleteCertification(certificationID uuid.UUID, certificationName string) error
 }

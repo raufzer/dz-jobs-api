@@ -5,6 +5,7 @@ import (
 	models "dz-jobs-api/internal/models/candidate"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces/candidate"
 	"fmt"
+
 	"github.com/google/uuid"
 )
 
@@ -12,11 +13,11 @@ type SQLCandidateCertificationRepository struct {
 	db *sql.DB
 }
 
-func NewCandidateCertificationRepository(db *sql.DB) repositoryInterfaces.CandidateCertificationsRepository {
+func NewCandidateCertificationsRepository(db *sql.DB) repositoryInterfaces.CandidateCertificationsRepository {
 	return &SQLCandidateCertificationRepository{db: db}
 }
 
-func (r *SQLCandidateCertificationRepository) CreateCertification(certification models.CandidateCertification) error {
+func (r *SQLCandidateCertificationRepository) CreateCertification(certification *models.CandidateCertification) error {
 	query := `INSERT INTO candidate_certifications (certification_id, candidate_id, certification_name, issued_by, issue_date, expiration_date) 
 			VALUES ($1, $2, $3, $4, $5, $6)`
 	_, err := r.db.Exec(query, certification.CertificationID, certification.CandidateID, certification.CertificationName, certification.IssuedBy, certification.IssueDate, certification.ExpirationDate)
