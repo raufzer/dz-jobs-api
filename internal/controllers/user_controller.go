@@ -4,9 +4,10 @@ import (
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/dto/response"
 	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"net/http"
 )
 
 type UserController struct {
@@ -18,6 +19,17 @@ func NewUserController(service serviceInterfaces.UserService) *UserController {
 		userService: service,
 	}
 }
+
+// CreateUser godoc
+// @Summary Create a new user
+// @Description Create a new user
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param user body request.CreateUsersRequest true "User request"
+// @Success 201 {object} response.Response
+// @Failure 400 {object} response.Response
+// @Router /users [post]
 func (uc *UserController) CreateUser(ctx *gin.Context) {
 	var req request.CreateUsersRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -37,6 +49,16 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 		Data:    response.ToUserResponse(user),
 	})
 }
+
+// GetUser godoc
+// @Summary Get user by ID
+// @Description Get user details by ID
+// @Tags users
+// @Produce json
+// @Param id path string true "User ID"
+// @Success 200 {object} response.Response
+// @Failure 400 {object} response.Response
+// @Router /users/{id} [get]
 func (uc *UserController) GetUser(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
@@ -56,6 +78,18 @@ func (uc *UserController) GetUser(ctx *gin.Context) {
 		Data:    response.ToUserResponse(user),
 	})
 }
+
+// UpdateUser godoc
+// @Summary Update user
+// @Description Update user details
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param id path string true "User ID"
+// @Param user body request.UpdateUserRequest true "User request"
+// @Success 200 {object} response.Response
+// @Failure 400 {object} response.Response
+// @Router /users/{id} [put]
 func (uc *UserController) UpdateUser(ctx *gin.Context) {
 	var req request.UpdateUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -81,6 +115,15 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 		Data:    response.ToUserResponse(updatedUser),
 	})
 }
+
+// GetAllUsers godoc
+// @Summary Get all users
+// @Description Get all users
+// @Tags users
+// @Produce json
+// @Success 200 {object} response.Response
+// @Failure 400 {object} response.Response
+// @Router /users [get]
 func (uc *UserController) GetAllUsers(ctx *gin.Context) {
 	users, err := uc.userService.GetAllUsers()
 	if err != nil {
@@ -101,6 +144,16 @@ func (uc *UserController) GetAllUsers(ctx *gin.Context) {
 		},
 	})
 }
+
+// DeleteUser godoc
+// @Summary Delete user
+// @Description Delete user by ID
+// @Tags users
+// @Produce json
+// @Param id path string true "User ID"
+// @Success 200 {object} response.Response
+// @Failure 400 {object} response.Response
+// @Router /users/{id} [delete]
 func (uc *UserController) DeleteUser(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {

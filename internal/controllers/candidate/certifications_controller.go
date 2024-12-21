@@ -19,6 +19,17 @@ func NewCandidateCertificationsController(service serviceInterfaces.CandidateCer
 	return &CandidateCertificationsController{service: service}
 }
 
+// CreateCertification godoc
+// @Summary Create a new certification
+// @Description Create a new certification for a candidate
+// @Tags certifications
+// @Accept json
+// @Produce json
+// @Param id path string true "Candidate ID"
+// @Param certification body request.AddCertificationRequest true "Certification request"
+// @Success 201 {object} response.Response
+// @Failure 400 {object} response.Response
+// @Router /candidates/{id}/certifications [post]
 func (c *CandidateCertificationsController) CreateCertification(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
@@ -46,7 +57,16 @@ func (c *CandidateCertificationsController) CreateCertification(ctx *gin.Context
 	})
 }
 
-func (c *CandidateCertificationsController) GetCertfications(ctx *gin.Context) {
+// GetCertifications godoc
+// @Summary Get certifications by candidate ID
+// @Description Get all certifications for a candidate by candidate ID
+// @Tags certifications
+// @Produce json
+// @Param id path string true "Candidate ID"
+// @Success 200 {object} response.Response
+// @Failure 400 {object} response.Response
+// @Router /candidates/{id}/certifications [get]
+func (c *CandidateCertificationsController) GetCertifications(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
@@ -63,14 +83,24 @@ func (c *CandidateCertificationsController) GetCertfications(ctx *gin.Context) {
 	for _, cer := range experience {
 		certificationResponses = append(certificationResponses, responseCandidate.ToCertificationResponse(&cer))
 	}
-	ctx.JSON(http.StatusCreated, response.Response{
-		Code:    http.StatusCreated,
-		Status:  "Created",
+	ctx.JSON(http.StatusOK, response.Response{
+		Code:    http.StatusOK,
+		Status:  "OK",
 		Message: "Certifications retrieved successfully",
 		Data:    certificationResponses,
 	})
 }
 
+// DeleteCertification godoc
+// @Summary Delete certification
+// @Description Delete a certification by candidate ID and certification ID
+// @Tags certifications
+// @Produce json
+// @Param id path string true "Candidate ID"
+// @Param certification_id path string true "Certification ID"
+// @Success 200 {object} response.Response
+// @Failure 400 {object} response.Response
+// @Router /candidates/{id}/certifications/{certification_id} [delete]
 func (c *CandidateCertificationsController) DeleteCertification(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
