@@ -28,7 +28,7 @@ func NewAuthController(service serviceInterfaces.AuthService, config *config.App
 }
 
 // Login godoc
-// @Summary 3. Login user
+// @Summary Login user
 // @Description Login user with email and password
 // @Tags Auth
 // @Accept json
@@ -62,7 +62,7 @@ func (ac *AuthController) Login(ctx *gin.Context) {
 }
 
 // RefreshToken godoc
-// @Summary 4. Refresh access token
+// @Summary Refresh access token
 // @Description Refresh access token using refresh token
 // @Tags Auth
 // @Produce json
@@ -100,7 +100,7 @@ func (ac *AuthController) RefreshToken(ctx *gin.Context) {
 }
 
 // Logout godoc
-// @Summary 5. Logout user
+// @Summary Logout user
 // @Description Logout user and clear cookies
 // @Tags Auth
 // @Produce json
@@ -118,7 +118,7 @@ func (ac *AuthController) Logout(ctx *gin.Context) {
 }
 
 // Register godoc
-// @Summary 2. Register user
+// @Summary Register user
 // @Description Register a new user
 // @Tags Auth
 // @Accept json
@@ -149,7 +149,7 @@ func (ac *AuthController) Register(ctx *gin.Context) {
 }
 
 // SendResetOTP godoc
-// @Summary 6. Send OTP for password reset
+// @Summary Send OTP for password reset
 // @Description Send OTP to user's email for password reset
 // @Tags Auth
 // @Accept json
@@ -179,7 +179,7 @@ func (ac *AuthController) SendResetOTP(ctx *gin.Context) {
 }
 
 // VerifyOTP godoc
-// @Summary 7. Verify OTP
+// @Summary Verify OTP
 // @Description Verify OTP and generate reset token
 // @Tags Auth
 // @Accept json
@@ -210,7 +210,7 @@ func (ac *AuthController) VerifyOTP(ctx *gin.Context) {
 }
 
 // ResetPassword godoc
-// @Summary 8. Reset password
+// @Summary Reset password
 // @Description Reset user's password using reset token
 // @Tags Auth
 // @Accept json
@@ -246,7 +246,7 @@ func (ac *AuthController) ResetPassword(ctx *gin.Context) {
 }
 
 // GoogleConnect godoc
-// @Summary 1. Google OAuth Connect
+// @Summary Google OAuth Connect
 // @Description Connect with Google OAuth
 // @Tags Auth
 // @Produce json

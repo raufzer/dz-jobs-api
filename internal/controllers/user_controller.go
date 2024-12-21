@@ -21,7 +21,7 @@ func NewUserController(service serviceInterfaces.UserService) *UserController {
 }
 
 // CreateUser godoc
-// @Summary 1. Create a new user
+// @Summary Create a new user
 // @Description Create a new user
 // @Tags Users
 // @Accept json
@@ -51,7 +51,7 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 }
 
 // GetUser godoc
-// @Summary 2. Get user by ID
+// @Summary Get user by ID
 // @Description Get user details by ID
 // @Tags Users
 // @Produce json
@@ -80,7 +80,7 @@ func (uc *UserController) GetUser(ctx *gin.Context) {
 }
 
 // UpdateUser godoc
-// @Summary 4. Update user
+// @Summary Update user
 // @Description Update user details
 // @Tags Users
 // @Accept json
@@ -117,7 +117,7 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 }
 
 // GetAllUsers godoc
-// @Summary 3. Get all users
+// @Summary Get all users
 // @Description Get all users
 // @Tags Users
 // @Produce json

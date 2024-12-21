@@ -201,7 +201,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 3. Get all users
+      summary: Get all users
       tags:
       - Users
     post:
@@ -226,7 +226,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 1. Create a new user
+      summary: Create a new user
       tags:
       - Users
   /admin/users/{id}:
@@ -271,7 +271,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 2. Get user by ID
+      summary: Get user by ID
       tags:
       - Users
     put:
@@ -301,7 +301,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 4. Update user
+      summary: Update user
       tags:
       - Users
   /auth/google-connect:
@@ -312,7 +312,7 @@ paths:
       responses:
         "302":
           description: Found
-      summary: 1. Google OAuth Connect
+      summary: Google OAuth Connect
       tags:
       - Auth
   /auth/login:
@@ -338,7 +338,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 3. Login user
+      summary: Login user
       tags:
       - Auth
   /auth/logout:
@@ -351,7 +351,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 5. Logout user
+      summary: Logout user
       tags:
       - Auth
   /auth/refresh-token:
@@ -368,7 +368,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 4. Refresh access token
+      summary: Refresh access token
       tags:
       - Auth
   /auth/register:
@@ -394,7 +394,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 2. Register user
+      summary: Register user
       tags:
       - Auth
   /auth/reset-password:
@@ -420,7 +420,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 8. Reset password
+      summary: Reset password
       tags:
       - Auth
   /auth/send-reset-otp:
@@ -446,7 +446,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 6. Send OTP for password reset
+      summary: Send OTP for password reset
       tags:
       - Auth
   /auth/verify-otp:
@@ -472,7 +472,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 7. Verify OTP
+      summary: Verify OTP
       tags:
       - Auth
   /candidates:
@@ -502,9 +502,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 1. Create a new candidate
+      summary: Create a new candidate
       tags:
-      - Candidates > Candidate
+      - Candidates - Candidate
   /candidates/{id}:
     delete:
       description: Delete candidate by ID
@@ -525,9 +525,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 4. Delete candidate
+      summary: Delete candidate
       tags:
-      - Candidates > Candidate
+      - Candidates - Candidate
     get:
       description: Get candidate details by ID
       parameters:
@@ -547,9 +547,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 2. Get candidate by ID
+      summary: Get candidate by ID
       tags:
-      - Candidates > Candidate
+      - Candidates - Candidate
     put:
       consumes:
       - multipart/form-data
@@ -581,9 +581,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 3. Update candidate
+      summary: Update candidate
       tags:
-      - Candidates > Candidate
+      - Candidates - Candidate
   /candidates/{id}/certifications:
     get:
       description: Get all certifications for a candidate by candidate ID
@@ -606,7 +606,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: b. Get certifications by candidate ID
       tags:
-      - Candidates > Certifications
+      - Candidates - Certifications
     post:
       consumes:
       - application/json
@@ -636,7 +636,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: a. Create a new certification
       tags:
-      - Candidates > Certifications
+      - Candidates - Certifications
   /candidates/{id}/certifications/{certification_id}:
     delete:
       description: Delete a certification by candidate ID and certification ID
@@ -664,7 +664,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: c. Delete certification
       tags:
-      - Candidates > Certifications
+      - Candidates - Certifications
   /candidates/{id}/education:
     delete:
       description: Delete an education record by candidate ID
@@ -685,9 +685,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 3. Delete education record
+      summary: Delete education record
       tags:
-      - Candidates > Education
+      - Candidates - Education
     get:
       description: Get all education records for a candidate by candidate ID
       parameters:
@@ -709,7 +709,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: 2. Get education records by candidate ID
       tags:
-      - Candidates > Education
+      - Candidates - Education
     post:
       consumes:
       - application/json
@@ -737,9 +737,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 1. Create a new education record
+      summary: Create a new education record
       tags:
-      - Candidates > Education
+      - Candidates - Education
   /candidates/{id}/experience:
     delete:
       description: Delete an experience record by candidate ID
@@ -760,9 +760,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 3. Delete experience record
+      summary: Delete experience record
       tags:
-      - Candidates > Experience
+      - Candidates - Experience
     get:
       description: Get all experience records for a candidate by candidate ID
       parameters:
@@ -784,7 +784,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: 2. Get experience records by candidate ID
       tags:
-      - Candidates > Experience
+      - Candidates - Experience
     post:
       consumes:
       - application/json
@@ -812,9 +812,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 1. Create a new experience record
+      summary: Create a new experience record
       tags:
-      - Candidates > Experience
+      - Candidates - Experience
   /candidates/{id}/personal-info:
     delete:
       description: Delete personal information for a candidate
@@ -835,9 +835,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 4. Delete personal information
+      summary: Delete personal information
       tags:
-      - Candidates > Personal Info
+      - Candidates - Personal Info
     get:
       description: Get personal information for a candidate by candidate ID
       parameters:
@@ -859,7 +859,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: 2. Get personal information by candidate ID
       tags:
-      - Candidates > Personal Info
+      - Candidates - Personal Info
     post:
       consumes:
       - application/json
@@ -887,9 +887,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 1. Create personal information
+      summary: Create personal information
       tags:
-      - Candidates > Personal Info
+      - Candidates - Personal Info
     put:
       consumes:
       - application/json
@@ -917,9 +917,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 3. Update personal information
+      summary: Update personal information
       tags:
-      - Candidates > Personal Info
+      - Candidates - Personal Info
   /candidates/{id}/portfolio:
     get:
       description: Get all projects for a candidate by candidate ID
@@ -940,9 +940,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 2. Get projects by candidate ID
+      summary: Get projects by candidate ID
       tags:
-      - Candidates > Portfolio
+      - Candidates - Portfolio
     post:
       consumes:
       - application/json
@@ -970,9 +970,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 1. Create a new project
+      summary: Create a new project
       tags:
-      - Candidates > Portfolio
+      - Candidates - Portfolio
   /candidates/{id}/portfolio/{project_id}:
     delete:
       description: Delete a project by candidate ID and project ID
@@ -998,9 +998,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 3. Delete project
+      summary: Delete project
       tags:
-      - Candidates > Portfolio
+      - Candidates - Portfolio
   /candidates/{id}/skills:
     get:
       description: Get all skills for a candidate by candidate ID
@@ -1021,9 +1021,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 2. Get skills by candidate ID
+      summary: Get skills by candidate ID
       tags:
-      - Candidates > Skills
+      - Candidates - Skills
     post:
       consumes:
       - application/json
@@ -1051,9 +1051,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 1. Create a new skill
+      summary: Create a new skill
       tags:
-      - Candidates > Skills
+      - Candidates - Skills
   /candidates/{id}/skills/{skill}:
     delete:
       description: Delete a skill by candidate ID and skill name
@@ -1079,7 +1079,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 3. Delete skill
+      summary: Delete skill
       tags:
-      - Candidates > Skills
+      - Candidates - Skills
 swagger: "2.0"
