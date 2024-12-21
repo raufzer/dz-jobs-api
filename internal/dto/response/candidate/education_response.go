@@ -2,7 +2,6 @@ package candidate
 
 import (
 	models "dz-jobs-api/internal/models/candidate"
-	"time"
 
 	"github.com/google/uuid"
 )
@@ -12,8 +11,8 @@ type EducationResponse struct {
 	CandidateID uuid.UUID `json:"candidate_id"`
 	Degree      string    `json:"degree"`
 	Institution string    `json:"institution"`
-	StartDate   time.Time `json:"start_date"`
-	EndDate     time.Time `json:"end_date"`
+	StartDate   string    `json:"start_date"`
+	EndDate     string    `json:"end_date"`
 	Description string    `json:"description"`
 }
 

@@ -20,6 +20,18 @@ func NewCandidateEducationController(service serviceInterfaces.CandidateEducatio
 }
 
 func (c *CandidateEducationController) CreateEducation(ctx *gin.Context) {
+	accessToken, err := ctx.Cookie("access_token")
+	if err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
+	userID, err := c.service.ExtractTokenDetails(accessToken)
+	if err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
 	var req request.AddEducationRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
@@ -27,7 +39,7 @@ func (c *CandidateEducationController) CreateEducation(ctx *gin.Context) {
 		return
 	}
 
-	education, err := c.service.AddEducation(req)
+	education, err := c.service.AddEducation(userID, req)
 	if err != nil {
 		ctx.Error(err)
 		return

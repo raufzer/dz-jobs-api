@@ -18,12 +18,12 @@ func NewCandidateEducationRepository(db *sql.DB) repositoryInterfaces.CandidateE
 	}
 }
 
-func (r *SQLCandidateEducationRepository) CreateEducation(education models.CandidateEducation) error {
-	query := `INSERT INTO candidate_education (education_id, candidate_id, degree, institution, start_date, end_date, description) 
-			VALUES ($1, $2, $3, $4, $5, $6, $7)`
+func (r *SQLCandidateEducationRepository) CreateEducation(education *models.CandidateEducation) error {
+	query := "INSERT INTO candidate_education (education_id, candidate_id, degree, institution, start_date, end_date, description) " +
+		"VALUES ($1, $2, $3, $4, $5, $6, $7)"
 	_, err := r.db.Exec(query, education.EducationID, education.CandidateID, education.Degree, education.Institution, education.StartDate, education.EndDate, education.Description)
 	if err != nil {
-		return fmt.Errorf("unable to create education: %w", err)
+		return fmt.Errorf("repository: failed to create education: %w", err)
 	}
 	return nil
 }
@@ -49,7 +49,7 @@ func (r *SQLCandidateEducationRepository) GetEducationByCandidateID(id uuid.UUID
 	return educations, nil
 }
 
-func (r *SQLCandidateEducationRepository) UpdateEducation(education models.CandidateEducation) error {
+func (r *SQLCandidateEducationRepository) UpdateEducation(education *models.CandidateEducation) error {
 	query := `UPDATE candidate_education SET degree = $1, institution = $2, start_date = $3, end_date = $4, description = $5 WHERE education_id = $6`
 	_, err := r.db.Exec(query, education.Degree, education.Institution, education.StartDate, education.EndDate, education.Description, education.EducationID)
 	if err != nil {

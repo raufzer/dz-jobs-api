@@ -53,7 +53,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	userService := services.NewUserService(userRepo)
 	candidateService := candidateServices.NewCandidateService(candidateRepo, cfg)
 	personalInfoService := candidateServices.NewCandidatePersonalInfoService(personalInfoRepo)
-	educationService := candidateServices.NewCandidateEducationService(educationRepo)
+	educationService := candidateServices.NewCandidateEducationService(educationRepo,cfg)
 	experienceService := candidateServices.NewCandidateExperienceService(experienceRepo)
 
 	// Initialize Controllers
