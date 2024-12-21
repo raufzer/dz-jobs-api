@@ -23,7 +23,7 @@ func NewUserController(service serviceInterfaces.UserService) *UserController {
 // CreateUser godoc
 // @Summary Create a new user
 // @Description Create a new user
-// @Tags users
+// @Tags users_1create
 // @Accept json
 // @Produce json
 // @Param user body request.CreateUsersRequest true "User request"
@@ -53,7 +53,7 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 // GetUser godoc
 // @Summary Get user by ID
 // @Description Get user details by ID
-// @Tags users
+// @Tags users_2get
 // @Produce json
 // @Param id path string true "User ID"
 // @Success 200 {object} response.Response
@@ -82,7 +82,7 @@ func (uc *UserController) GetUser(ctx *gin.Context) {
 // UpdateUser godoc
 // @Summary Update user
 // @Description Update user details
-// @Tags users
+// @Tags users_4update
 // @Accept json
 // @Produce json
 // @Param id path string true "User ID"
@@ -119,7 +119,7 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 // GetAllUsers godoc
 // @Summary Get all users
 // @Description Get all users
-// @Tags users
+// @Tags users_3get
 // @Produce json
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
@@ -148,7 +148,7 @@ func (uc *UserController) GetAllUsers(ctx *gin.Context) {
 // DeleteUser godoc
 // @Summary Delete user
 // @Description Delete user by ID
-// @Tags users
+// @Tags users_5delete
 // @Produce json
 // @Param id path string true "User ID"
 // @Success 200 {object} response.Response

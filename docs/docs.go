@@ -22,7 +22,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "auth_1register/login with google"
                 ],
                 "summary": "Google OAuth Connect",
                 "responses": {
@@ -42,7 +42,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "auth_3login"
                 ],
                 "summary": "Login user",
                 "parameters": [
@@ -79,7 +79,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "auth_5logout"
                 ],
                 "summary": "Logout user",
                 "responses": {
@@ -99,7 +99,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "auth_4refresh token"
                 ],
                 "summary": "Refresh access token",
                 "responses": {
@@ -128,7 +128,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "auth_2register"
                 ],
                 "summary": "Register user",
                 "parameters": [
@@ -168,7 +168,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "auth_8reset password"
                 ],
                 "summary": "Reset password",
                 "parameters": [
@@ -208,7 +208,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "auth_6send otp"
                 ],
                 "summary": "Send OTP for password reset",
                 "parameters": [
@@ -248,7 +248,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "auth_7verify otp"
                 ],
                 "summary": "Verify OTP",
                 "parameters": [
@@ -288,7 +288,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "candidates"
+                    "candidates_1create"
                 ],
                 "summary": "Create a new candidate",
                 "parameters": [
@@ -330,7 +330,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "candidates"
+                    "candidates_2get"
                 ],
                 "summary": "Get candidate by ID",
                 "parameters": [
@@ -366,7 +366,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "candidates"
+                    "candidates_3update"
                 ],
                 "summary": "Update candidate",
                 "parameters": [
@@ -413,7 +413,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "candidates"
+                    "candidates_4delete"
                 ],
                 "summary": "Delete candidate",
                 "parameters": [
@@ -448,7 +448,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "certifications"
+                    "certifications_2get"
                 ],
                 "summary": "Get certifications by candidate ID",
                 "parameters": [
@@ -484,7 +484,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "certifications"
+                    "certifications_1create"
                 ],
                 "summary": "Create a new certification",
                 "parameters": [
@@ -528,7 +528,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "certifications"
+                    "certifications_3delete"
                 ],
                 "summary": "Delete certification",
                 "parameters": [
@@ -570,7 +570,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "education"
+                    "education_2get"
                 ],
                 "summary": "Get education records by candidate ID",
                 "parameters": [
@@ -606,7 +606,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "education"
+                    "education_1create"
                 ],
                 "summary": "Create a new education record",
                 "parameters": [
@@ -648,7 +648,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "education"
+                    "education_3delete"
                 ],
                 "summary": "Delete education record",
                 "parameters": [
@@ -683,7 +683,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "experience"
+                    "experience_2get"
                 ],
                 "summary": "Get experience records by candidate ID",
                 "parameters": [
@@ -719,7 +719,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "experience"
+                    "experience_1create"
                 ],
                 "summary": "Create a new experience record",
                 "parameters": [
@@ -761,7 +761,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "experience"
+                    "experience_3delete"
                 ],
                 "summary": "Delete experience record",
                 "parameters": [
@@ -796,7 +796,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "personal_info"
+                    "personal_info_2get"
                 ],
                 "summary": "Get personal information by candidate ID",
                 "parameters": [
@@ -832,7 +832,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "personal_info"
+                    "personal_info_3update"
                 ],
                 "summary": "Update personal information",
                 "parameters": [
@@ -877,7 +877,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "personal_info"
+                    "personal_info_1create"
                 ],
                 "summary": "Create personal information",
                 "parameters": [
@@ -919,7 +919,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "personal_info"
+                    "personal_info_4delete"
                 ],
                 "summary": "Delete personal information",
                 "parameters": [
@@ -954,7 +954,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "portfolio"
+                    "portfolio_2get"
                 ],
                 "summary": "Get projects by candidate ID",
                 "parameters": [
@@ -990,7 +990,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "portfolio"
+                    "portfolio_1create"
                 ],
                 "summary": "Create a new project",
                 "parameters": [
@@ -1034,7 +1034,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "portfolio"
+                    "portfolio_3delete"
                 ],
                 "summary": "Delete project",
                 "parameters": [
@@ -1076,7 +1076,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "skills"
+                    "skills_2get"
                 ],
                 "summary": "Get skills by candidate ID",
                 "parameters": [
@@ -1112,7 +1112,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "skills"
+                    "skills_1create"
                 ],
                 "summary": "Create a new skill",
                 "parameters": [
@@ -1156,7 +1156,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "skills"
+                    "skills_3delete"
                 ],
                 "summary": "Delete skill",
                 "parameters": [
@@ -1198,7 +1198,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "users_3get"
                 ],
                 "summary": "Get all users",
                 "responses": {
@@ -1225,7 +1225,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "users_1create"
                 ],
                 "summary": "Create a new user",
                 "parameters": [
@@ -1262,7 +1262,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "users_2get"
                 ],
                 "summary": "Get user by ID",
                 "parameters": [
@@ -1298,7 +1298,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "users_4update"
                 ],
                 "summary": "Update user",
                 "parameters": [
@@ -1340,7 +1340,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "users_5delete"
                 ],
                 "summary": "Delete user",
                 "parameters": [

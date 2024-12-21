@@ -19,81 +19,10 @@ func NewCandidatePersonalInfoController(service serviceInterfaces.CandidatePerso
 	return &CandidatePersonalInfoController{service: service}
 }
 
-// GetPersonalInfoByID godoc
-// @Summary Get personal information by candidate ID
-// @Description Get personal information for a candidate by candidate ID
-// @Tags personal_info
-// @Produce json
-// @Param id path string true "Candidate ID"
-// @Success 200 {object} response.Response
-// @Failure 400 {object} response.Response
-// @Router /candidates/{id}/personal-info [get]
-func (c *CandidatePersonalInfoController) GetPersonalInfoByID(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("id"))
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
-
-	info, err := c.service.GetPersonalInfo(candidateID)
-	if err != nil {
-		ctx.Error(err)
-		return
-	}
-
-	ctx.JSON(http.StatusOK, response.Response{
-		Code:    http.StatusOK,
-		Status:  "OK",
-		Message: "Personal information retrieved successfully",
-		Data:    responseCandidate.ToPersonalInfoResponse(info),
-	})
-}
-
-// UpdatePersonalInfo godoc
-// @Summary Update personal information
-// @Description Update personal information for a candidate
-// @Tags personal_info
-// @Accept json
-// @Produce json
-// @Param id path string true "Candidate ID"
-// @Param personal_info body request.UpdateCandidatePersonalInfoRequest true "Personal Info request"
-// @Success 200 {object} response.Response
-// @Failure 400 {object} response.Response
-// @Router /candidates/{id}/personal-info [put]
-func (c *CandidatePersonalInfoController) UpdatePersonalInfo(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("id"))
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
-	var req request.UpdateCandidatePersonalInfoRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
-
-	updatedInfo, err := c.service.UpdatePersonalInfo(candidateID, req)
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
-
-	ctx.JSON(http.StatusOK, response.Response{
-		Code:    http.StatusOK,
-		Status:  "OK",
-		Message: "Personal information updated successfully",
-		Data:    responseCandidate.ToPersonalInfoResponse(updatedInfo),
-	})
-}
-
 // CreatePersonalInfo godoc
 // @Summary Create personal information
 // @Description Create personal information for a candidate
-// @Tags personal_info
+// @Tags personal_info_1create
 // @Accept json
 // @Produce json
 // @Param id path string true "Candidate ID"
@@ -130,10 +59,81 @@ func (c *CandidatePersonalInfoController) CreatePersonalInfo(ctx *gin.Context) {
 	})
 }
 
+// GetPersonalInfoByID godoc
+// @Summary Get personal information by candidate ID
+// @Description Get personal information for a candidate by candidate ID
+// @Tags personal_info_2get
+// @Produce json
+// @Param id path string true "Candidate ID"
+// @Success 200 {object} response.Response
+// @Failure 400 {object} response.Response
+// @Router /candidates/{id}/personal-info [get]
+func (c *CandidatePersonalInfoController) GetPersonalInfoByID(ctx *gin.Context) {
+	candidateID, err := uuid.Parse(ctx.Param("id"))
+	if err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
+
+	info, err := c.service.GetPersonalInfo(candidateID)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response.Response{
+		Code:    http.StatusOK,
+		Status:  "OK",
+		Message: "Personal information retrieved successfully",
+		Data:    responseCandidate.ToPersonalInfoResponse(info),
+	})
+}
+
+// UpdatePersonalInfo godoc
+// @Summary Update personal information
+// @Description Update personal information for a candidate
+// @Tags personal_info_3update
+// @Accept json
+// @Produce json
+// @Param id path string true "Candidate ID"
+// @Param personal_info body request.UpdateCandidatePersonalInfoRequest true "Personal Info request"
+// @Success 200 {object} response.Response
+// @Failure 400 {object} response.Response
+// @Router /candidates/{id}/personal-info [put]
+func (c *CandidatePersonalInfoController) UpdatePersonalInfo(ctx *gin.Context) {
+	candidateID, err := uuid.Parse(ctx.Param("id"))
+	if err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
+	var req request.UpdateCandidatePersonalInfoRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
+
+	updatedInfo, err := c.service.UpdatePersonalInfo(candidateID, req)
+	if err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response.Response{
+		Code:    http.StatusOK,
+		Status:  "OK",
+		Message: "Personal information updated successfully",
+		Data:    responseCandidate.ToPersonalInfoResponse(updatedInfo),
+	})
+}
+
 // DeletePersonalInfo godoc
 // @Summary Delete personal information
 // @Description Delete personal information for a candidate
-// @Tags personal_info
+// @Tags personal_info_4delete
 // @Produce json
 // @Param id path string true "Candidate ID"
 // @Success 200 {object} response.Response
