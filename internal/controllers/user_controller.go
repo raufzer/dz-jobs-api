@@ -23,13 +23,13 @@ func NewUserController(service serviceInterfaces.UserService) *UserController {
 // CreateUser godoc
 // @Summary Create a new user
 // @Description Create a new user
-// @Tags users_1create
+// @Tags Users_1create
 // @Accept json
 // @Produce json
 // @Param user body request.CreateUsersRequest true "User request"
 // @Success 201 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /users [post]
+// @Router /admin/users [post]
 func (uc *UserController) CreateUser(ctx *gin.Context) {
 	var req request.CreateUsersRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -53,12 +53,12 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 // GetUser godoc
 // @Summary Get user by ID
 // @Description Get user details by ID
-// @Tags users_2get
+// @Tags Users_2get
 // @Produce json
 // @Param id path string true "User ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /users/{id} [get]
+// @Router /admin/users/{id} [get]
 func (uc *UserController) GetUser(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
@@ -82,14 +82,14 @@ func (uc *UserController) GetUser(ctx *gin.Context) {
 // UpdateUser godoc
 // @Summary Update user
 // @Description Update user details
-// @Tags users_4update
+// @Tags Users_4update
 // @Accept json
 // @Produce json
 // @Param id path string true "User ID"
 // @Param user body request.UpdateUserRequest true "User request"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /users/{id} [put]
+// @Router /admin/users/{id} [put]
 func (uc *UserController) UpdateUser(ctx *gin.Context) {
 	var req request.UpdateUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -119,11 +119,11 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 // GetAllUsers godoc
 // @Summary Get all users
 // @Description Get all users
-// @Tags users_3get
+// @Tags Users_3get
 // @Produce json
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /users [get]
+// @Router /admin/users [get]
 func (uc *UserController) GetAllUsers(ctx *gin.Context) {
 	users, err := uc.userService.GetAllUsers()
 	if err != nil {
@@ -148,12 +148,12 @@ func (uc *UserController) GetAllUsers(ctx *gin.Context) {
 // DeleteUser godoc
 // @Summary Delete user
 // @Description Delete user by ID
-// @Tags users_5delete
+// @Tags Users_5delete
 // @Produce json
 // @Param id path string true "User ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /users/{id} [delete]
+// @Router /admin/users/{id} [delete]
 func (uc *UserController) DeleteUser(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {

@@ -15,6 +15,183 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/admin/users": {
+            "get": {
+                "description": "Get all users",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users_3get"
+                ],
+                "summary": "Get all users",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users_1create"
+                ],
+                "summary": "Create a new user",
+                "parameters": [
+                    {
+                        "description": "User request",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.CreateUsersRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/users/{id}": {
+            "get": {
+                "description": "Get user details by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users_2get"
+                ],
+                "summary": "Get user by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update user details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users_4update"
+                ],
+                "summary": "Update user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "User request",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete user by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users_5delete"
+                ],
+                "summary": "Delete user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/google-connect": {
             "get": {
                 "description": "Connect with Google OAuth",
@@ -22,7 +199,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth_1register/login with google"
+                    "Auth_1register/login with google"
                 ],
                 "summary": "Google OAuth Connect",
                 "responses": {
@@ -42,7 +219,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth_3login"
+                    "Auth_3login"
                 ],
                 "summary": "Login user",
                 "parameters": [
@@ -79,7 +256,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth_5logout"
+                    "Auth_5logout"
                 ],
                 "summary": "Logout user",
                 "responses": {
@@ -99,7 +276,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth_4refresh token"
+                    "Auth_4refresh token"
                 ],
                 "summary": "Refresh access token",
                 "responses": {
@@ -128,7 +305,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth_2register"
+                    "Auth_2register"
                 ],
                 "summary": "Register user",
                 "parameters": [
@@ -168,7 +345,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth_8reset password"
+                    "Auth_8reset password"
                 ],
                 "summary": "Reset password",
                 "parameters": [
@@ -208,7 +385,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth_6send otp"
+                    "Auth_6send otp"
                 ],
                 "summary": "Send OTP for password reset",
                 "parameters": [
@@ -248,7 +425,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth_7verify otp"
+                    "Auth_7verify otp"
                 ],
                 "summary": "Verify OTP",
                 "parameters": [
@@ -288,7 +465,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "candidates_1create"
+                    "Candidates",
+                    "Candidate_1create"
                 ],
                 "summary": "Create a new candidate",
                 "parameters": [
@@ -330,7 +508,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "candidates_2get"
+                    "Candidates",
+                    "Candidate_2get"
                 ],
                 "summary": "Get candidate by ID",
                 "parameters": [
@@ -366,7 +545,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "candidates_3update"
+                    "Candidates",
+                    "Candidate_3update"
                 ],
                 "summary": "Update candidate",
                 "parameters": [
@@ -413,7 +593,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "candidates_4delete"
+                    "Candidates",
+                    "Candidate_4delete"
                 ],
                 "summary": "Delete candidate",
                 "parameters": [
@@ -448,7 +629,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "certifications_2get"
+                    "Candidates",
+                    "Certifications_2get"
                 ],
                 "summary": "Get certifications by candidate ID",
                 "parameters": [
@@ -484,7 +666,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "certifications_1create"
+                    "Candidates",
+                    "Certifications_1create"
                 ],
                 "summary": "Create a new certification",
                 "parameters": [
@@ -528,7 +711,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "certifications_3delete"
+                    "Candidates",
+                    "Certifications_3delete"
                 ],
                 "summary": "Delete certification",
                 "parameters": [
@@ -570,7 +754,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "education_2get"
+                    "Candidates",
+                    "Education_2get"
                 ],
                 "summary": "Get education records by candidate ID",
                 "parameters": [
@@ -606,7 +791,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "education_1create"
+                    "Candidates",
+                    "Education_1create"
                 ],
                 "summary": "Create a new education record",
                 "parameters": [
@@ -648,7 +834,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "education_3delete"
+                    "Candidates",
+                    "Education_3delete"
                 ],
                 "summary": "Delete education record",
                 "parameters": [
@@ -683,7 +870,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "experience_2get"
+                    "Candidates",
+                    "Experience_2get"
                 ],
                 "summary": "Get experience records by candidate ID",
                 "parameters": [
@@ -719,7 +907,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "experience_1create"
+                    "Candidates",
+                    "Experience_1create"
                 ],
                 "summary": "Create a new experience record",
                 "parameters": [
@@ -761,7 +950,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "experience_3delete"
+                    "Candidates",
+                    "Experience_3delete"
                 ],
                 "summary": "Delete experience record",
                 "parameters": [
@@ -796,7 +986,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "personal_info_2get"
+                    "Candidates",
+                    "Personal_Info_2get"
                 ],
                 "summary": "Get personal information by candidate ID",
                 "parameters": [
@@ -832,7 +1023,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "personal_info_3update"
+                    "Candidates",
+                    "Personal_Info_3update"
                 ],
                 "summary": "Update personal information",
                 "parameters": [
@@ -877,7 +1069,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "personal_info_1create"
+                    "Candidates",
+                    "Personal_Info_1create"
                 ],
                 "summary": "Create personal information",
                 "parameters": [
@@ -919,7 +1112,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "personal_info_4delete"
+                    "Candidates",
+                    "Personal_Info_4delete"
                 ],
                 "summary": "Delete personal information",
                 "parameters": [
@@ -954,7 +1148,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "portfolio_2get"
+                    "Candidates",
+                    "Portfolio_2get"
                 ],
                 "summary": "Get projects by candidate ID",
                 "parameters": [
@@ -990,7 +1185,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "portfolio_1create"
+                    "Candidates",
+                    "Portfolio_1create"
                 ],
                 "summary": "Create a new project",
                 "parameters": [
@@ -1034,7 +1230,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "portfolio_3delete"
+                    "Candidates",
+                    "Portfolio_3delete"
                 ],
                 "summary": "Delete project",
                 "parameters": [
@@ -1076,7 +1273,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "skills_2get"
+                    "Candidates",
+                    "Skills_2get"
                 ],
                 "summary": "Get skills by candidate ID",
                 "parameters": [
@@ -1112,7 +1310,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "skills_1create"
+                    "Candidates",
+                    "Skills_1create"
                 ],
                 "summary": "Create a new skill",
                 "parameters": [
@@ -1156,7 +1355,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "skills_3delete"
+                    "Candidates",
+                    "Skills_3delete"
                 ],
                 "summary": "Delete skill",
                 "parameters": [
@@ -1171,183 +1371,6 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Skill name",
                         "name": "skill",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/users": {
-            "get": {
-                "description": "Get all users",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users_3get"
-                ],
-                "summary": "Get all users",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create a new user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users_1create"
-                ],
-                "summary": "Create a new user",
-                "parameters": [
-                    {
-                        "description": "User request",
-                        "name": "user",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.CreateUsersRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/{id}": {
-            "get": {
-                "description": "Get user details by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users_2get"
-                ],
-                "summary": "Get user by ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update user details",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users_4update"
-                ],
-                "summary": "Update user",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "User request",
-                        "name": "user",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.UpdateUserRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete user by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users_5delete"
-                ],
-                "summary": "Delete user",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
                         "in": "path",
                         "required": true
                     }

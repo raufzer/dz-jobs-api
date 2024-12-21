@@ -22,7 +22,7 @@ func NewCandidateSkillsController(service serviceInterfaces.CandidateSkillsServi
 // CreateSkill godoc
 // @Summary Create a new skill
 // @Description Create a new skill for a candidate
-// @Tags skills_1create
+// @Tags Candidates, Skills_1create
 // @Accept json
 // @Produce json
 // @Param id path string true "Candidate ID"
@@ -61,7 +61,7 @@ func (c *CandidateSkillsController) CreateSkill(ctx *gin.Context) {
 // GetSkillsByID godoc
 // @Summary Get skills by candidate ID
 // @Description Get all skills for a candidate by candidate ID
-// @Tags skills_2get
+// @Tags Candidates, Skills_2get
 // @Produce json
 // @Param id path string true "Candidate ID"
 // @Success 200 {object} response.Response
@@ -95,7 +95,7 @@ func (c *CandidateSkillsController) GetSkillsByID(ctx *gin.Context) {
 // DeleteSkill godoc
 // @Summary Delete skill
 // @Description Delete a skill by candidate ID and skill name
-// @Tags skills_3delete
+// @Tags Candidates, Skills_3delete
 // @Produce json
 // @Param id path string true "Candidate ID"
 // @Param skill path string true "Skill name"

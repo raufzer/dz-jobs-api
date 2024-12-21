@@ -187,6 +187,123 @@ info:
   title: DZ Jobs API
   version: "1.0"
 paths:
+  /admin/users:
+    get:
+      description: Get all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get all users
+      tags:
+      - Users_3get
+    post:
+      consumes:
+      - application/json
+      description: Create a new user
+      parameters:
+      - description: User request
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateUsersRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Create a new user
+      tags:
+      - Users_1create
+  /admin/users/{id}:
+    delete:
+      description: Delete user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Delete user
+      tags:
+      - Users_5delete
+    get:
+      description: Get user details by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get user by ID
+      tags:
+      - Users_2get
+    put:
+      consumes:
+      - application/json
+      description: Update user details
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User request
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Update user
+      tags:
+      - Users_4update
   /auth/google-connect:
     get:
       description: Connect with Google OAuth
@@ -197,7 +314,7 @@ paths:
           description: Found
       summary: Google OAuth Connect
       tags:
-      - auth_1register/login with google
+      - Auth_1register/login with google
   /auth/login:
     post:
       consumes:
@@ -223,7 +340,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Login user
       tags:
-      - auth_3login
+      - Auth_3login
   /auth/logout:
     post:
       description: Logout user and clear cookies
@@ -236,7 +353,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Logout user
       tags:
-      - auth_5logout
+      - Auth_5logout
   /auth/refresh-token:
     post:
       description: Refresh access token using refresh token
@@ -253,7 +370,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Refresh access token
       tags:
-      - auth_4refresh token
+      - Auth_4refresh token
   /auth/register:
     post:
       consumes:
@@ -279,7 +396,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Register user
       tags:
-      - auth_2register
+      - Auth_2register
   /auth/reset-password:
     post:
       consumes:
@@ -305,7 +422,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Reset password
       tags:
-      - auth_8reset password
+      - Auth_8reset password
   /auth/send-reset-otp:
     post:
       consumes:
@@ -331,7 +448,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Send OTP for password reset
       tags:
-      - auth_6send otp
+      - Auth_6send otp
   /auth/verify-otp:
     post:
       consumes:
@@ -357,7 +474,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Verify OTP
       tags:
-      - auth_7verify otp
+      - Auth_7verify otp
   /candidates:
     post:
       consumes:
@@ -387,7 +504,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Create a new candidate
       tags:
-      - candidates_1create
+      - Candidates
+      - Candidate_1create
   /candidates/{id}:
     delete:
       description: Delete candidate by ID
@@ -410,7 +528,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Delete candidate
       tags:
-      - candidates_4delete
+      - Candidates
+      - Candidate_4delete
     get:
       description: Get candidate details by ID
       parameters:
@@ -432,7 +551,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Get candidate by ID
       tags:
-      - candidates_2get
+      - Candidates
+      - Candidate_2get
     put:
       consumes:
       - multipart/form-data
@@ -466,7 +586,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Update candidate
       tags:
-      - candidates_3update
+      - Candidates
+      - Candidate_3update
   /candidates/{id}/certifications:
     get:
       description: Get all certifications for a candidate by candidate ID
@@ -489,7 +610,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Get certifications by candidate ID
       tags:
-      - certifications_2get
+      - Candidates
+      - Certifications_2get
     post:
       consumes:
       - application/json
@@ -519,7 +641,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Create a new certification
       tags:
-      - certifications_1create
+      - Candidates
+      - Certifications_1create
   /candidates/{id}/certifications/{certification_id}:
     delete:
       description: Delete a certification by candidate ID and certification ID
@@ -547,7 +670,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Delete certification
       tags:
-      - certifications_3delete
+      - Candidates
+      - Certifications_3delete
   /candidates/{id}/education:
     delete:
       description: Delete an education record by candidate ID
@@ -570,7 +694,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Delete education record
       tags:
-      - education_3delete
+      - Candidates
+      - Education_3delete
     get:
       description: Get all education records for a candidate by candidate ID
       parameters:
@@ -592,7 +717,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Get education records by candidate ID
       tags:
-      - education_2get
+      - Candidates
+      - Education_2get
     post:
       consumes:
       - application/json
@@ -622,7 +748,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Create a new education record
       tags:
-      - education_1create
+      - Candidates
+      - Education_1create
   /candidates/{id}/experience:
     delete:
       description: Delete an experience record by candidate ID
@@ -645,7 +772,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Delete experience record
       tags:
-      - experience_3delete
+      - Candidates
+      - Experience_3delete
     get:
       description: Get all experience records for a candidate by candidate ID
       parameters:
@@ -667,7 +795,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Get experience records by candidate ID
       tags:
-      - experience_2get
+      - Candidates
+      - Experience_2get
     post:
       consumes:
       - application/json
@@ -697,7 +826,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Create a new experience record
       tags:
-      - experience_1create
+      - Candidates
+      - Experience_1create
   /candidates/{id}/personal-info:
     delete:
       description: Delete personal information for a candidate
@@ -720,7 +850,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Delete personal information
       tags:
-      - personal_info_4delete
+      - Candidates
+      - Personal_Info_4delete
     get:
       description: Get personal information for a candidate by candidate ID
       parameters:
@@ -742,7 +873,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Get personal information by candidate ID
       tags:
-      - personal_info_2get
+      - Candidates
+      - Personal_Info_2get
     post:
       consumes:
       - application/json
@@ -772,7 +904,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Create personal information
       tags:
-      - personal_info_1create
+      - Candidates
+      - Personal_Info_1create
     put:
       consumes:
       - application/json
@@ -802,7 +935,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Update personal information
       tags:
-      - personal_info_3update
+      - Candidates
+      - Personal_Info_3update
   /candidates/{id}/portfolio:
     get:
       description: Get all projects for a candidate by candidate ID
@@ -825,7 +959,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Get projects by candidate ID
       tags:
-      - portfolio_2get
+      - Candidates
+      - Portfolio_2get
     post:
       consumes:
       - application/json
@@ -855,7 +990,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Create a new project
       tags:
-      - portfolio_1create
+      - Candidates
+      - Portfolio_1create
   /candidates/{id}/portfolio/{project_id}:
     delete:
       description: Delete a project by candidate ID and project ID
@@ -883,7 +1019,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Delete project
       tags:
-      - portfolio_3delete
+      - Candidates
+      - Portfolio_3delete
   /candidates/{id}/skills:
     get:
       description: Get all skills for a candidate by candidate ID
@@ -906,7 +1043,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Get skills by candidate ID
       tags:
-      - skills_2get
+      - Candidates
+      - Skills_2get
     post:
       consumes:
       - application/json
@@ -936,7 +1074,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Create a new skill
       tags:
-      - skills_1create
+      - Candidates
+      - Skills_1create
   /candidates/{id}/skills/{skill}:
     delete:
       description: Delete a skill by candidate ID and skill name
@@ -964,122 +1103,6 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Delete skill
       tags:
-      - skills_3delete
-  /users:
-    get:
-      description: Get all users
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Get all users
-      tags:
-      - users_3get
-    post:
-      consumes:
-      - application/json
-      description: Create a new user
-      parameters:
-      - description: User request
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/request.CreateUsersRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Create a new user
-      tags:
-      - users_1create
-  /users/{id}:
-    delete:
-      description: Delete user by ID
-      parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Delete user
-      tags:
-      - users_5delete
-    get:
-      description: Get user details by ID
-      parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Get user by ID
-      tags:
-      - users_2get
-    put:
-      consumes:
-      - application/json
-      description: Update user details
-      parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: User request
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/request.UpdateUserRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Update user
-      tags:
-      - users_4update
+      - Candidates
+      - Skills_3delete
 swagger: "2.0"
