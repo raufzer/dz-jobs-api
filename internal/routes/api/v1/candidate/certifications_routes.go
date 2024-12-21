@@ -10,7 +10,7 @@ func CertificationsRoutes(rg *gin.RouterGroup, candidateCertificationsController
 	certificationsRoute := rg.Group("/:id/certifications")
 
 	certificationsRoute.POST("/", candidateCertificationsController.CreateCertification)
-	certificationsRoute.GET("/", candidateCertificationsController.GetCertfications)
+	certificationsRoute.GET("/", candidateCertificationsController.GetCertifications)
 	// educationRoute.PUT("/", candidateEducationController.UpdateEducation)
 	certificationsRoute.DELETE("/:certification_id", candidateCertificationsController.DeleteCertification)
 
