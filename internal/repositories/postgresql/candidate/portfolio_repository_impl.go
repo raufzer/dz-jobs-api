@@ -5,6 +5,7 @@ import (
 	models "dz-jobs-api/internal/models/candidate"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces/candidate"
 	"fmt"
+
 	"github.com/google/uuid"
 )
 
@@ -18,7 +19,7 @@ func NewCandidatePortfolioRepository(db *sql.DB) repositoryInterfaces.CandidateP
 	}
 }
 
-func (r *SQLCandidatePortfolioRepository) CreatePortfolio(portfolio models.CandidatePortfolio) error {
+func (r *SQLCandidatePortfolioRepository) CreateProject(portfolio *models.CandidatePortfolio) error {
 	query := `INSERT INTO candidate_portfolio (project_id, candidate_id, project_name, project_link, category, description) 
 			VALUES ($1, $2, $3, $4, $5, $6)`
 	_, err := r.db.Exec(query, portfolio.ProjectID, portfolio.CandidateID, portfolio.ProjectName, portfolio.ProjectLink, portfolio.Category, portfolio.Description)
@@ -48,8 +49,8 @@ func (r *SQLCandidatePortfolioRepository) GetPortfolioByCandidateID(id uuid.UUID
 	}
 	return portfolios, nil
 }
-func (r *SQLCandidatePortfolioRepository) UpdatePortfolio(portfolio models.CandidatePortfolio) error {
-	
+func (r *SQLCandidatePortfolioRepository) UpdateProject(portfolio models.CandidatePortfolio) error {
+
 	query := `
 		UPDATE candidate_portfolio
 		SET project_id = $1, project_name = $2, project_link = $3, category = $4, description = $5
@@ -62,7 +63,7 @@ func (r *SQLCandidatePortfolioRepository) UpdatePortfolio(portfolio models.Candi
 	return nil
 }
 
-func (r *SQLCandidatePortfolioRepository) DeletePortfolio(id uuid.UUID, projectName string) error {
+func (r *SQLCandidatePortfolioRepository) DeleteProject(id uuid.UUID, projectName string) error {
 	query := `DELETE FROM candidate_portfolio WHERE candidate_id = $1 AND project_name = $2`
 	_, err := r.db.Exec(query, id, projectName)
 	if err != nil {

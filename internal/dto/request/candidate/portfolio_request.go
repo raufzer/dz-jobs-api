@@ -1,7 +1,7 @@
 package candidate
 
 
-type AddPortfolioRequest struct {
+type AddProjectRequest struct {
 
 	ProjectName string    `json:"project_name" binding:"required"`
 	ProjectLink string    `json:"project_link" binding:"required,url"`
@@ -9,7 +9,7 @@ type AddPortfolioRequest struct {
 	Description string    `json:"description"`
 }
 
-type UpdatePortfolioRequest struct {
+type UpdateProjectRequest struct {
 	ProjectName string    `json:"project_name"`
 	ProjectLink string    `json:"project_link"`
 	Category    string    `json:"category"`
