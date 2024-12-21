@@ -20,6 +20,12 @@ func NewCandidateExperienceController(service serviceInterfaces.CandidateExperie
 }
 
 func (c *CandidateExperienceController) CreateExperience(ctx *gin.Context) {
+	candidateID, err := uuid.Parse(ctx.Param("id"))
+	if err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
 	var req request.AddExperienceRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
@@ -27,7 +33,7 @@ func (c *CandidateExperienceController) CreateExperience(ctx *gin.Context) {
 		return
 	}
 
-	experience, err := c.service.AddExperience(req)
+	experience, err := c.service.AddExperience(candidateID,req)
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -41,10 +47,10 @@ func (c *CandidateExperienceController) CreateExperience(ctx *gin.Context) {
 }
 
 func (c *CandidateExperienceController) GetExperienceByID(ctx *gin.Context) {
-	idParam := ctx.Param("id")
-	candidateID, err := uuid.Parse(idParam)
+	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
+		ctx.Abort()
 		return
 	}
 
@@ -66,10 +72,10 @@ func (c *CandidateExperienceController) GetExperienceByID(ctx *gin.Context) {
 }
 
 func (c *CandidateExperienceController) DeleteExperience(ctx *gin.Context) {
-	idParam := ctx.Param("id")
-	candidateID, err := uuid.Parse(idParam)
+	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
+		ctx.Abort()
 		return
 	}
 

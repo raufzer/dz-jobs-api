@@ -2,7 +2,7 @@ package candidate
 
 import (
 	"database/sql"
-	models"dz-jobs-api/internal/models/candidate"
+	models "dz-jobs-api/internal/models/candidate"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces/candidate"
 	"fmt"
 	"github.com/google/uuid"
@@ -18,12 +18,12 @@ func NewCandidateExperienceRepository(db *sql.DB) repositoryInterfaces.Candidate
 	}
 }
 
-func (r *SQLCandidateExperienceRepository) CreateExperience(experience models.CandidateExperience) error {
+func (r *SQLCandidateExperienceRepository) CreateExperience(experience *models.CandidateExperience) error {
 	query := `INSERT INTO candidate_experience (experience_id, candidate_id, job_title, company, start_date, end_date, description) 
 			VALUES ($1, $2, $3, $4, $5, $6, $7)`
 	_, err := r.db.Exec(query, experience.ExperienceID, experience.CandidateID, experience.JobTitle, experience.Company, experience.StartDate, experience.EndDate, experience.Description)
 	if err != nil {
-		return fmt.Errorf("unable to create experience: %w", err)
+		return fmt.Errorf("repository: failed to create experience: %w", err)
 	}
 	return nil
 }
@@ -49,7 +49,7 @@ func (r *SQLCandidateExperienceRepository) GetExperienceByCandidateID(id uuid.UU
 	return experiences, nil
 }
 
-func (r *SQLCandidateExperienceRepository) UpdateExperience(experience models.CandidateExperience) error {
+func (r *SQLCandidateExperienceRepository) UpdateExperience(experience *models.CandidateExperience) error {
 	query := `UPDATE candidate_experience SET job_title = $1, company = $2, start_date = $3, end_date = $4, description = $5 WHERE experience_id = $6`
 	_, err := r.db.Exec(query, experience.JobTitle, experience.Company, experience.StartDate, experience.EndDate, experience.Description, experience.ExperienceID)
 	if err != nil {

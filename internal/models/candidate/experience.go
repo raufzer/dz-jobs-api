@@ -1,8 +1,6 @@
 package candidate
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 )
 
@@ -11,7 +9,7 @@ type CandidateExperience struct {
 	CandidateID  uuid.UUID `db:"candidate_id"`
 	JobTitle     string    `db:"job_title"`
 	Company      string    `db:"company"`
-	StartDate    time.Time `db:"start_date"`
-	EndDate      time.Time `db:"end_date"`
+	StartDate    string    `db:"start_date"`
+	EndDate      string    `db:"end_date"`
 	Description  string    `db:"description"`
 }

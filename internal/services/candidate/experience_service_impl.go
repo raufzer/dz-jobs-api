@@ -18,9 +18,10 @@ func NewCandidateExperienceService(repo interfaces.CandidateExperienceRepository
 	return &candidateExperienceService{experienceRepo: repo}
 }
 
-func (s *candidateExperienceService) AddExperience(request request.AddExperienceRequest) (*models.CandidateExperience, error) {
+func (s *candidateExperienceService) AddExperience(candidateID uuid.UUID, request request.AddExperienceRequest) (*models.CandidateExperience, error) {
 	experience := &models.CandidateExperience{
 		ExperienceID: uuid.New(),
+		CandidateID:  candidateID,
 		JobTitle:     request.JobTitle,
 		Company:      request.Company,
 		StartDate:    request.StartDate,
@@ -28,7 +29,7 @@ func (s *candidateExperienceService) AddExperience(request request.AddExperience
 		Description:  request.Description,
 	}
 
-	err := s.experienceRepo.CreateExperience(*experience)
+	err := s.experienceRepo.CreateExperience(experience)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to add experience")
 	}
