@@ -20,10 +20,10 @@ func NewCandidatePersonalInfoController(service serviceInterfaces.CandidatePerso
 }
 
 func (c *CandidatePersonalInfoController) GetPersonalInfoByID(ctx *gin.Context) {
-	idParam := ctx.Param("id")
-	candidateID, err := uuid.Parse(idParam)
+	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
+		ctx.Abort()
 		return
 	}
 
@@ -43,16 +43,16 @@ func (c *CandidatePersonalInfoController) GetPersonalInfoByID(ctx *gin.Context) 
 }
 
 func (c *CandidatePersonalInfoController) UpdatePersonalInfo(ctx *gin.Context) {
-	var req request.UpdateCandidatePersonalInfoRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
+	candidateID, err := uuid.Parse(ctx.Param("id"))
+	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
-	idParam := ctx.Param("id")
-	candidateID, err := uuid.Parse(idParam)
-	if err != nil {
+	var req request.UpdateCandidatePersonalInfoRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
+		ctx.Abort()
 		return
 	}
 
@@ -72,10 +72,10 @@ func (c *CandidatePersonalInfoController) UpdatePersonalInfo(ctx *gin.Context) {
 }
 
 func (c *CandidatePersonalInfoController) CreatePersonalInfo(ctx *gin.Context) {
-	idParam := ctx.Param("id")
-	candidateID, err := uuid.Parse(idParam)
+	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
+		ctx.Abort()
 		return
 	}
 	var req request.CreateCandidatePersonalInfoRequest
@@ -101,10 +101,10 @@ func (c *CandidatePersonalInfoController) CreatePersonalInfo(ctx *gin.Context) {
 }
 
 func (c *CandidatePersonalInfoController) DeletePersonalInfo(ctx *gin.Context) {
-	idParam := ctx.Param("id")
-	candidateID, err := uuid.Parse(idParam)
+	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
+		ctx.Abort()
 		return
 	}
 

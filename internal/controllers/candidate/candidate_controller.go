@@ -57,10 +57,10 @@ func (c *CandidateController) CreateCandidate(ctx *gin.Context) {
 }
 
 func (c *CandidateController) GetCandidateByID(ctx *gin.Context) {
-	idParam := ctx.Param("id")
-	candidateID, err := uuid.Parse(idParam)
+	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
+		ctx.Abort()
 		return
 	}
 
@@ -75,10 +75,10 @@ func (c *CandidateController) GetCandidateByID(ctx *gin.Context) {
 
 func (c *CandidateController) UpdateCandidate(ctx *gin.Context) {
 
-	idParam := ctx.Param("id")
-	candidateID, err := uuid.Parse(idParam)
+	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
+		ctx.Abort()
 		return
 	}
 
@@ -110,10 +110,10 @@ func (c *CandidateController) UpdateCandidate(ctx *gin.Context) {
 }
 
 func (c *CandidateController) DeleteCandidate(ctx *gin.Context) {
-	idParam := ctx.Param("id")
-	candidateID, err := uuid.Parse(idParam)
+	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
+		ctx.Abort()
 		return
 	}
 

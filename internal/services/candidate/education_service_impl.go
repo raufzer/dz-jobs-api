@@ -22,11 +22,11 @@ func NewCandidateEducationService(repo interfaces.CandidateEducationRepository, 
 		config: config}	
 }
 
-func (s *candidateEducationService) AddEducation(userID string, request request.AddEducationRequest) (*models.CandidateEducation, error) {
+func (s *candidateEducationService) AddEducation(candidateID uuid.UUID, request request.AddEducationRequest) (*models.CandidateEducation, error) {
 
 	education := &models.CandidateEducation{
 		EducationID: uuid.New(),
-		CandidateID: uuid.MustParse(userID),
+		CandidateID: candidateID,
 		Degree:      request.Degree,
 		Institution: request.Institution,
 		StartDate:   request.StartDate,
@@ -60,11 +60,3 @@ func (s *candidateEducationService) DeleteEducation(educationID uuid.UUID) error
 	return nil
 }
 
-func (s *candidateEducationService) ExtractTokenDetails(token string) (string, error) {
-
-	claims, err := utils.ExtractTokenDetails(token, s.config.AccessTokenSecret)
-	if err != nil {
-		return "", utils.NewCustomError(http.StatusUnauthorized, "Invalid or expired token")
-	}
-	return claims.UserID, nil
-}
