@@ -23,6 +23,7 @@ type AppDependencies struct {
 	ExperienceController     *candidateControllers.CandidateExperienceController
 	SkillsController         *candidateControllers.CandidateSkillsController
 	CertificationsController *candidateControllers.CandidateCertificationsController
+	PortfolioController      *candidateControllers.CandidatePortfolioController
 }
 
 func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
@@ -47,6 +48,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	experienceRepo := candidatePostgresql.NewCandidateExperienceRepository(dbConfig.DB)
 	skillsRepo := candidatePostgresql.NewCandidateSkillsRepository(dbConfig.DB)
 	certificationRepo := candidatePostgresql.NewCandidateCertificationsRepository(dbConfig.DB)
+	portfolioRepo := candidatePostgresql.NewCandidatePortfolioRepository(dbConfig.DB)
 
 	// Initialize Services
 	authService := services.NewAuthService(
@@ -61,6 +63,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	experienceService := candidateServices.NewCandidateExperienceService(experienceRepo)
 	skillsService := candidateServices.NewCandidateSkillService(skillsRepo)
 	certificationsService := candidateServices.NewCandidateCertificationsService(certificationRepo)
+	portfolioService := candidateServices.NewCandidatePortfolioService(portfolioRepo)
 
 	// Initialize Controllers
 	userController := controllers.NewUserController(userService)
@@ -71,6 +74,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	experienceController := candidateControllers.NewCandidateExperienceController(experienceService)
 	skillsController := candidateControllers.NewCandidateSkillsController(skillsService)
 	certificationsController := candidateControllers.NewCandidateCertificationsController(certificationsService)
+	portfolioController := candidateControllers.NewCandidatePortfolioController(portfolioService)
 
 	// Return dependencies
 	return &AppDependencies{
@@ -83,5 +87,6 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 		ExperienceController:     experienceController,
 		SkillsController:         skillsController,
 		CertificationsController: certificationsController,
+		PortfolioController:      portfolioController,
 	}, nil
 }
