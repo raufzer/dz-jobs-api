@@ -16,7 +16,7 @@ import (
 )
 
 // RegisterRoutes sets up all public and protected routes
-func RegisterRoutes(router *gin.Engine, authController *controllers.AuthController, userController *controllers.UserController, candidateController *candidateControllers.CandidateController, personalInfoController *candidateControllers.CandidatePersonalInfoController, educationController *candidateControllers.CandidateEducationController, experienceController *candidateControllers.CandidateExperienceController, skillsController *candidateControllers.CandidateSkillsController, appConfig *config.AppConfig) {
+func RegisterRoutes(router *gin.Engine, authController *controllers.AuthController, userController *controllers.UserController, candidateController *candidateControllers.CandidateController, personalInfoController *candidateControllers.CandidatePersonalInfoController, educationController *candidateControllers.CandidateEducationController, experienceController *candidateControllers.CandidateExperienceController, skillsController *candidateControllers.CandidateSkillsController, certificationsController *candidateControllers.CandidateCertificationsController, appConfig *config.AppConfig) {
 	// Base path
 	basePath := router.Group("/v1")
 
@@ -26,7 +26,7 @@ func RegisterRoutes(router *gin.Engine, authController *controllers.AuthControll
 	// Protected routes (authentication required)
 	protected := basePath.Group("/")
 	protected.Use(middlewares.AuthMiddleware(appConfig))
-	RegisterProtectedRoutes(protected, userController, candidateController, personalInfoController, educationController, experienceController, skillsController)
+	RegisterProtectedRoutes(protected, userController, candidateController, personalInfoController, educationController, experienceController, skillsController, certificationsController)
 }
 
 // RegisterPublicRoutes handles routes that don't require authentication
@@ -35,7 +35,7 @@ func RegisterPublicRoutes(router *gin.RouterGroup, authController *controllers.A
 }
 
 // RegisterProtectedRoutes handles routes that require authentication
-func RegisterProtectedRoutes(router *gin.RouterGroup, userController *controllers.UserController, candidateController *candidateControllers.CandidateController, personalInfoController *candidateControllers.CandidatePersonalInfoController, educationController *candidateControllers.CandidateEducationController, experienceController *candidateControllers.CandidateExperienceController, skillsController *candidateControllers.CandidateSkillsController) {
+func RegisterProtectedRoutes(router *gin.RouterGroup, userController *controllers.UserController, candidateController *candidateControllers.CandidateController, personalInfoController *candidateControllers.CandidatePersonalInfoController, educationController *candidateControllers.CandidateEducationController, experienceController *candidateControllers.CandidateExperienceController, skillsController *candidateControllers.CandidateSkillsController, certificationsController *candidateControllers.CandidateCertificationsController) {
 	// Admin-specific routes
 	adminGroup := router.Group("/admin")
 	adminGroup.Use(middlewares.RoleMiddleware("admin"))
@@ -44,7 +44,7 @@ func RegisterProtectedRoutes(router *gin.RouterGroup, userController *controller
 	// Candidate-specific routes
 	candidateGroup := router.Group("/candidates")
 	candidateGroup.Use(middlewares.RoleMiddleware("candidate", "admin"))
-	RegisterCandidateRoutes(candidateGroup, candidateController, personalInfoController, educationController, experienceController, skillsController)
+	RegisterCandidateRoutes(candidateGroup, candidateController, personalInfoController, educationController, experienceController, skillsController, certificationsController)
 
 	// Recruiter-specific routes (Future Implementation)
 	// recruiterGroup := router.Group("/recruiters")
@@ -58,12 +58,13 @@ func RegisterAdminRoutes(router *gin.RouterGroup, userController *controllers.Us
 }
 
 // RegisterCandidateRoutes handles routes accessible only to candidates
-func RegisterCandidateRoutes(router *gin.RouterGroup, candidateController *candidateControllers.CandidateController, personalInfoController *candidateControllers.CandidatePersonalInfoController, educationController *candidateControllers.CandidateEducationController, experienceController *candidateControllers.CandidateExperienceController, skillsController *candidateControllers.CandidateSkillsController) {
+func RegisterCandidateRoutes(router *gin.RouterGroup, candidateController *candidateControllers.CandidateController, personalInfoController *candidateControllers.CandidatePersonalInfoController, educationController *candidateControllers.CandidateEducationController, experienceController *candidateControllers.CandidateExperienceController, skillsController *candidateControllers.CandidateSkillsController, certificationsController *candidateControllers.CandidateCertificationsController) {
 	v1.CandidateRoutes(router, candidateController)
 	v1.PersonalInfoRoutes(router, personalInfoController)
 	v1.ExperienceRoutes(router, experienceController)
 	v1.EducationRoutes(router, educationController)
 	v1.SkillsRoutes(router, skillsController)
+	v1.CertificationsRoutes(router, certificationsController)
 }
 
 // RegisterRecruiterRoutes handles routes accessible only to recruiters

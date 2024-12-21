@@ -14,14 +14,15 @@ import (
 )
 
 type AppDependencies struct {
-	UserController         *controllers.UserController
-	AuthController         *controllers.AuthController
-	RedisClient            *config.RedisConfig
-	CandidateController    *candidateControllers.CandidateController
-	PersonalInfoController *candidateControllers.CandidatePersonalInfoController
-	EducationController    *candidateControllers.CandidateEducationController
-	ExperienceController   *candidateControllers.CandidateExperienceController
-	SkillsController       *candidateControllers.CandidateSkillsController
+	UserController           *controllers.UserController
+	AuthController           *controllers.AuthController
+	RedisClient              *config.RedisConfig
+	CandidateController      *candidateControllers.CandidateController
+	PersonalInfoController   *candidateControllers.CandidatePersonalInfoController
+	EducationController      *candidateControllers.CandidateEducationController
+	ExperienceController     *candidateControllers.CandidateExperienceController
+	SkillsController         *candidateControllers.CandidateSkillsController
+	CertificationsController *candidateControllers.CandidateCertificationsController
 }
 
 func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
@@ -45,6 +46,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	educationRepo := candidatePostgresql.NewCandidateEducationRepository(dbConfig.DB)
 	experienceRepo := candidatePostgresql.NewCandidateExperienceRepository(dbConfig.DB)
 	skillsRepo := candidatePostgresql.NewCandidateSkillsRepository(dbConfig.DB)
+	certificationRepo := candidatePostgresql.NewCandidateCertificationsRepository(dbConfig.DB)
 
 	// Initialize Services
 	authService := services.NewAuthService(
@@ -55,9 +57,10 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	userService := services.NewUserService(userRepo)
 	candidateService := candidateServices.NewCandidateService(candidateRepo, cfg)
 	personalInfoService := candidateServices.NewCandidatePersonalInfoService(personalInfoRepo)
-	educationService := candidateServices.NewCandidateEducationService(educationRepo,cfg)
+	educationService := candidateServices.NewCandidateEducationService(educationRepo, cfg)
 	experienceService := candidateServices.NewCandidateExperienceService(experienceRepo)
 	skillsService := candidateServices.NewCandidateSkillService(skillsRepo)
+	certificationsService := candidateServices.NewCandidateCertificationsService(certificationRepo)
 
 	// Initialize Controllers
 	userController := controllers.NewUserController(userService)
@@ -67,16 +70,18 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	educationController := candidateControllers.NewCandidateEducationController(educationService)
 	experienceController := candidateControllers.NewCandidateExperienceController(experienceService)
 	skillsController := candidateControllers.NewCandidateSkillsController(skillsService)
+	certificationsController := candidateControllers.NewCandidateCertificationsController(certificationsService)
 
 	// Return dependencies
 	return &AppDependencies{
-		UserController:         userController,
-		AuthController:         authController,
-		RedisClient:            redisConfig,
-		CandidateController:    candidateController,
-		PersonalInfoController: personalInfoController,
-		EducationController:    educationController,
-		ExperienceController:   experienceController,
-		SkillsController:       skillsController,
+		UserController:           userController,
+		AuthController:           authController,
+		RedisClient:              redisConfig,
+		CandidateController:      candidateController,
+		PersonalInfoController:   personalInfoController,
+		EducationController:      educationController,
+		ExperienceController:     experienceController,
+		SkillsController:         skillsController,
+		CertificationsController: certificationsController,
 	}, nil
 }
