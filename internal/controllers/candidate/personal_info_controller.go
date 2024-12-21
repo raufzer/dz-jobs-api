@@ -60,7 +60,7 @@ func (c *CandidatePersonalInfoController) CreatePersonalInfo(ctx *gin.Context) {
 }
 
 // GetPersonalInfoByID godoc
-// @Summary 2. Get personal information by candidate ID
+// @Summary Get personal information by candidate ID
 // @Description Get personal information for a candidate by candidate ID
 // @Tags Candidates - Personal Info
 // @Produce json

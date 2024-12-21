@@ -249,7 +249,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 5. Delete user
+      summary: Delete user
       tags:
       - Users
     get:
@@ -604,7 +604,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: b. Get certifications by candidate ID
+      summary: Get certifications by candidate ID
       tags:
       - Candidates - Certifications
     post:
@@ -634,7 +634,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: a. Create a new certification
+      summary: Create a new certification
       tags:
       - Candidates - Certifications
   /candidates/{id}/certifications/{certification_id}:
@@ -662,7 +662,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: c. Delete certification
+      summary: Delete certification
       tags:
       - Candidates - Certifications
   /candidates/{id}/education:
@@ -707,7 +707,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 2. Get education records by candidate ID
+      summary: Get education records by candidate ID
       tags:
       - Candidates - Education
     post:
@@ -782,7 +782,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 2. Get experience records by candidate ID
+      summary: Get experience records by candidate ID
       tags:
       - Candidates - Experience
     post:
@@ -857,7 +857,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 2. Get personal information by candidate ID
+      summary: Get personal information by candidate ID
       tags:
       - Candidates - Personal Info
     post:

@@ -58,7 +58,7 @@ func (c *CandidateExperienceController) CreateExperience(ctx *gin.Context) {
 }
 
 // GetExperienceByID godoc
-// @Summary 2. Get experience records by candidate ID
+// @Summary Get experience records by candidate ID
 // @Description Get all experience records for a candidate by candidate ID
 // @Tags Candidates - Experience
 // @Produce json

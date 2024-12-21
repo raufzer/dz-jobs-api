@@ -59,7 +59,7 @@ func (c *CandidateEducationController) CreateEducation(ctx *gin.Context) {
 }
 
 // GetEducationByID godoc
-// @Summary 2. Get education records by candidate ID
+// @Summary Get education records by candidate ID
 // @Description Get all education records for a candidate by candidate ID
 // @Tags Candidates - Education
 // @Produce json

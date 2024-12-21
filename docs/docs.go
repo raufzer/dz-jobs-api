@@ -166,7 +166,7 @@ const docTemplate = `{
                 "tags": [
                     "Users"
                 ],
-                "summary": "5. Delete user",
+                "summary": "Delete user",
                 "parameters": [
                     {
                         "type": "string",
@@ -627,7 +627,7 @@ const docTemplate = `{
                 "tags": [
                     "Candidates - Certifications"
                 ],
-                "summary": "b. Get certifications by candidate ID",
+                "summary": "Get certifications by candidate ID",
                 "parameters": [
                     {
                         "type": "string",
@@ -663,7 +663,7 @@ const docTemplate = `{
                 "tags": [
                     "Candidates - Certifications"
                 ],
-                "summary": "a. Create a new certification",
+                "summary": "Create a new certification",
                 "parameters": [
                     {
                         "type": "string",
@@ -707,7 +707,7 @@ const docTemplate = `{
                 "tags": [
                     "Candidates - Certifications"
                 ],
-                "summary": "c. Delete certification",
+                "summary": "Delete certification",
                 "parameters": [
                     {
                         "type": "string",
@@ -749,7 +749,7 @@ const docTemplate = `{
                 "tags": [
                     "Candidates - Education"
                 ],
-                "summary": "2. Get education records by candidate ID",
+                "summary": "Get education records by candidate ID",
                 "parameters": [
                     {
                         "type": "string",
@@ -862,7 +862,7 @@ const docTemplate = `{
                 "tags": [
                     "Candidates - Experience"
                 ],
-                "summary": "2. Get experience records by candidate ID",
+                "summary": "Get experience records by candidate ID",
                 "parameters": [
                     {
                         "type": "string",
@@ -975,7 +975,7 @@ const docTemplate = `{
                 "tags": [
                     "Candidates - Personal Info"
                 ],
-                "summary": "2. Get personal information by candidate ID",
+                "summary": "Get personal information by candidate ID",
                 "parameters": [
                     {
                         "type": "string",

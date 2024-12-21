@@ -146,7 +146,7 @@ func (uc *UserController) GetAllUsers(ctx *gin.Context) {
 }
 
 // DeleteUser godoc
-// @Summary 5. Delete user
+// @Summary Delete user
 // @Description Delete user by ID
 // @Tags Users
 // @Produce json
