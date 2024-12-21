@@ -19,9 +19,9 @@ func NewCandidateController(service serviceInterfaces.CandidateService) *Candida
 }
 
 // CreateCandidate godoc
-// @Summary Create a new candidate
+// @Summary 1. Create a new candidate
 // @Description Create a new candidate with profile picture and resume
-// @Tags Candidates, Candidate_1create
+// @Tags Candidates > Candidate
 // @Accept multipart/form-data
 // @Produce json
 // @Param profile_picture formData file true "Profile Picture"
@@ -68,9 +68,9 @@ func (c *CandidateController) CreateCandidate(ctx *gin.Context) {
 }
 
 // GetCandidateByID godoc
-// @Summary Get candidate by ID
+// @Summary 2. Get candidate by ID
 // @Description Get candidate details by ID
-// @Tags Candidates, Candidate_2get
+// @Tags Candidates > Candidate
 // @Produce json
 // @Param id path string true "Candidate ID"
 // @Success 200 {object} response.Response
@@ -94,9 +94,9 @@ func (c *CandidateController) GetCandidateByID(ctx *gin.Context) {
 }
 
 // UpdateCandidate godoc
-// @Summary Update candidate
+// @Summary 3. Update candidate
 // @Description Update candidate details with profile picture and resume
-// @Tags Candidates, Candidate_3update
+// @Tags Candidates > Candidate
 // @Accept multipart/form-data
 // @Produce json
 // @Param id path string true "Candidate ID"
@@ -141,9 +141,9 @@ func (c *CandidateController) UpdateCandidate(ctx *gin.Context) {
 }
 
 // DeleteCandidate godoc
-// @Summary Delete candidate
+// @Summary 4. Delete candidate
 // @Description Delete candidate by ID
-// @Tags Candidates, Candidate_4delete
+// @Tags Candidates > Candidate
 // @Produce json
 // @Param id path string true "Candidate ID"
 // @Success 200 {object} response.Response

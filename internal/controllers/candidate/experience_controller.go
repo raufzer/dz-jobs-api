@@ -20,9 +20,9 @@ func NewCandidateExperienceController(service serviceInterfaces.CandidateExperie
 }
 
 // CreateExperience godoc
-// @Summary Create a new experience record
+// @Summary 1. Create a new experience record
 // @Description Create a new experience record for a candidate
-// @Tags Candidates, Experience_1create
+// @Tags Candidates > Experience
 // @Accept json
 // @Produce json
 // @Param id path string true "Candidate ID"
@@ -58,9 +58,9 @@ func (c *CandidateExperienceController) CreateExperience(ctx *gin.Context) {
 }
 
 // GetExperienceByID godoc
-// @Summary Get experience records by candidate ID
+// @Summary 2. Get experience records by candidate ID
 // @Description Get all experience records for a candidate by candidate ID
-// @Tags Candidates, Experience_2get
+// @Tags Candidates > Experience
 // @Produce json
 // @Param id path string true "Candidate ID"
 // @Success 200 {object} response.Response
@@ -92,9 +92,9 @@ func (c *CandidateExperienceController) GetExperienceByID(ctx *gin.Context) {
 }
 
 // DeleteExperience godoc
-// @Summary Delete experience record
+// @Summary 3. Delete experience record
 // @Description Delete an experience record by candidate ID
-// @Tags Candidates, Experience_3delete
+// @Tags Candidates > Experience
 // @Produce json
 // @Param id path string true "Candidate ID"
 // @Success 200 {object} response.Response

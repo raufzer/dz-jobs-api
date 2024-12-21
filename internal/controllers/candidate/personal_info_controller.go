@@ -20,9 +20,9 @@ func NewCandidatePersonalInfoController(service serviceInterfaces.CandidatePerso
 }
 
 // CreatePersonalInfo godoc
-// @Summary Create personal information
+// @Summary 1. Create personal information
 // @Description Create personal information for a candidate
-// @Tags Candidates, Personal_Info_1create
+// @Tags Candidates > Personal Info
 // @Accept json
 // @Produce json
 // @Param id path string true "Candidate ID"
@@ -60,9 +60,9 @@ func (c *CandidatePersonalInfoController) CreatePersonalInfo(ctx *gin.Context) {
 }
 
 // GetPersonalInfoByID godoc
-// @Summary Get personal information by candidate ID
+// @Summary 2. Get personal information by candidate ID
 // @Description Get personal information for a candidate by candidate ID
-// @Tags Candidates, Personal_Info_2get
+// @Tags Candidates > Personal Info
 // @Produce json
 // @Param id path string true "Candidate ID"
 // @Success 200 {object} response.Response
@@ -91,9 +91,9 @@ func (c *CandidatePersonalInfoController) GetPersonalInfoByID(ctx *gin.Context) 
 }
 
 // UpdatePersonalInfo godoc
-// @Summary Update personal information
+// @Summary 3. Update personal information
 // @Description Update personal information for a candidate
-// @Tags Candidates, Personal_Info_3update
+// @Tags Candidates > Personal Info
 // @Accept json
 // @Produce json
 // @Param id path string true "Candidate ID"
@@ -131,9 +131,9 @@ func (c *CandidatePersonalInfoController) UpdatePersonalInfo(ctx *gin.Context) {
 }
 
 // DeletePersonalInfo godoc
-// @Summary Delete personal information
+// @Summary 4. Delete personal information
 // @Description Delete personal information for a candidate
-// @Tags Candidates, Personal_Info_4delete
+// @Tags Candidates > Personal Info
 // @Produce json
 // @Param id path string true "Candidate ID"
 // @Success 200 {object} response.Response

@@ -20,9 +20,9 @@ func NewCandidateEducationController(service serviceInterfaces.CandidateEducatio
 }
 
 // CreateEducation godoc
-// @Summary Create a new education record
+// @Summary 1. Create a new education record
 // @Description Create a new education record for a candidate
-// @Tags Candidates, Education_1create
+// @Tags Candidates > Education
 // @Accept json
 // @Produce json
 // @Param id path string true "Candidate ID"
@@ -59,9 +59,9 @@ func (c *CandidateEducationController) CreateEducation(ctx *gin.Context) {
 }
 
 // GetEducationByID godoc
-// @Summary Get education records by candidate ID
+// @Summary 2. Get education records by candidate ID
 // @Description Get all education records for a candidate by candidate ID
-// @Tags Candidates, Education_2get
+// @Tags Candidates > Education
 // @Produce json
 // @Param id path string true "Candidate ID"
 // @Success 200 {object} response.Response
@@ -93,9 +93,9 @@ func (c *CandidateEducationController) GetEducationByID(ctx *gin.Context) {
 }
 
 // DeleteEducation godoc
-// @Summary Delete education record
+// @Summary 3. Delete education record
 // @Description Delete an education record by candidate ID
-// @Tags Candidates, Education_3delete
+// @Tags Candidates > Education
 // @Produce json
 // @Param id path string true "Candidate ID"
 // @Success 200 {object} response.Response

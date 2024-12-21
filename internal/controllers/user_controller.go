@@ -21,9 +21,9 @@ func NewUserController(service serviceInterfaces.UserService) *UserController {
 }
 
 // CreateUser godoc
-// @Summary Create a new user
+// @Summary 1. Create a new user
 // @Description Create a new user
-// @Tags Users_1create
+// @Tags Users
 // @Accept json
 // @Produce json
 // @Param user body request.CreateUsersRequest true "User request"
@@ -51,9 +51,9 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 }
 
 // GetUser godoc
-// @Summary Get user by ID
+// @Summary 2. Get user by ID
 // @Description Get user details by ID
-// @Tags Users_2get
+// @Tags Users
 // @Produce json
 // @Param id path string true "User ID"
 // @Success 200 {object} response.Response
@@ -80,9 +80,9 @@ func (uc *UserController) GetUser(ctx *gin.Context) {
 }
 
 // UpdateUser godoc
-// @Summary Update user
+// @Summary 4. Update user
 // @Description Update user details
-// @Tags Users_4update
+// @Tags Users
 // @Accept json
 // @Produce json
 // @Param id path string true "User ID"
@@ -117,9 +117,9 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 }
 
 // GetAllUsers godoc
-// @Summary Get all users
+// @Summary 3. Get all users
 // @Description Get all users
-// @Tags Users_3get
+// @Tags Users
 // @Produce json
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
@@ -146,9 +146,9 @@ func (uc *UserController) GetAllUsers(ctx *gin.Context) {
 }
 
 // DeleteUser godoc
-// @Summary Delete user
+// @Summary 5. Delete user
 // @Description Delete user by ID
-// @Tags Users_5delete
+// @Tags Users
 // @Produce json
 // @Param id path string true "User ID"
 // @Success 200 {object} response.Response

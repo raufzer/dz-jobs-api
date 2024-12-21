@@ -20,9 +20,9 @@ func NewCandidateCertificationsController(service serviceInterfaces.CandidateCer
 }
 
 // CreateCertification godoc
-// @Summary Create a new certification
+// @Summary 1. Create a new certification
 // @Description Create a new certification for a candidate
-// @Tags Candidates, Certifications_1create
+// @Tags Candidates > Certifications
 // @Accept json
 // @Produce json
 // @Param id path string true "Candidate ID"
@@ -58,9 +58,9 @@ func (c *CandidateCertificationsController) CreateCertification(ctx *gin.Context
 }
 
 // GetCertifications godoc
-// @Summary Get certifications by candidate ID
+// @Summary 2. Get certifications by candidate ID
 // @Description Get all certifications for a candidate by candidate ID
-// @Tags Candidates, Certifications_2get
+// @Tags Candidates > Certifications
 // @Produce json
 // @Param id path string true "Candidate ID"
 // @Success 200 {object} response.Response
@@ -92,9 +92,9 @@ func (c *CandidateCertificationsController) GetCertifications(ctx *gin.Context) 
 }
 
 // DeleteCertification godoc
-// @Summary Delete certification
+// @Summary 3. Delete certification
 // @Description Delete a certification by candidate ID and certification ID
-// @Tags Candidates, Certifications_3delete
+// @Tags Candidates > Certifications
 // @Produce json
 // @Param id path string true "Candidate ID"
 // @Param certification_id path string true "Certification ID"

@@ -20,9 +20,9 @@ func NewCandidatePortfolioController(service serviceInterfaces.CandidatePortfoli
 }
 
 // CreateProject godoc
-// @Summary Create a new project
+// @Summary 1. Create a new project
 // @Description Create a new project for a candidate
-// @Tags Candidates, Portfolio_1create
+// @Tags Candidates > Portfolio
 // @Accept json
 // @Produce json
 // @Param id path string true "Candidate ID"
@@ -58,9 +58,9 @@ func (c *CandidatePortfolioController) CreateProject(ctx *gin.Context) {
 }
 
 // GetProjectsByCandidateID godoc
-// @Summary Get projects by candidate ID
+// @Summary 2. Get projects by candidate ID
 // @Description Get all projects for a candidate by candidate ID
-// @Tags Candidates, Portfolio_2get
+// @Tags Candidates > Portfolio
 // @Produce json
 // @Param id path string true "Candidate ID"
 // @Success 200 {object} response.Response
@@ -92,9 +92,9 @@ func (c *CandidatePortfolioController) GetProjectsByCandidateID(ctx *gin.Context
 }
 
 // DeleteProject godoc
-// @Summary Delete project
+// @Summary 3. Delete project
 // @Description Delete a project by candidate ID and project ID
-// @Tags Candidates, Portfolio_3delete
+// @Tags Candidates > Portfolio
 // @Produce json
 // @Param id path string true "Candidate ID"
 // @Param project_id path string true "Project ID"
