@@ -14,16 +14,17 @@ type candidateSkillsService struct {
 	skillsRepo interfaces.CandidateSkillsRepository
 }
 
-func NewCandidateSkillsService(repo interfaces.CandidateSkillsRepository) *candidateSkillsService {
+func NewCandidateSkillService(repo interfaces.CandidateSkillsRepository) *candidateSkillsService {
 	return &candidateSkillsService{skillsRepo: repo}
 }
 
-func (s *candidateSkillsService) AddSkill(request request.AddSkillRequest) (*models.CandidateSkills, error) {
+func (s *candidateSkillsService) AddSkill(candidateID uuid.UUID, request request.AddSkillRequest) (*models.CandidateSkills, error) {
 	skill := &models.CandidateSkills{
+		CandidateID: candidateID,
 		Skill:       request.Skill,
 	}
 
-	err := s.skillsRepo.CreateSkill(*skill)
+	err := s.skillsRepo.CreateSkill(skill)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to add skill")
 	}

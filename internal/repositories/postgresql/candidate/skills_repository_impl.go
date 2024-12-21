@@ -18,7 +18,7 @@ func NewCandidateSkillsRepository(db *sql.DB) repositoryInterfaces.CandidateSkil
 	}
 }
 
-func (r *SQLCandidateSkillsRepository) CreateSkill(skill models.CandidateSkills) error {
+func (r *SQLCandidateSkillsRepository) CreateSkill(skill *models.CandidateSkills) error {
 	query := `INSERT INTO candidate_skills (candidate_id, skill) VALUES ($1, $2)`
 	_, err := r.db.Exec(query, skill.CandidateID, skill.Skill)
 	if err != nil {
