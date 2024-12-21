@@ -21,6 +21,7 @@ type AppDependencies struct {
 	PersonalInfoController *candidateControllers.CandidatePersonalInfoController
 	EducationController    *candidateControllers.CandidateEducationController
 	ExperienceController   *candidateControllers.CandidateExperienceController
+	SkillsController       *candidateControllers.CandidateSkillsController
 }
 
 func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
@@ -43,6 +44,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	personalInfoRepo := candidatePostgresql.NewCandidatePersonalInfoRepository(dbConfig.DB)
 	educationRepo := candidatePostgresql.NewCandidateEducationRepository(dbConfig.DB)
 	experienceRepo := candidatePostgresql.NewCandidateExperienceRepository(dbConfig.DB)
+	skillsRepo := candidatePostgresql.NewCandidateSkillsRepository(dbConfig.DB)
 
 	// Initialize Services
 	authService := services.NewAuthService(
@@ -55,6 +57,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	personalInfoService := candidateServices.NewCandidatePersonalInfoService(personalInfoRepo)
 	educationService := candidateServices.NewCandidateEducationService(educationRepo,cfg)
 	experienceService := candidateServices.NewCandidateExperienceService(experienceRepo)
+	skillsService := candidateServices.NewCandidateSkillService(skillsRepo)
 
 	// Initialize Controllers
 	userController := controllers.NewUserController(userService)
@@ -63,6 +66,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	personalInfoController := candidateControllers.NewCandidatePersonalInfoController(personalInfoService)
 	educationController := candidateControllers.NewCandidateEducationController(educationService)
 	experienceController := candidateControllers.NewCandidateExperienceController(experienceService)
+	skillsController := candidateControllers.NewCandidateSkillsController(skillsService)
 
 	// Return dependencies
 	return &AppDependencies{
@@ -73,5 +77,6 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 		PersonalInfoController: personalInfoController,
 		EducationController:    educationController,
 		ExperienceController:   experienceController,
+		SkillsController:       skillsController,
 	}, nil
 }

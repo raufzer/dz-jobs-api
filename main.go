@@ -29,7 +29,7 @@ func main() {
 	server := bootstrap.CreateServer(appConfig)
 
 	// Register all routes (public, protected, role-based)
-	v1.RegisterRoutes(server, deps.AuthController, deps.UserController, deps.CandidateController, deps.PersonalInfoController, deps.EducationController, deps.ExperienceController, appConfig)
+	v1.RegisterRoutes(server, deps.AuthController, deps.UserController, deps.CandidateController, deps.PersonalInfoController, deps.EducationController, deps.ExperienceController, deps.SkillsController, appConfig)
 
 	// Start the server
 	serverAddr := ":" + appConfig.ServerPort
