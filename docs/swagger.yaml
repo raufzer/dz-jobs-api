@@ -604,7 +604,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 2. Get certifications by candidate ID
+      summary: b. Get certifications by candidate ID
       tags:
       - Candidates > Certifications
     post:
@@ -634,7 +634,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 1. Create a new certification
+      summary: a. Create a new certification
       tags:
       - Candidates > Certifications
   /candidates/{id}/certifications/{certification_id}:
@@ -662,7 +662,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 3. Delete certification
+      summary: c. Delete certification
       tags:
       - Candidates > Certifications
   /candidates/{id}/education:

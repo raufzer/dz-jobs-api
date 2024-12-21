@@ -627,7 +627,7 @@ const docTemplate = `{
                 "tags": [
                     "Candidates \u003e Certifications"
                 ],
-                "summary": "2. Get certifications by candidate ID",
+                "summary": "b. Get certifications by candidate ID",
                 "parameters": [
                     {
                         "type": "string",
@@ -663,7 +663,7 @@ const docTemplate = `{
                 "tags": [
                     "Candidates \u003e Certifications"
                 ],
-                "summary": "1. Create a new certification",
+                "summary": "a. Create a new certification",
                 "parameters": [
                     {
                         "type": "string",
@@ -707,7 +707,7 @@ const docTemplate = `{
                 "tags": [
                     "Candidates \u003e Certifications"
                 ],
-                "summary": "3. Delete certification",
+                "summary": "c. Delete certification",
                 "parameters": [
                     {
                         "type": "string",
