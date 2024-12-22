@@ -10,21 +10,21 @@ import (
 	"github.com/google/uuid"
 )
 
-type candidateSkillsService struct {
-	skillsRepo interfaces.CandidateSkillsRepository
+type CandidateSkillsService struct {
+	candidateSkillsRepo interfaces.CandidateSkillsRepository
 }
 
-func NewCandidateSkillService(repo interfaces.CandidateSkillsRepository) *candidateSkillsService {
-	return &candidateSkillsService{skillsRepo: repo}
+func NewCandidateSkillService(repo interfaces.CandidateSkillsRepository) *CandidateSkillsService {
+	return &CandidateSkillsService{candidateSkillsRepo: repo}
 }
 
-func (s *candidateSkillsService) AddSkill(candidateID uuid.UUID, request request.AddSkillRequest) (*models.CandidateSkills, error) {
+func (s *CandidateSkillsService) AddSkill(candidateID uuid.UUID, request request.AddSkillRequest) (*models.CandidateSkills, error) {
 	skill := &models.CandidateSkills{
 		CandidateID: candidateID,
 		Skill:       request.Skill,
 	}
 
-	err := s.skillsRepo.CreateSkill(skill)
+	err := s.candidateSkillsRepo.CreateSkill(skill)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to add skill")
 	}
@@ -32,8 +32,9 @@ func (s *candidateSkillsService) AddSkill(candidateID uuid.UUID, request request
 	return skill, nil
 }
 
-func (s *candidateSkillsService) GetSkillsByCandidateID(candidateID uuid.UUID) ([]models.CandidateSkills, error) {
-	skills, err := s.skillsRepo.GetSkillsByCandidateID(candidateID)
+
+func (s *CandidateSkillsService) GetSkills(candidateID uuid.UUID) ([]models.CandidateSkills, error) {
+	skills, err := s.candidateSkillsRepo.GetSkills(candidateID)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusNotFound, "No skills found")
 	}
@@ -41,8 +42,8 @@ func (s *candidateSkillsService) GetSkillsByCandidateID(candidateID uuid.UUID) (
 	return skills, nil
 }
 
-func (s *candidateSkillsService) DeleteSkill(candidateID uuid.UUID, skill string) error {
-	err := s.skillsRepo.DeleteSkill(candidateID, skill)
+func (s *CandidateSkillsService) DeleteSkill(candidateID uuid.UUID, skill string) error {
+	err := s.candidateSkillsRepo.DeleteSkill(candidateID, skill)
 	if err != nil {
 		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete skill")
 	}

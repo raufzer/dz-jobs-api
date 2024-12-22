@@ -37,22 +37,22 @@ func NewAuthController(service serviceInterfaces.AuthService, config *config.App
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
 // @Router /auth/login [post]
-func (ac *AuthController) Login(ctx *gin.Context) {
+func (c *AuthController) Login(ctx *gin.Context) {
 	var req request.LoginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
-	user, accessToken, refreshToken, err := ac.authService.Login(req)
+	user, accessToken, refreshToken, err := c.authService.Login(req)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
-	isProduction := ac.config.ServerPort != "9090"
-	utils.SetAuthCookie(ctx, "access_token", accessToken, ac.config.AccessTokenMaxAge, ac.config.Domain, isProduction)
-	utils.SetAuthCookie(ctx, "refresh_token", refreshToken, ac.config.RefreshTokenMaxAge, ac.config.Domain, isProduction)
+	isProduction := c.config.ServerPort != "9090"
+	utils.SetAuthCookie(ctx, "access_token", accessToken, c.config.AccessTokenMaxAge, c.config.Domain, isProduction)
+	utils.SetAuthCookie(ctx, "refresh_token", refreshToken, c.config.RefreshTokenMaxAge, c.config.Domain, isProduction)
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",
@@ -69,29 +69,29 @@ func (ac *AuthController) Login(ctx *gin.Context) {
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
 // @Router /auth/refresh-token [post]
-func (ac *AuthController) RefreshToken(ctx *gin.Context) {
+func (c *AuthController) RefreshToken(ctx *gin.Context) {
 	refreshToken, err := ctx.Cookie("refresh_token")
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
-	userID, userRole, err := ac.authService.ValidateToken(refreshToken)
+	userID, userRole, err := c.authService.ValidateToken(refreshToken)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 
-	accessToken, err := ac.authService.RefreshAccessToken(userID, userRole, refreshToken)
+	accessToken, err := c.authService.RefreshAccessToken(userID, userRole, refreshToken)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 
-	isProduction := ac.config.ServerPort != "9090"
-	utils.SetAuthCookie(ctx, "access_token", accessToken, ac.config.AccessTokenMaxAge, ac.config.Domain, isProduction)
+	isProduction := c.config.ServerPort != "9090"
+	utils.SetAuthCookie(ctx, "access_token", accessToken, c.config.AccessTokenMaxAge, c.config.Domain, isProduction)
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",
@@ -106,10 +106,10 @@ func (ac *AuthController) RefreshToken(ctx *gin.Context) {
 // @Produce json
 // @Success 200 {object} response.Response
 // @Router /auth/logout [post]
-func (ac *AuthController) Logout(ctx *gin.Context) {
-	isProduction := ac.config.ServerPort != "9090"
-	utils.SetAuthCookie(ctx, "access_token", "", -1, ac.config.Domain, isProduction)
-	utils.SetAuthCookie(ctx, "refresh_token", "", -1, ac.config.Domain, isProduction)
+func (c *AuthController) Logout(ctx *gin.Context) {
+	isProduction := c.config.ServerPort != "9090"
+	utils.SetAuthCookie(ctx, "access_token", "", -1, c.config.Domain, isProduction)
+	utils.SetAuthCookie(ctx, "refresh_token", "", -1, c.config.Domain, isProduction)
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",
@@ -127,14 +127,14 @@ func (ac *AuthController) Logout(ctx *gin.Context) {
 // @Success 201 {object} response.Response
 // @Failure 400 {object} response.Response
 // @Router /auth/register [post]
-func (ac *AuthController) Register(ctx *gin.Context) {
+func (c *AuthController) Register(ctx *gin.Context) {
 	var req request.CreateUsersRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
-	user, err := ac.authService.Register(req)
+	user, err := c.authService.Register(req)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -158,14 +158,14 @@ func (ac *AuthController) Register(ctx *gin.Context) {
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
 // @Router /auth/send-reset-otp [post]
-func (ac *AuthController) SendResetOTP(ctx *gin.Context) {
+func (c *AuthController) SendResetOTP(ctx *gin.Context) {
 	var req request.SendOTPRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
-	err := ac.authService.SendOTP(req.Email)
+	err := c.authService.SendOTP(req.Email)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -188,20 +188,20 @@ func (ac *AuthController) SendResetOTP(ctx *gin.Context) {
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
 // @Router /auth/verify-otp [post]
-func (ac *AuthController) VerifyOTP(ctx *gin.Context) {
+func (c *AuthController) VerifyOTP(ctx *gin.Context) {
 	var req request.VerifyOTPRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
-	resetToken, err := ac.authService.VerifyOTP(req.Email, req.OTP)
+	resetToken, err := c.authService.VerifyOTP(req.Email, req.OTP)
 	if err != nil {
 		ctx.Error(err)
 		return
 	}
-	isProduction := ac.config.ServerPort != "9090"
-	utils.SetAuthCookie(ctx, "reset_token", resetToken, ac.config.ResetPasswordTokenMaxAge, ac.config.Domain, isProduction)
+	isProduction := c.config.ServerPort != "9090"
+	utils.SetAuthCookie(ctx, "reset_token", resetToken, c.config.ResetPasswordTokenMaxAge, c.config.Domain, isProduction)
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",
@@ -219,7 +219,7 @@ func (ac *AuthController) VerifyOTP(ctx *gin.Context) {
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
 // @Router /auth/reset-password [post]
-func (ac *AuthController) ResetPassword(ctx *gin.Context) {
+func (c *AuthController) ResetPassword(ctx *gin.Context) {
 	token, err := ctx.Cookie("reset_token")
 	if err != nil {
 		ctx.Error(err)
@@ -232,7 +232,7 @@ func (ac *AuthController) ResetPassword(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	err = ac.authService.ResetPassword(req.Email, token, req.NewPassword)
+	err = c.authService.ResetPassword(req.Email, token, req.NewPassword)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -252,17 +252,17 @@ func (ac *AuthController) ResetPassword(ctx *gin.Context) {
 // @Produce json
 // @Success 302
 // @Router /auth/google-connect [get]
-func (ac *AuthController) GoogleConnect(ctx *gin.Context) {
+func (c *AuthController) GoogleConnect(ctx *gin.Context) {
 	role := ctx.DefaultQuery("role", "candidate")
-	ctx.SetCookie("role", role, 3600, "/", ac.config.Domain, false, true)
-	oauthConfig := integrations.InitializeGoogleOAuthConfig(ac.config.GoogleClientID, ac.config.GoogleClientSecret, ac.config.GoogleRedirectURL)
+	ctx.SetCookie("role", role, 3600, "/", c.config.Domain, false, true)
+	oauthConfig := integrations.InitializeGoogleOAuthConfig(c.config.GoogleClientID, c.config.GoogleClientSecret, c.config.GoogleRedirectURL)
 
 	authURL := oauthConfig.AuthCodeURL("", oauth2.AccessTypeOffline)
 
 	ctx.Redirect(http.StatusFound, authURL)
 }
 
-func (ac *AuthController) GoogleCallbackConnect(ctx *gin.Context) {
+func (c *AuthController) GoogleCallbackConnect(ctx *gin.Context) {
 	role, err := ctx.Cookie("role")
 	if err != nil || role == "" {
 		ctx.JSON(http.StatusBadRequest, response.Response{
@@ -284,7 +284,7 @@ func (ac *AuthController) GoogleCallbackConnect(ctx *gin.Context) {
 		return
 	}
 
-	user, accessToken, refreshToken, connect, err := ac.authService.GoogleConnect(code, role)
+	user, accessToken, refreshToken, connect, err := c.authService.GoogleConnect(code, role)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -298,9 +298,9 @@ func (ac *AuthController) GoogleCallbackConnect(ctx *gin.Context) {
 			Data:    response.ToUserResponse(user),
 		})
 	} else if connect == "login" {
-		isProduction := ac.config.ServerPort != "9090"
-		utils.SetAuthCookie(ctx, "access_token", accessToken, ac.config.AccessTokenMaxAge, ac.config.Domain, isProduction)
-		utils.SetAuthCookie(ctx, "refresh_token", refreshToken, ac.config.RefreshTokenMaxAge, ac.config.Domain, isProduction)
+		isProduction := c.config.ServerPort != "9090"
+		utils.SetAuthCookie(ctx, "access_token", accessToken, c.config.AccessTokenMaxAge, c.config.Domain, isProduction)
+		utils.SetAuthCookie(ctx, "refresh_token", refreshToken, c.config.RefreshTokenMaxAge, c.config.Domain, isProduction)
 		ctx.JSON(http.StatusOK, response.Response{
 			Code:    http.StatusOK,
 			Status:  "OK",

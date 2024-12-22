@@ -32,7 +32,7 @@ func (r *SQLRecruiterRepository) CreateRecruiter(recruiter *models.Recruiter) er
 	return nil
 }
 
-func (r *SQLRecruiterRepository) GetRecruiterByID(recruiter_id uuid.UUID) (*models.Recruiter, error) {
+func (r *SQLRecruiterRepository) GetRecruiter(recruiter_id uuid.UUID) (*models.Recruiter, error) {
 
 	query := `SELECT recruiter_id, company_name, company_logo, company_description, company_website, 
 			  company_location, company_contact, social_links, verified_status

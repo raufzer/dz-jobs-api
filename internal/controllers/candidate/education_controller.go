@@ -19,18 +19,18 @@ func NewCandidateEducationController(service serviceInterfaces.CandidateEducatio
     return &CandidateEducationController{service: service}
 }
 
-// CreateEducation godoc
-// @Summary Create a new education record
-// @Description Create a new education record for a candidate
+// AddEducation godoc
+// @Summary Add a new education record
+// @Description Add a new education record for a candidate
 // @Tags Candidates - Education
 // @Accept json
 // @Produce json
-// @Param id path string true "Candidate ID"
+// @Param candidate_id path string true "Candidate ID"
 // @Param education body request.AddEducationRequest true "Education request"
 // @Success 201 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id}/education [post]
-func (c *CandidateEducationController) CreateEducation(ctx *gin.Context) {
+// @Router /candidates/{candidate_id}/education [post]
+func (c *CandidateEducationController) AddEducation(ctx *gin.Context) {
     candidateID, err := uuid.Parse(ctx.Param("id"))
     if err != nil {
         ctx.Error(err)
@@ -58,16 +58,16 @@ func (c *CandidateEducationController) CreateEducation(ctx *gin.Context) {
     })
 }
 
-// GetEducationByID godoc
+// GetEducation godoc
 // @Summary Get education records by candidate ID
 // @Description Get all education records for a candidate by candidate ID
 // @Tags Candidates - Education
 // @Produce json
-// @Param id path string true "Candidate ID"
+// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id}/education [get]
-func (c *CandidateEducationController) GetEducationByID(ctx *gin.Context) {
+// @Router /candidates/{candidate_id}/education [get]
+func (c *CandidateEducationController) GetEducation(ctx *gin.Context) {
     candidateID, err := uuid.Parse(ctx.Param("id"))
     if err != nil {
         ctx.Error(err)
@@ -75,7 +75,7 @@ func (c *CandidateEducationController) GetEducationByID(ctx *gin.Context) {
         return
     }
 
-    education, err := c.service.GetEducationByCandidateID(candidateID)
+    education, err := c.service.GetEducation(candidateID)
     if err != nil {
         ctx.Error(err)
         return
@@ -97,10 +97,10 @@ func (c *CandidateEducationController) GetEducationByID(ctx *gin.Context) {
 // @Description Delete an education record by candidate ID
 // @Tags Candidates - Education
 // @Produce json
-// @Param id path string true "Candidate ID"
+// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id}/education [delete]
+// @Router /candidates/{candidate_id}/education [delete]
 func (c *CandidateEducationController) DeleteEducation(ctx *gin.Context) {
     candidateID, err := uuid.Parse(ctx.Param("id"))
     if err != nil {

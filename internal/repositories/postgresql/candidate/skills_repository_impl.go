@@ -27,7 +27,7 @@ func (r *SQLCandidateSkillsRepository) CreateSkill(skill *models.CandidateSkills
 	return nil
 }
 
-func (r *SQLCandidateSkillsRepository) GetSkillsByCandidateID(id uuid.UUID) ([]models.CandidateSkills, error) {
+func (r *SQLCandidateSkillsRepository) GetSkills(id uuid.UUID) ([]models.CandidateSkills, error) {
 	rows, err := r.db.Query(`SELECT candidate_id, skill FROM candidate_skills WHERE candidate_id = $1`, id)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch skills: %w", err)

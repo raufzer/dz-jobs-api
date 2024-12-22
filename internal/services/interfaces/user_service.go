@@ -10,7 +10,7 @@ import (
 type UserService interface {
 	CreateUser(req request.CreateUsersRequest) (*models.User, error)
 	UpdateUser(id uuid.UUID, req request.UpdateUserRequest) (*models.User, error)
-	GetUserByID(id uuid.UUID) (*models.User, error)
+	GetUser(id uuid.UUID) (*models.User, error)
 	GetAllUsers() ([]*models.User, error)
 	DeleteUser(id uuid.UUID) error
 }

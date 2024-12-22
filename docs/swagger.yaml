@@ -49,6 +49,20 @@ definitions:
     - job_title
     - start_date
     type: object
+  candidate.AddPersonalInfoRequest:
+    properties:
+      address:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    required:
+    - email
+    - name
+    type: object
   candidate.AddProjectRequest:
     properties:
       category:
@@ -70,21 +84,7 @@ definitions:
     required:
     - skill
     type: object
-  candidate.CreateCandidatePersonalInfoRequest:
-    properties:
-      address:
-        type: string
-      email:
-        type: string
-      name:
-        type: string
-      phone:
-        type: string
-    required:
-    - email
-    - name
-    type: object
-  candidate.UpdateCandidatePersonalInfoRequest:
+  candidate.UpdatePersonalInfoRequest:
     properties:
       address:
         type: string
@@ -275,7 +275,7 @@ paths:
       summary: Create a new user
       tags:
       - Users
-  /admin/users/{id}:
+  /admin/users/{user_id}:
     delete:
       description: Delete user by ID
       parameters:
@@ -551,13 +551,13 @@ paths:
       summary: Create a new candidate
       tags:
       - Candidates - Candidate
-  /candidates/{id}:
+  /candidates/{candidate_id}:
     delete:
       description: Delete candidate by ID
       parameters:
       - description: Candidate ID
         in: path
-        name: id
+        name: candidate_id
         required: true
         type: string
       produces:
@@ -579,7 +579,7 @@ paths:
       parameters:
       - description: Candidate ID
         in: path
-        name: id
+        name: candidate_id
         required: true
         type: string
       produces:
@@ -603,7 +603,7 @@ paths:
       parameters:
       - description: Candidate ID
         in: path
-        name: id
+        name: candidate_id
         required: true
         type: string
       - description: Profile Picture
@@ -630,13 +630,13 @@ paths:
       summary: Update candidate
       tags:
       - Candidates - Candidate
-  /candidates/{id}/certifications:
+  /candidates/{candidate_id}/certifications:
     get:
       description: Get all certifications for a candidate by candidate ID
       parameters:
       - description: Candidate ID
         in: path
-        name: id
+        name: candidate_id
         required: true
         type: string
       produces:
@@ -653,10 +653,456 @@ paths:
       summary: Get certifications by candidate ID
       tags:
       - Candidates - Certifications
+  /candidates/{candidate_id}/certifications/{certification_id}:
+    delete:
+      description: Delete a certification by candidate ID and certification ID
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidate_id
+        required: true
+        type: string
+      - description: Certification ID
+        in: path
+        name: certification_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Delete certification
+      tags:
+      - Candidates - Certifications
+  /candidates/{candidate_id}/education:
+    delete:
+      description: Delete an education record by candidate ID
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidate_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Delete education record
+      tags:
+      - Candidates - Education
+    get:
+      description: Get all education records for a candidate by candidate ID
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidate_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get education records by candidate ID
+      tags:
+      - Candidates - Education
     post:
       consumes:
       - application/json
-      description: Create a new certification for a candidate
+      description: Add a new education record for a candidate
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidate_id
+        required: true
+        type: string
+      - description: Education request
+        in: body
+        name: education
+        required: true
+        schema:
+          $ref: '#/definitions/candidate.AddEducationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Add a new education record
+      tags:
+      - Candidates - Education
+  /candidates/{candidate_id}/experience:
+    delete:
+      description: Delete an experience record by candidate ID
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidate_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Delete experience record
+      tags:
+      - Candidates - Experience
+    get:
+      description: Get all experience records for a candidate by candidate ID
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidate_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get experience records by candidate ID
+      tags:
+      - Candidates - Experience
+    post:
+      consumes:
+      - application/json
+      description: Add a new experience record for a candidate
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidate_id
+        required: true
+        type: string
+      - description: Experience request
+        in: body
+        name: experience
+        required: true
+        schema:
+          $ref: '#/definitions/candidate.AddExperienceRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Add a new experience record
+      tags:
+      - Candidates - Experience
+  /candidates/{candidate_id}/personal-info:
+    delete:
+      description: Delete personal information for a candidate
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidate_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Delete personal information
+      tags:
+      - Candidates - Personal Info
+    get:
+      description: Get personal information for a candidate by candidate ID
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidate_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get personal information by candidate ID
+      tags:
+      - Candidates - Personal Info
+    post:
+      consumes:
+      - application/json
+      description: Add personal information for a candidate
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidate_id
+        required: true
+        type: string
+      - description: Personal Info request
+        in: body
+        name: personal_info
+        required: true
+        schema:
+          $ref: '#/definitions/candidate.AddPersonalInfoRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Add personal information
+      tags:
+      - Candidates - Personal Info
+    put:
+      consumes:
+      - application/json
+      description: Update personal information for a candidate
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidate_id
+        required: true
+        type: string
+      - description: Personal Info request
+        in: body
+        name: personal_info
+        required: true
+        schema:
+          $ref: '#/definitions/candidate.UpdatePersonalInfoRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Update personal information
+      tags:
+      - Candidates - Personal Info
+  /candidates/{candidate_id}/portfolio:
+    get:
+      description: Get all projects for a candidate by candidate ID
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidate_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get projects by candidate ID
+      tags:
+      - Candidates - Portfolio
+    post:
+      consumes:
+      - application/json
+      description: Add a new project for a candidate
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidate_id
+        required: true
+        type: string
+      - description: Project request
+        in: body
+        name: project
+        required: true
+        schema:
+          $ref: '#/definitions/candidate.AddProjectRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Add a new project
+      tags:
+      - Candidates - Portfolio
+  /candidates/{candidate_id}/portfolio/{project_id}:
+    delete:
+      description: Delete a project by candidate ID and project ID
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidate_id
+        required: true
+        type: string
+      - description: Project ID
+        in: path
+        name: project_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Delete project
+      tags:
+      - Candidates - Portfolio
+  /candidates/{candidate_id}/skills:
+    get:
+      description: Get all skills for a candidate by candidate ID
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidate_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get skills by candidate ID
+      tags:
+      - Candidates - Skills
+    post:
+      consumes:
+      - application/json
+      description: Add a new skill for a candidate
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidate_id
+        required: true
+        type: string
+      - description: Skill request
+        in: body
+        name: Skill
+        required: true
+        schema:
+          $ref: '#/definitions/candidate.AddSkillRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Add a new skill
+      tags:
+      - Candidates - Skills
+  /candidates/{candidate_id}/skills/{skill_name}:
+    delete:
+      description: Delete a skill by candidate ID and skill name
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidate_id
+        required: true
+        type: string
+      - description: Skill name
+        in: path
+        name: skill_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Delete skill
+      tags:
+      - Candidates - Skills
+  /candidates/{id}/certifications:
+    post:
+      consumes:
+      - application/json
+      description: Add a new certification for a candidate
       parameters:
       - description: Candidate ID
         in: path
@@ -680,454 +1126,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.Response'
-      summary: Create a new certification
+      summary: Add a new certification
       tags:
       - Candidates - Certifications
-  /candidates/{id}/certifications/{certification_id}:
-    delete:
-      description: Delete a certification by candidate ID and certification ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Certification ID
-        in: path
-        name: certification_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Delete certification
-      tags:
-      - Candidates - Certifications
-  /candidates/{id}/education:
-    delete:
-      description: Delete an education record by candidate ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Delete education record
-      tags:
-      - Candidates - Education
-    get:
-      description: Get all education records for a candidate by candidate ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Get education records by candidate ID
-      tags:
-      - Candidates - Education
-    post:
-      consumes:
-      - application/json
-      description: Create a new education record for a candidate
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Education request
-        in: body
-        name: education
-        required: true
-        schema:
-          $ref: '#/definitions/candidate.AddEducationRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Create a new education record
-      tags:
-      - Candidates - Education
-  /candidates/{id}/experience:
-    delete:
-      description: Delete an experience record by candidate ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Delete experience record
-      tags:
-      - Candidates - Experience
-    get:
-      description: Get all experience records for a candidate by candidate ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Get experience records by candidate ID
-      tags:
-      - Candidates - Experience
-    post:
-      consumes:
-      - application/json
-      description: Create a new experience record for a candidate
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Experience request
-        in: body
-        name: experience
-        required: true
-        schema:
-          $ref: '#/definitions/candidate.AddExperienceRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Create a new experience record
-      tags:
-      - Candidates - Experience
-  /candidates/{id}/personal-info:
-    delete:
-      description: Delete personal information for a candidate
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Delete personal information
-      tags:
-      - Candidates - Personal Info
-    get:
-      description: Get personal information for a candidate by candidate ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Get personal information by candidate ID
-      tags:
-      - Candidates - Personal Info
-    post:
-      consumes:
-      - application/json
-      description: Create personal information for a candidate
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Personal Info request
-        in: body
-        name: personal_info
-        required: true
-        schema:
-          $ref: '#/definitions/candidate.CreateCandidatePersonalInfoRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Create personal information
-      tags:
-      - Candidates - Personal Info
-    put:
-      consumes:
-      - application/json
-      description: Update personal information for a candidate
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Personal Info request
-        in: body
-        name: personal_info
-        required: true
-        schema:
-          $ref: '#/definitions/candidate.UpdateCandidatePersonalInfoRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Update personal information
-      tags:
-      - Candidates - Personal Info
-  /candidates/{id}/portfolio:
-    get:
-      description: Get all projects for a candidate by candidate ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Get projects by candidate ID
-      tags:
-      - Candidates - Portfolio
-    post:
-      consumes:
-      - application/json
-      description: Create a new project for a candidate
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Project request
-        in: body
-        name: project
-        required: true
-        schema:
-          $ref: '#/definitions/candidate.AddProjectRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Create a new project
-      tags:
-      - Candidates - Portfolio
-  /candidates/{id}/portfolio/{project_id}:
-    delete:
-      description: Delete a project by candidate ID and project ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Project ID
-        in: path
-        name: project_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Delete project
-      tags:
-      - Candidates - Portfolio
-  /candidates/{id}/skills:
-    get:
-      description: Get all skills for a candidate by candidate ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Get skills by candidate ID
-      tags:
-      - Candidates - Skills
-    post:
-      consumes:
-      - application/json
-      description: Create a new skill for a candidate
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Skill request
-        in: body
-        name: skill
-        required: true
-        schema:
-          $ref: '#/definitions/candidate.AddSkillRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Create a new skill
-      tags:
-      - Candidates - Skills
-  /candidates/{id}/skills/{skill}:
-    delete:
-      description: Delete a skill by candidate ID and skill name
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Skill name
-        in: path
-        name: skill
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Delete skill
-      tags:
-      - Candidates - Skills
   /recruiters:
     post:
       consumes:

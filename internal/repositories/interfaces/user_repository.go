@@ -7,11 +7,11 @@ import (
 )
 
 type UserRepository interface {
-	Create(user *models.User) error
-	GetByEmail(email string) (*models.User, error)
-	GetByID(user_id uuid.UUID) (*models.User, error)
-	GetAll() ([]*models.User, error)
-	Update(user_id uuid.UUID, user *models.User) error
-	UpdatePassword(email, hashedPassword string) error
-	Delete(user_id uuid.UUID) error
+	CreateUser(user *models.User) error
+	GetUserByEmail(email string) (*models.User, error)
+	GetUserByID(user_id uuid.UUID) (*models.User, error)
+	GetAllUsers() ([]*models.User, error)
+	UpdateUser(user_id uuid.UUID, user *models.User) error
+	UpdateUserPassword(email, hashedPassword string) error
+	DeleteUser(user_id uuid.UUID) error
 }

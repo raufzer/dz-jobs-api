@@ -7,6 +7,6 @@ import (
 
 type CandidateExperienceRepository interface {
 	CreateExperience(experience *models.CandidateExperience) error
-	GetExperienceByCandidateID(id uuid.UUID) ([]models.CandidateExperience, error)
+	GetExperience(id uuid.UUID) ([]models.CandidateExperience, error)
 	DeleteExperience(id uuid.UUID) error
 }

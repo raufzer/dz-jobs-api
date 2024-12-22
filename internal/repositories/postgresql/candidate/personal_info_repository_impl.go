@@ -27,7 +27,7 @@ func (r *SQLCandidatePersonalInfoRepository) CreatePersonalInfo(info *models.Can
 	return nil
 }
 
-func (r *SQLCandidatePersonalInfoRepository) GetPersonalInfoByCandidateID(id uuid.UUID) (*models.CandidatePersonalInfo, error) {
+func (r *SQLCandidatePersonalInfoRepository) GetPersonalInfo(id uuid.UUID) (*models.CandidatePersonalInfo, error) {
 	var info models.CandidatePersonalInfo
 	query := `SELECT candidate_id, name, email, phone, address FROM candidate_personal_info WHERE candidate_id = $1`
 	err := r.db.QueryRow(query, id).Scan(&info.CandidateID, &info.Name, &info.Email, &info.Phone, &info.Address)

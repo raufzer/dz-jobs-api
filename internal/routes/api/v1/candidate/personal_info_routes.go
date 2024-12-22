@@ -7,10 +7,10 @@ import (
 )
 
 func PersonalInfoRoutes(rg *gin.RouterGroup, candidatePersonalInfoController *controllers.CandidatePersonalInfoController) {
-	personalInfoRoute := rg.Group("/:id/personal-info")
+	personalInfoRoute := rg.Group("/:candidate_id/personal-info")
 
-	personalInfoRoute.POST("/", candidatePersonalInfoController.CreatePersonalInfo)
-	personalInfoRoute.GET("/", candidatePersonalInfoController.GetPersonalInfoByID)
+	personalInfoRoute.POST("/", candidatePersonalInfoController.AddPersonalInfo)
+	personalInfoRoute.GET("/", candidatePersonalInfoController.GetPersonalInfo)
 	personalInfoRoute.PUT("/", candidatePersonalInfoController.UpdatePersonalInfo)
 	personalInfoRoute.DELETE("/", candidatePersonalInfoController.DeletePersonalInfo)
 

@@ -31,14 +31,14 @@ func NewRecruiterController(service serviceInterfaces.RecruiterService) *Recruit
 // @Success 201 {object} response.Response
 // @Failure 400 {object} response.Response
 // @Router /recruiters [post]
-func (rc *RecruiterController) CreateRecruiter(ctx *gin.Context) {
+func (c *RecruiterController) CreateRecruiter(ctx *gin.Context) {
 	accessToken, err := ctx.Cookie("access_token")
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
-	userID, err := rc.recruiterService.ExtractTokenDetails(accessToken)
+	userID, err := c.recruiterService.ExtractTokenDetails(accessToken)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -55,7 +55,7 @@ func (rc *RecruiterController) CreateRecruiter(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	recruiter, err := rc.recruiterService.CreateRecruiter(userID, req, companyLogoFile)
+	recruiter, err := c.recruiterService.CreateRecruiter(userID, req, companyLogoFile)
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -68,7 +68,7 @@ func (rc *RecruiterController) CreateRecruiter(ctx *gin.Context) {
 	})
 }
 
-// GetRecruiterByID godoc
+// GetRecruiter godoc
 // @Summary Get recruiter by ID
 // @Description Get recruiter details by ID
 // @Tags Recruiters
@@ -77,14 +77,14 @@ func (rc *RecruiterController) CreateRecruiter(ctx *gin.Context) {
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
 // @Router /recruiters/{id} [get]
-func (rc *RecruiterController) GetRecruiterByID(ctx *gin.Context) {
+func (c *RecruiterController) GetRecruiter(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
-	recruiter, err := rc.recruiterService.GetRecruiterByID(id)
+	recruiter, err := c.recruiterService.GetRecruiter(id)
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -109,7 +109,7 @@ func (rc *RecruiterController) GetRecruiterByID(ctx *gin.Context) {
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
 // @Router /recruiters/{id} [put]
-func (rc *RecruiterController) UpdateRecruiter(ctx *gin.Context) {
+func (c *RecruiterController) UpdateRecruiter(ctx *gin.Context) {
 	var req request.UpdateRecruiterRequest
 	if err := ctx.ShouldBind(&req); err != nil {
 		ctx.Error(err)
@@ -126,7 +126,7 @@ func (rc *RecruiterController) UpdateRecruiter(ctx *gin.Context) {
 		ctx.Error(err)
 		return
 	}
-	updatedRecruiter, err := rc.recruiterService.UpdateRecruiter(id, req, companyLogoFile)
+	updatedRecruiter, err := c.recruiterService.UpdateRecruiter(id, req, companyLogoFile)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -149,14 +149,14 @@ func (rc *RecruiterController) UpdateRecruiter(ctx *gin.Context) {
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
 // @Router /recruiters/{id} [delete]
-func (rc *RecruiterController) DeleteRecruiter(ctx *gin.Context) {
+func (c *RecruiterController) DeleteRecruiter(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
-	err = rc.recruiterService.DeleteRecruiter(id)
+	err = c.recruiterService.DeleteRecruiter(id)
 	if err != nil {
 		ctx.Error(err)
 		return

@@ -9,6 +9,6 @@ import (
 
 type CandidatePortfolioService interface {
 	AddProject(candidateID uuid.UUID, request request.AddProjectRequest) (*models.CandidatePortfolio, error)
-	GetPortfolioByCandidateID(candidateID uuid.UUID) ([]models.CandidatePortfolio, error)
+	GetPortfolio(candidateID uuid.UUID) ([]models.CandidatePortfolio, error)
 	DeleteProject(projectID uuid.UUID, projectName string) error
 }

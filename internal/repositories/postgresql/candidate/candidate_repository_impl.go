@@ -29,7 +29,7 @@ func (r *SQLCandidateRepository) CreateCandidate(candidate *models.Candidate) (u
 	return candidate.CandidateID, nil
 }
 
-func (r *SQLCandidateRepository) GetCandidateByID(id uuid.UUID) (*models.Candidate, error) {
+func (r *SQLCandidateRepository) GetCandidate(id uuid.UUID) (*models.Candidate, error) {
 	query := `SELECT candidate_id, resume, profile_picture FROM candidates WHERE candidate_id = $1`
 	row := r.db.QueryRow(query, id)
 	candidate := &models.Candidate{}

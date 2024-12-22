@@ -7,10 +7,10 @@ import (
 )
 
 func PortfolioRoutes(rg *gin.RouterGroup, candidatePortfolioController *controllers.CandidatePortfolioController) {
-	portfolioRoute := rg.Group("/:id/portfolio")
+	portfolioRoute := rg.Group("/:candidate_id/portfolio")
 
-	portfolioRoute.POST("/", candidatePortfolioController.CreateProject)
-	portfolioRoute.GET("/", candidatePortfolioController.GetProjectsByCandidateID)
+	portfolioRoute.POST("/", candidatePortfolioController.AddProject)
+	portfolioRoute.GET("/", candidatePortfolioController.GetPortfolio)
 	portfolioRoute.DELETE("/:project_id", candidatePortfolioController.DeleteProject)
 
 }

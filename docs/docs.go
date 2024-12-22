@@ -79,7 +79,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/users/{id}": {
+        "/admin/users/{user_id}": {
             "get": {
                 "description": "Get user details by ID",
                 "produces": [
@@ -500,7 +500,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{id}": {
+        "/candidates/{candidate_id}": {
             "get": {
                 "description": "Get candidate details by ID",
                 "produces": [
@@ -514,7 +514,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     }
@@ -550,7 +550,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     },
@@ -597,7 +597,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     }
@@ -618,7 +618,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{id}/certifications": {
+        "/candidates/{candidate_id}/certifications": {
             "get": {
                 "description": "Get all certifications for a candidate by candidate ID",
                 "produces": [
@@ -632,7 +632,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     }
@@ -651,54 +651,9 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
-            "post": {
-                "description": "Create a new certification for a candidate",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Candidates - Certifications"
-                ],
-                "summary": "Create a new certification",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Certification request",
-                        "name": "certification",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/candidate.AddCertificationRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
             }
         },
-        "/candidates/{id}/certifications/{certification_id}": {
+        "/candidates/{candidate_id}/certifications/{certification_id}": {
             "delete": {
                 "description": "Delete a certification by candidate ID and certification ID",
                 "produces": [
@@ -712,7 +667,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     },
@@ -740,7 +695,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{id}/education": {
+        "/candidates/{candidate_id}/education": {
             "get": {
                 "description": "Get all education records for a candidate by candidate ID",
                 "produces": [
@@ -754,7 +709,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     }
@@ -775,7 +730,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Create a new education record for a candidate",
+                "description": "Add a new education record for a candidate",
                 "consumes": [
                     "application/json"
                 ],
@@ -785,12 +740,12 @@ const docTemplate = `{
                 "tags": [
                     "Candidates - Education"
                 ],
-                "summary": "Create a new education record",
+                "summary": "Add a new education record",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     },
@@ -832,7 +787,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     }
@@ -853,7 +808,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{id}/experience": {
+        "/candidates/{candidate_id}/experience": {
             "get": {
                 "description": "Get all experience records for a candidate by candidate ID",
                 "produces": [
@@ -867,7 +822,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     }
@@ -888,7 +843,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Create a new experience record for a candidate",
+                "description": "Add a new experience record for a candidate",
                 "consumes": [
                     "application/json"
                 ],
@@ -898,12 +853,12 @@ const docTemplate = `{
                 "tags": [
                     "Candidates - Experience"
                 ],
-                "summary": "Create a new experience record",
+                "summary": "Add a new experience record",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     },
@@ -945,7 +900,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     }
@@ -966,7 +921,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{id}/personal-info": {
+        "/candidates/{candidate_id}/personal-info": {
             "get": {
                 "description": "Get personal information for a candidate by candidate ID",
                 "produces": [
@@ -980,7 +935,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     }
@@ -1016,7 +971,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     },
@@ -1026,7 +981,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/candidate.UpdateCandidatePersonalInfoRequest"
+                            "$ref": "#/definitions/candidate.UpdatePersonalInfoRequest"
                         }
                     }
                 ],
@@ -1046,7 +1001,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Create personal information for a candidate",
+                "description": "Add personal information for a candidate",
                 "consumes": [
                     "application/json"
                 ],
@@ -1056,12 +1011,12 @@ const docTemplate = `{
                 "tags": [
                     "Candidates - Personal Info"
                 ],
-                "summary": "Create personal information",
+                "summary": "Add personal information",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     },
@@ -1071,7 +1026,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/candidate.CreateCandidatePersonalInfoRequest"
+                            "$ref": "#/definitions/candidate.AddPersonalInfoRequest"
                         }
                     }
                 ],
@@ -1103,7 +1058,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     }
@@ -1124,7 +1079,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{id}/portfolio": {
+        "/candidates/{candidate_id}/portfolio": {
             "get": {
                 "description": "Get all projects for a candidate by candidate ID",
                 "produces": [
@@ -1138,7 +1093,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     }
@@ -1159,7 +1114,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Create a new project for a candidate",
+                "description": "Add a new project for a candidate",
                 "consumes": [
                     "application/json"
                 ],
@@ -1169,12 +1124,12 @@ const docTemplate = `{
                 "tags": [
                     "Candidates - Portfolio"
                 ],
-                "summary": "Create a new project",
+                "summary": "Add a new project",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     },
@@ -1204,7 +1159,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{id}/portfolio/{project_id}": {
+        "/candidates/{candidate_id}/portfolio/{project_id}": {
             "delete": {
                 "description": "Delete a project by candidate ID and project ID",
                 "produces": [
@@ -1218,7 +1173,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     },
@@ -1246,7 +1201,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{id}/skills": {
+        "/candidates/{candidate_id}/skills": {
             "get": {
                 "description": "Get all skills for a candidate by candidate ID",
                 "produces": [
@@ -1260,7 +1215,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     }
@@ -1281,7 +1236,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Create a new skill for a candidate",
+                "description": "Add a new skill for a candidate",
                 "consumes": [
                     "application/json"
                 ],
@@ -1291,18 +1246,18 @@ const docTemplate = `{
                 "tags": [
                     "Candidates - Skills"
                 ],
-                "summary": "Create a new skill",
+                "summary": "Add a new skill",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     },
                     {
                         "description": "Skill request",
-                        "name": "skill",
+                        "name": "Skill",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -1326,7 +1281,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{id}/skills/{skill}": {
+        "/candidates/{candidate_id}/skills/{skill_name}": {
             "delete": {
                 "description": "Delete a skill by candidate ID and skill name",
                 "produces": [
@@ -1340,14 +1295,14 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Candidate ID",
-                        "name": "id",
+                        "name": "candidate_id",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "Skill name",
-                        "name": "skill",
+                        "name": "skill_name",
                         "in": "path",
                         "required": true
                     }
@@ -1355,6 +1310,53 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/candidates/{id}/certifications": {
+            "post": {
+                "description": "Add a new certification for a candidate",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Candidates - Certifications"
+                ],
+                "summary": "Add a new certification",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Candidate ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Certification request",
+                        "name": "certification",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/candidate.AddCertificationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -1609,6 +1611,27 @@ const docTemplate = `{
                 }
             }
         },
+        "candidate.AddPersonalInfoRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "name"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
         "candidate.AddProjectRequest": {
             "type": "object",
             "required": [
@@ -1641,28 +1664,7 @@ const docTemplate = `{
                 }
             }
         },
-        "candidate.CreateCandidatePersonalInfoRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "name"
-            ],
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                }
-            }
-        },
-        "candidate.UpdateCandidatePersonalInfoRequest": {
+        "candidate.UpdatePersonalInfoRequest": {
             "type": "object",
             "required": [
                 "email",

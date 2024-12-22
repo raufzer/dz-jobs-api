@@ -9,8 +9,8 @@ import (
 func CandidateRoutes(rg *gin.RouterGroup, candidateController *controllers.CandidateController) {
 
 	rg.POST("/", candidateController.CreateCandidate)
-	rg.GET("/:id", candidateController.GetCandidateByID)
-	rg.PUT("/:id", candidateController.UpdateCandidate)
-	rg.DELETE("/:id", candidateController.DeleteCandidate)
+	rg.GET("/:candidate_id", candidateController.GetCandidate)
+	rg.PUT("/:candidate_id", candidateController.UpdateCandidate)
+	rg.DELETE("/:candidate_id", candidateController.DeleteCandidate)
 
 }

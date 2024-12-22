@@ -10,15 +10,15 @@ import (
 	"github.com/google/uuid"
 )
 
-type candidateExperienceService struct {
-	experienceRepo interfaces.CandidateExperienceRepository
+type CandidateExperienceService struct {
+	candidateExperienceRepo interfaces.CandidateExperienceRepository
 }
 
-func NewCandidateExperienceService(repo interfaces.CandidateExperienceRepository) *candidateExperienceService {
-	return &candidateExperienceService{experienceRepo: repo}
+func NewCandidateExperienceService(repo interfaces.CandidateExperienceRepository) *CandidateExperienceService {
+	return &CandidateExperienceService{candidateExperienceRepo: repo}
 }
 
-func (s *candidateExperienceService) AddExperience(candidateID uuid.UUID, request request.AddExperienceRequest) (*models.CandidateExperience, error) {
+func (s *CandidateExperienceService) AddExperience(candidateID uuid.UUID, request request.AddExperienceRequest) (*models.CandidateExperience, error) {
 	experience := &models.CandidateExperience{
 		ExperienceID: uuid.New(),
 		CandidateID:  candidateID,
@@ -29,7 +29,7 @@ func (s *candidateExperienceService) AddExperience(candidateID uuid.UUID, reques
 		Description:  request.Description,
 	}
 
-	err := s.experienceRepo.CreateExperience(experience)
+	err := s.candidateExperienceRepo.CreateExperience(experience)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to add experience")
 	}
@@ -37,8 +37,8 @@ func (s *candidateExperienceService) AddExperience(candidateID uuid.UUID, reques
 	return experience, nil
 }
 
-func (s *candidateExperienceService) GetExperienceByCandidateID(candidateID uuid.UUID) ([]models.CandidateExperience, error) {
-	experiences, err := s.experienceRepo.GetExperienceByCandidateID(candidateID)
+func (s *CandidateExperienceService) GetExperience(candidateID uuid.UUID) ([]models.CandidateExperience, error) {
+	experiences, err := s.candidateExperienceRepo.GetExperience(candidateID)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusNotFound, "No experience records found")
 	}
@@ -46,8 +46,8 @@ func (s *candidateExperienceService) GetExperienceByCandidateID(candidateID uuid
 	return experiences, nil
 }
 
-func (s *candidateExperienceService) DeleteExperience(experienceID uuid.UUID) error {
-	err := s.experienceRepo.DeleteExperience(experienceID)
+func (s *CandidateExperienceService) DeleteExperience(experienceID uuid.UUID) error {
+	err := s.candidateExperienceRepo.DeleteExperience(experienceID)
 	if err != nil {
 		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete experience")
 	}

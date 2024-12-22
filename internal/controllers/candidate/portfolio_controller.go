@@ -19,18 +19,18 @@ func NewCandidatePortfolioController(service serviceInterfaces.CandidatePortfoli
 	return &CandidatePortfolioController{service: service}
 }
 
-// CreateProject godoc
-// @Summary Create a new project
-// @Description Create a new project for a candidate
+// AddProject godoc
+// @Summary Add a new project
+// @Description Add a new project for a candidate
 // @Tags Candidates - Portfolio
 // @Accept json
 // @Produce json
-// @Param id path string true "Candidate ID"
+// @Param candidate_id path string true "Candidate ID"
 // @Param project body request.AddProjectRequest true "Project request"
 // @Success 201 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id}/portfolio [post]
-func (c *CandidatePortfolioController) CreateProject(ctx *gin.Context) {
+// @Router /candidates/{candidate_id}/portfolio [post]
+func (c *CandidatePortfolioController) AddProject(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
@@ -57,16 +57,16 @@ func (c *CandidatePortfolioController) CreateProject(ctx *gin.Context) {
 	})
 }
 
-// GetProjectsByCandidateID godoc
+// GetPortfolio godoc
 // @Summary Get projects by candidate ID
 // @Description Get all projects for a candidate by candidate ID
 // @Tags Candidates - Portfolio
 // @Produce json
-// @Param id path string true "Candidate ID"
+// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id}/portfolio [get]
-func (c *CandidatePortfolioController) GetProjectsByCandidateID(ctx *gin.Context) {
+// @Router /candidates/{candidate_id}/portfolio [get]
+func (c *CandidatePortfolioController) GetPortfolio(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
@@ -74,7 +74,7 @@ func (c *CandidatePortfolioController) GetProjectsByCandidateID(ctx *gin.Context
 		return
 	}
 
-	projects, err := c.service.GetPortfolioByCandidateID(candidateID)
+	projects, err := c.service.GetPortfolio(candidateID)
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -96,11 +96,11 @@ func (c *CandidatePortfolioController) GetProjectsByCandidateID(ctx *gin.Context
 // @Description Delete a project by candidate ID and project ID
 // @Tags Candidates - Portfolio
 // @Produce json
-// @Param id path string true "Candidate ID"
+// @Param candidate_id path string true "Candidate ID"
 // @Param project_id path string true "Project ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id}/portfolio/{project_id} [delete]
+// @Router /candidates/{candidate_id}/portfolio/{project_id} [delete]
 func (c *CandidatePortfolioController) DeleteProject(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {

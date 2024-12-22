@@ -7,6 +7,6 @@ import (
 
 type CandidateCertificationsRepository interface {
 	CreateCertification(certification *models.CandidateCertification) error
-	GetCertificationsByCandidateID(id uuid.UUID) ([]models.CandidateCertification, error)
+	GetCertifications(id uuid.UUID) ([]models.CandidateCertification, error)
 	DeleteCertification(id uuid.UUID, certificationName string) error
 }

@@ -20,7 +20,7 @@ func NewUserRepository(db *sql.DB) repositoryInterfaces.UserRepository {
 		db: db,
 	}
 }
-func (r *SQLUserRepository) Create(user *models.User) error {
+func (r *SQLUserRepository) CreateUser(user *models.User) error {
 	query := "INSERT INTO users (name, email, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING user_id"
 	var user_id uuid.UUID
 	err := r.db.QueryRow(query, user.Name, user.Email, user.Password, user.Role).Scan(&user_id)
@@ -30,7 +30,7 @@ func (r *SQLUserRepository) Create(user *models.User) error {
 	user.ID = user_id
 	return nil
 }
-func (r *SQLUserRepository) GetByEmail(email string) (*models.User, error) {
+func (r *SQLUserRepository) GetUserByEmail(email string) (*models.User, error) {
 	query := "SELECT user_id, name, email, password, role, created_at, updated_at FROM users WHERE email = $1"
 	row := r.db.QueryRow(query, email)
 	user := &models.User{}
@@ -43,7 +43,7 @@ func (r *SQLUserRepository) GetByEmail(email string) (*models.User, error) {
 	}
 	return user, nil
 }
-func (r *SQLUserRepository) GetByID(user_id uuid.UUID) (*models.User, error) {
+func (r *SQLUserRepository) GetUserByID(user_id uuid.UUID) (*models.User, error) {
 	query := "SELECT user_id, name, email, role, created_at, updated_at FROM users WHERE user_id = $1"
 	row := r.db.QueryRow(query, user_id)
 	user := &models.User{}
@@ -56,7 +56,7 @@ func (r *SQLUserRepository) GetByID(user_id uuid.UUID) (*models.User, error) {
 	}
 	return user, nil
 }
-func (r *SQLUserRepository) GetAll() ([]*models.User, error) {
+func (r *SQLUserRepository) GetAllUsers() ([]*models.User, error) {
 	query := "SELECT user_id, name, email, role, created_at, updated_at FROM users"
 	rows, err := r.db.Query(query)
 	if err != nil {
@@ -76,7 +76,7 @@ func (r *SQLUserRepository) GetAll() ([]*models.User, error) {
 	}
 	return users, nil
 }
-func (r *SQLUserRepository) Update(user_id uuid.UUID, user *models.User) error {
+func (r *SQLUserRepository) UpdateUser(user_id uuid.UUID, user *models.User) error {
 	query := "UPDATE users SET name = $1, email = $2, password = $3, role = $4, updated_at = NOW() WHERE user_id = $5"
 	result, err := r.db.Exec(query, user.Name, user.Email, user.Password, user.Role, user_id)
 	if err != nil {
@@ -91,7 +91,7 @@ func (r *SQLUserRepository) Update(user_id uuid.UUID, user *models.User) error {
 	}
 	return nil
 }
-func (r *SQLUserRepository) UpdatePassword(email, hashedPassword string) error {
+func (r *SQLUserRepository) UpdateUserPassword(email, hashedPassword string) error {
 	query := "UPDATE users SET password = $1, updated_at = NOW() WHERE email = $2"
 	result, err := r.db.Exec(query, hashedPassword, email)
 	if err != nil {
@@ -106,7 +106,7 @@ func (r *SQLUserRepository) UpdatePassword(email, hashedPassword string) error {
 	}
 	return nil
 }
-func (r *SQLUserRepository) Delete(user_id uuid.UUID) error {
+func (r *SQLUserRepository) DeleteUser(user_id uuid.UUID) error {
 	query := "DELETE FROM users WHERE user_id = $1"
 	result, err := r.db.Exec(query, user_id)
 	if err != nil {

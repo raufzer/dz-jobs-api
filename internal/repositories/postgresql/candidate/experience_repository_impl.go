@@ -28,7 +28,7 @@ func (r *SQLCandidateExperienceRepository) CreateExperience(experience *models.C
 	return nil
 }
 
-func (r *SQLCandidateExperienceRepository) GetExperienceByCandidateID(id uuid.UUID) ([]models.CandidateExperience, error) {
+func (r *SQLCandidateExperienceRepository) GetExperience(id uuid.UUID) ([]models.CandidateExperience, error) {
 	rows, err := r.db.Query(`SELECT experience_id, candidate_id, job_title, company, start_date, end_date, description FROM candidate_experience WHERE candidate_id = $1`, id)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch experience: %w", err)

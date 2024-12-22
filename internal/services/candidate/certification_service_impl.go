@@ -10,15 +10,15 @@ import (
 	"github.com/google/uuid"
 )
 
-type candidateCertificationsService struct {
-	certificationsRepo interfaces.CandidateCertificationsRepository
+type CandidateCertificationsService struct {
+	candidateCertificationsRepo interfaces.CandidateCertificationsRepository
 }
 
-func NewCandidateCertificationsService(repo interfaces.CandidateCertificationsRepository) *candidateCertificationsService {
-	return &candidateCertificationsService{certificationsRepo: repo}
+func NewCandidateCertificationsService(repo interfaces.CandidateCertificationsRepository) *CandidateCertificationsService {
+	return &CandidateCertificationsService{candidateCertificationsRepo: repo}
 }
 
-func (s *candidateCertificationsService) AddCertification(candidateID uuid.UUID, request request.AddCertificationRequest) (*models.CandidateCertification, error) {
+func (s *CandidateCertificationsService) AddCertification(candidateID uuid.UUID, request request.AddCertificationRequest) (*models.CandidateCertification, error) {
 	certification := &models.CandidateCertification{
 		CertificationID:   uuid.New(),
 		CandidateID:       candidateID,
@@ -28,7 +28,7 @@ func (s *candidateCertificationsService) AddCertification(candidateID uuid.UUID,
 		ExpirationDate:    request.ExpirationDate,
 	}
 
-	err := s.certificationsRepo.CreateCertification(certification)
+	err := s.candidateCertificationsRepo.CreateCertification(certification)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to add certification")
 	}
@@ -36,8 +36,8 @@ func (s *candidateCertificationsService) AddCertification(candidateID uuid.UUID,
 	return certification, nil
 }
 
-func (s *candidateCertificationsService) GetCertificationsByCandidateID(candidateID uuid.UUID) ([]models.CandidateCertification, error) {
-	certifications, err := s.certificationsRepo.GetCertificationsByCandidateID(candidateID)
+func (s *CandidateCertificationsService) GetCertifications(candidateID uuid.UUID) ([]models.CandidateCertification, error) {
+	certifications, err := s.candidateCertificationsRepo.GetCertifications(candidateID)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusNotFound, "No certifications found")
 	}
@@ -45,8 +45,8 @@ func (s *candidateCertificationsService) GetCertificationsByCandidateID(candidat
 	return certifications, nil
 }
 
-func (s *candidateCertificationsService) DeleteCertification(certificationID uuid.UUID, certificationName string) error {
-	err := s.certificationsRepo.DeleteCertification(certificationID, certificationName)
+func (s *CandidateCertificationsService) DeleteCertification(certificationID uuid.UUID, certificationName string) error {
+	err := s.candidateCertificationsRepo.DeleteCertification(certificationID, certificationName)
 	if err != nil {
 		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete certification")
 	}

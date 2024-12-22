@@ -27,7 +27,7 @@ func (r *SQLCandidateCertificationRepository) CreateCertification(certification 
 	return nil
 }
 
-func (r *SQLCandidateCertificationRepository) GetCertificationsByCandidateID(id uuid.UUID) ([]models.CandidateCertification, error) {
+func (r *SQLCandidateCertificationRepository) GetCertifications(id uuid.UUID) ([]models.CandidateCertification, error) {
 	rows, err := r.db.Query(`SELECT certification_id, candidate_id, certification_name, issued_by, issue_date, expiration_date FROM candidate_certifications WHERE candidate_id = $1`, id)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch certifications: %w", err)

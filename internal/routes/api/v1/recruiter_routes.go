@@ -9,7 +9,7 @@ import (
 func RecruiterRoutes(rg *gin.RouterGroup, recruiterController *controllers.RecruiterController) {
 
 	rg.POST("/", recruiterController.CreateRecruiter)
-	rg.GET("/:id", recruiterController.GetRecruiterByID)
-	rg.PUT("/:id", recruiterController.UpdateRecruiter)
-	rg.DELETE("/:id", recruiterController.DeleteRecruiter)
+	rg.GET("/:recruiter_id", recruiterController.GetRecruiter)
+	rg.PUT("/:recruiter_id", recruiterController.UpdateRecruiter)
+	rg.DELETE("/:recruiter_id", recruiterController.DeleteRecruiter)
 }

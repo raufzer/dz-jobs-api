@@ -9,6 +9,6 @@ import (
 
 type CandidateEducationService interface {
 	AddEducation(candidateID uuid.UUID, request request.AddEducationRequest) (*models.CandidateEducation, error)
-	GetEducationByCandidateID(candidateID uuid.UUID) ([]models.CandidateEducation, error)
+	GetEducation(candidateID uuid.UUID) ([]models.CandidateEducation, error)
 	DeleteEducation(educationID uuid.UUID) error
 }

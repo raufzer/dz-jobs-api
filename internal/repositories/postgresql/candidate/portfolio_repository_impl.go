@@ -29,7 +29,7 @@ func (r *SQLCandidatePortfolioRepository) CreateProject(portfolio *models.Candid
 	return nil
 }
 
-func (r *SQLCandidatePortfolioRepository) GetPortfolioByCandidateID(id uuid.UUID) ([]models.CandidatePortfolio, error) {
+func (r *SQLCandidatePortfolioRepository) GetPortfolio(id uuid.UUID) ([]models.CandidatePortfolio, error) {
 	rows, err := r.db.Query(`SELECT project_id, candidate_id, project_name, project_link, category, description FROM candidate_portfolio WHERE candidate_id = $1`, id)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch portfolio: %w", err)

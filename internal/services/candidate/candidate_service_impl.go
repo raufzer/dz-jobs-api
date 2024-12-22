@@ -24,7 +24,7 @@ func NewCandidateService(repo interfaces.CandidateRepository, config *config.App
 }
 
 func (s *CandidateService) CreateCandidate(userID string, profilePictureFile, resumeFile *multipart.FileHeader) (*models.Candidate, error) {
-	existingCandidate, _ := s.candidateRepo.GetCandidateByID(uuid.MustParse(userID))
+	existingCandidate, _ := s.candidateRepo.GetCandidate(uuid.MustParse(userID))
 	if existingCandidate != nil {
 		return nil, utils.NewCustomError(http.StatusBadRequest, "Candidate already exists")
 	}
@@ -55,8 +55,8 @@ func (s *CandidateService) CreateCandidate(userID string, profilePictureFile, re
 	return newCandidate, nil
 }
 
-func (s *CandidateService) GetCandidateByID(candidateID uuid.UUID) (*models.Candidate, error) {
-	candidate, err := s.candidateRepo.GetCandidateByID(candidateID)
+func (s *CandidateService) GetCandidate(candidateID uuid.UUID) (*models.Candidate, error) {
+	candidate, err := s.candidateRepo.GetCandidate(candidateID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, utils.NewCustomError(http.StatusNotFound, "User not found")
@@ -97,7 +97,7 @@ func (s *CandidateService) UpdateCandidate(candidateID uuid.UUID, profilePicture
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to update candidate")
 	}
 
-	return s.candidateRepo.GetCandidateByID(candidateID)
+	return s.candidateRepo.GetCandidate(candidateID)
 }
 
 func (s *CandidateService) DeleteCandidate(candidateID uuid.UUID) error {

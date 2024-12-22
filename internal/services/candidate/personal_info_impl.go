@@ -10,15 +10,15 @@ import (
 	"github.com/google/uuid"
 )
 
-type candidatePersonalInfoService struct {
-	personalInfoRepo interfaces.CandidatePersonalInfoRepository
+type CandidatePersonalInfoService struct {
+	candidatePersonalInfoRepo interfaces.CandidatePersonalInfoRepository
 }
 
-func NewCandidatePersonalInfoService(repo interfaces.CandidatePersonalInfoRepository) *candidatePersonalInfoService {
-	return &candidatePersonalInfoService{personalInfoRepo: repo}
+func NewCandidatePersonalInfoService(repo interfaces.CandidatePersonalInfoRepository) *CandidatePersonalInfoService {
+	return &CandidatePersonalInfoService{candidatePersonalInfoRepo: repo}
 }
 
-func (s *candidatePersonalInfoService) UpdatePersonalInfo(id uuid.UUID, request request.UpdateCandidatePersonalInfoRequest) (*models.CandidatePersonalInfo, error) {
+func (s *CandidatePersonalInfoService) UpdatePersonalInfo(id uuid.UUID, request request.UpdatePersonalInfoRequest) (*models.CandidatePersonalInfo, error) {
 	info := &models.CandidatePersonalInfo{
 		Name:    request.Name,
 		Email:   request.Email,
@@ -26,15 +26,15 @@ func (s *candidatePersonalInfoService) UpdatePersonalInfo(id uuid.UUID, request 
 		Address: request.Address,
 	}
 
-	err := s.personalInfoRepo.UpdatePersonalInfo(info)
+	err := s.candidatePersonalInfoRepo.UpdatePersonalInfo(info)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to update personal info")
 	}
 	return s.GetPersonalInfo(id)
 }
 
-func (s *candidatePersonalInfoService) GetPersonalInfo(candidateID uuid.UUID) (*models.CandidatePersonalInfo, error) {
-	info, err := s.personalInfoRepo.GetPersonalInfoByCandidateID(candidateID)
+func (s *CandidatePersonalInfoService) GetPersonalInfo(candidateID uuid.UUID) (*models.CandidatePersonalInfo, error) {
+	info, err := s.candidatePersonalInfoRepo.GetPersonalInfo(candidateID)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusNotFound, "Personal info not found")
 	}
@@ -42,8 +42,8 @@ func (s *candidatePersonalInfoService) GetPersonalInfo(candidateID uuid.UUID) (*
 	return info, nil
 }
 
-func (s *candidatePersonalInfoService) CreatePersonalInfo(request request.CreateCandidatePersonalInfoRequest, candidateID uuid.UUID) (*models.CandidatePersonalInfo, error) {
-	existingPersonalInfo, _ := s.personalInfoRepo.GetPersonalInfoByCandidateID(candidateID)
+func (s *CandidatePersonalInfoService) AddPersonalInfo(request request.AddPersonalInfoRequest, candidateID uuid.UUID) (*models.CandidatePersonalInfo, error) {
+	existingPersonalInfo, _ := s.candidatePersonalInfoRepo.GetPersonalInfo(candidateID)
 
 	if existingPersonalInfo != nil {
 		return nil, utils.NewCustomError(http.StatusBadRequest, "Personal info already exists")
@@ -56,15 +56,15 @@ func (s *candidatePersonalInfoService) CreatePersonalInfo(request request.Create
 		Address:     request.Address,
 	}
 
-	err := s.personalInfoRepo.CreatePersonalInfo(info)
+	err := s.candidatePersonalInfoRepo.CreatePersonalInfo(info)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to create personal info")
 	}
 	return s.GetPersonalInfo(candidateID)
 }
 
-func (s *candidatePersonalInfoService) DeletePersonalInfo(candidateID uuid.UUID) error {
-	err := s.personalInfoRepo.DeletePersonalInfo(candidateID)
+func (s *CandidatePersonalInfoService) DeletePersonalInfo(candidateID uuid.UUID) error {
+	err := s.candidatePersonalInfoRepo.DeletePersonalInfo(candidateID)
 	if err != nil {
 		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete personal info")
 	}

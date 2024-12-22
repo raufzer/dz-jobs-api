@@ -10,15 +10,15 @@ import (
 	"github.com/google/uuid"
 )
 
-type candidatePortfolioService struct {
-	portfolioRepo interfaces.CandidatePortfolioRepository
+type CandidatePortfolioService struct {
+	candidatePortfolioRepo interfaces.CandidatePortfolioRepository
 }
 
-func NewCandidatePortfolioService(repo interfaces.CandidatePortfolioRepository) *candidatePortfolioService {
-	return &candidatePortfolioService{portfolioRepo: repo}
+func NewCandidatePortfolioService(repo interfaces.CandidatePortfolioRepository) *CandidatePortfolioService {
+	return &CandidatePortfolioService{candidatePortfolioRepo: repo}
 }
 
-func (s *candidatePortfolioService) AddProject(candidateID uuid.UUID, request request.AddProjectRequest) (*models.CandidatePortfolio, error) {
+func (s *CandidatePortfolioService) AddProject(candidateID uuid.UUID, request request.AddProjectRequest) (*models.CandidatePortfolio, error) {
 	portfolio := &models.CandidatePortfolio{
 		ProjectID:   uuid.New(),
 		CandidateID: candidateID,
@@ -28,7 +28,7 @@ func (s *candidatePortfolioService) AddProject(candidateID uuid.UUID, request re
 		Description: request.Description,
 	}
 
-	err := s.portfolioRepo.CreateProject(portfolio)
+	err := s.candidatePortfolioRepo.CreateProject(portfolio)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to add portfolio project")
 	}
@@ -36,8 +36,8 @@ func (s *candidatePortfolioService) AddProject(candidateID uuid.UUID, request re
 	return portfolio, nil
 }
 
-func (s *candidatePortfolioService) GetPortfolioByCandidateID(candidateID uuid.UUID) ([]models.CandidatePortfolio, error) {
-	portfolio, err := s.portfolioRepo.GetPortfolioByCandidateID(candidateID)
+func (s *CandidatePortfolioService) GetPortfolio(candidateID uuid.UUID) ([]models.CandidatePortfolio, error) {
+	portfolio, err := s.candidatePortfolioRepo.GetPortfolio(candidateID)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusNotFound, "No portfolio projects found")
 	}
@@ -45,8 +45,8 @@ func (s *candidatePortfolioService) GetPortfolioByCandidateID(candidateID uuid.U
 	return portfolio, nil
 }
 
-func (s *candidatePortfolioService) DeleteProject(projectID uuid.UUID, projectName string) error {
-	err := s.portfolioRepo.DeleteProject(projectID, projectName)
+func (s *CandidatePortfolioService) DeleteProject(projectID uuid.UUID, projectName string) error {
+	err := s.candidatePortfolioRepo.DeleteProject(projectID, projectName)
 	if err != nil {
 		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete portfolio project")
 	}

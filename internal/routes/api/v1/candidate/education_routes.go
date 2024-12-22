@@ -6,10 +6,10 @@ import (
 )
 
 func EducationRoutes(rg *gin.RouterGroup, candidateEducationController *controllers.CandidateEducationController) {
-	educationRoute := rg.Group("/:id/education")
+	educationRoute := rg.Group("/:candidate_id/education")
 
-	educationRoute.POST("/", candidateEducationController.CreateEducation)
-	educationRoute.GET("/", candidateEducationController.GetEducationByID)
+	educationRoute.POST("/", candidateEducationController.AddEducation)
+	educationRoute.GET("/", candidateEducationController.GetEducation)
 	educationRoute.DELETE("/", candidateEducationController.DeleteEducation)
 
 }

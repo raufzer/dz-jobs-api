@@ -19,32 +19,32 @@ func NewCandidatePersonalInfoController(service serviceInterfaces.CandidatePerso
 	return &CandidatePersonalInfoController{service: service}
 }
 
-// CreatePersonalInfo godoc
-// @Summary Create personal information
-// @Description Create personal information for a candidate
+// AddPersonalInfo godoc
+// @Summary Add personal information
+// @Description Add personal information for a candidate
 // @Tags Candidates - Personal Info
 // @Accept json
 // @Produce json
-// @Param id path string true "Candidate ID"
-// @Param personal_info body request.CreateCandidatePersonalInfoRequest true "Personal Info request"
+// @Param candidate_id path string true "Candidate ID"
+// @Param personal_info body request.AddPersonalInfoRequest true "Personal Info request"
 // @Success 201 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id}/personal-info [post]
-func (c *CandidatePersonalInfoController) CreatePersonalInfo(ctx *gin.Context) {
+// @Router /candidates/{candidate_id}/personal-info [post]
+func (c *CandidatePersonalInfoController) AddPersonalInfo(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
-	var req request.CreateCandidatePersonalInfoRequest
+	var req request.AddPersonalInfoRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 
-	createdInfo, err := c.service.CreatePersonalInfo(req, candidateID)
+	createdInfo, err := c.service.AddPersonalInfo(req, candidateID)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -59,16 +59,16 @@ func (c *CandidatePersonalInfoController) CreatePersonalInfo(ctx *gin.Context) {
 	})
 }
 
-// GetPersonalInfoByID godoc
+// GetPersonal godoc
 // @Summary Get personal information by candidate ID
 // @Description Get personal information for a candidate by candidate ID
 // @Tags Candidates - Personal Info
 // @Produce json
-// @Param id path string true "Candidate ID"
+// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id}/personal-info [get]
-func (c *CandidatePersonalInfoController) GetPersonalInfoByID(ctx *gin.Context) {
+// @Router /candidates/{candidate_id}/personal-info [get]
+func (c *CandidatePersonalInfoController) GetPersonalInfo(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
@@ -96,11 +96,11 @@ func (c *CandidatePersonalInfoController) GetPersonalInfoByID(ctx *gin.Context) 
 // @Tags Candidates - Personal Info
 // @Accept json
 // @Produce json
-// @Param id path string true "Candidate ID"
-// @Param personal_info body request.UpdateCandidatePersonalInfoRequest true "Personal Info request"
+// @Param candidate_id path string true "Candidate ID"
+// @Param personal_info body request.UpdatePersonalInfoRequest true "Personal Info request"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id}/personal-info [put]
+// @Router /candidates/{candidate_id}/personal-info [put]
 func (c *CandidatePersonalInfoController) UpdatePersonalInfo(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
@@ -108,7 +108,7 @@ func (c *CandidatePersonalInfoController) UpdatePersonalInfo(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	var req request.UpdateCandidatePersonalInfoRequest
+	var req request.UpdatePersonalInfoRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -135,10 +135,10 @@ func (c *CandidatePersonalInfoController) UpdatePersonalInfo(ctx *gin.Context) {
 // @Description Delete personal information for a candidate
 // @Tags Candidates - Personal Info
 // @Produce json
-// @Param id path string true "Candidate ID"
+// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id}/personal-info [delete]
+// @Router /candidates/{candidate_id}/personal-info [delete]
 func (c *CandidatePersonalInfoController) DeletePersonalInfo(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {

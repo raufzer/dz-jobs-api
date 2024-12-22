@@ -67,16 +67,16 @@ func (c *CandidateController) CreateCandidate(ctx *gin.Context) {
 	})
 }
 
-// GetCandidateByID godoc
+// GetCandidate godoc
 // @Summary Get candidate by ID
 // @Description Get candidate details by ID
 // @Tags Candidates - Candidate
 // @Produce json
-// @Param id path string true "Candidate ID"
+// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id} [get]
-func (c *CandidateController) GetCandidateByID(ctx *gin.Context) {
+// @Router /candidates/{candidate_id} [get]
+func (c *CandidateController) GetCandidate(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
@@ -84,7 +84,7 @@ func (c *CandidateController) GetCandidateByID(ctx *gin.Context) {
 		return
 	}
 
-	candidate, err := c.service.GetCandidateByID(candidateID)
+	candidate, err := c.service.GetCandidate(candidateID)
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -99,12 +99,12 @@ func (c *CandidateController) GetCandidateByID(ctx *gin.Context) {
 // @Tags Candidates - Candidate
 // @Accept multipart/form-data
 // @Produce json
-// @Param id path string true "Candidate ID"
+// @Param candidate_id path string true "Candidate ID"
 // @Param profile_picture formData file true "Profile Picture"
 // @Param resume formData file true "Resume"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id} [put]
+// @Router /candidates/{candidate_id} [put]
 func (c *CandidateController) UpdateCandidate(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
@@ -145,10 +145,10 @@ func (c *CandidateController) UpdateCandidate(ctx *gin.Context) {
 // @Description Delete candidate by ID
 // @Tags Candidates - Candidate
 // @Produce json
-// @Param id path string true "Candidate ID"
+// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id} [delete]
+// @Router /candidates/{candidate_id} [delete]
 func (c *CandidateController) DeleteCandidate(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {

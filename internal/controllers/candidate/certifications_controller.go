@@ -19,9 +19,9 @@ func NewCandidateCertificationsController(service serviceInterfaces.CandidateCer
     return &CandidateCertificationsController{service: service}
 }
 
-// CreateCertification godoc
-// @Summary Create a new certification
-// @Description Create a new certification for a candidate
+// AddCertification godoc
+// @Summary Add a new certification
+// @Description Add a new certification for a candidate
 // @Tags Candidates - Certifications
 // @Accept json
 // @Produce json
@@ -30,7 +30,7 @@ func NewCandidateCertificationsController(service serviceInterfaces.CandidateCer
 // @Success 201 {object} response.Response
 // @Failure 400 {object} response.Response
 // @Router /candidates/{id}/certifications [post]
-func (c *CandidateCertificationsController) CreateCertification(ctx *gin.Context) {
+func (c *CandidateCertificationsController) AddCertification(ctx *gin.Context) {
     candidateID, err := uuid.Parse(ctx.Param("id"))
     if err != nil {
         ctx.Error(err)
@@ -62,10 +62,10 @@ func (c *CandidateCertificationsController) CreateCertification(ctx *gin.Context
 // @Description Get all certifications for a candidate by candidate ID
 // @Tags Candidates - Certifications
 // @Produce json
-// @Param id path string true "Candidate ID"
+// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id}/certifications [get]
+// @Router /candidates/{candidate_id}/certifications [get]
 func (c *CandidateCertificationsController) GetCertifications(ctx *gin.Context) {
     candidateID, err := uuid.Parse(ctx.Param("id"))
     if err != nil {
@@ -74,7 +74,7 @@ func (c *CandidateCertificationsController) GetCertifications(ctx *gin.Context) 
         return
     }
 
-    experience, err := c.service.GetCertificationsByCandidateID(candidateID)
+    experience, err := c.service.GetCertifications(candidateID)
     if err != nil {
         ctx.Error(err)
         return
@@ -96,11 +96,11 @@ func (c *CandidateCertificationsController) GetCertifications(ctx *gin.Context) 
 // @Description Delete a certification by candidate ID and certification ID
 // @Tags Candidates - Certifications
 // @Produce json
-// @Param id path string true "Candidate ID"
+// @Param candidate_id path string true "Candidate ID"
 // @Param certification_id path string true "Certification ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id}/certifications/{certification_id} [delete]
+// @Router /candidates/{candidate_id}/certifications/{certification_id} [delete]
 func (c *CandidateCertificationsController) DeleteCertification(ctx *gin.Context) {
     candidateID, err := uuid.Parse(ctx.Param("id"))
     if err != nil {

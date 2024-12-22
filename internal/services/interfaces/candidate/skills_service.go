@@ -8,6 +8,6 @@ import (
 
 type CandidateSkillsService interface {
 	AddSkill(candidateID uuid.UUID, request request.AddSkillRequest) (*models.CandidateSkills, error)
-	GetSkillsByCandidateID(candidateID uuid.UUID) ([]models.CandidateSkills, error)
+	GetSkills(candidateID uuid.UUID) ([]models.CandidateSkills, error)
 	DeleteSkill(candidateID uuid.UUID, skill string) error
 }

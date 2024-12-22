@@ -19,18 +19,18 @@ func NewCandidateExperienceController(service serviceInterfaces.CandidateExperie
     return &CandidateExperienceController{service: service}
 }
 
-// CreateExperience godoc
-// @Summary Create a new experience record
-// @Description Create a new experience record for a candidate
+// AddExperience godoc
+// @Summary Add a new experience record
+// @Description Add a new experience record for a candidate
 // @Tags Candidates - Experience
 // @Accept json
 // @Produce json
-// @Param id path string true "Candidate ID"
+// @Param candidate_id path string true "Candidate ID"
 // @Param experience body request.AddExperienceRequest true "Experience request"
 // @Success 201 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id}/experience [post]
-func (c *CandidateExperienceController) CreateExperience(ctx *gin.Context) {
+// @Router /candidates/{candidate_id}/experience [post]
+func (c *CandidateExperienceController) AddExperience(ctx *gin.Context) {
     candidateID, err := uuid.Parse(ctx.Param("id"))
     if err != nil {
         ctx.Error(err)
@@ -57,16 +57,16 @@ func (c *CandidateExperienceController) CreateExperience(ctx *gin.Context) {
     })
 }
 
-// GetExperienceByID godoc
+// GetExperience godoc
 // @Summary Get experience records by candidate ID
 // @Description Get all experience records for a candidate by candidate ID
 // @Tags Candidates - Experience
 // @Produce json
-// @Param id path string true "Candidate ID"
+// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id}/experience [get]
-func (c *CandidateExperienceController) GetExperienceByID(ctx *gin.Context) {
+// @Router /candidates/{candidate_id}/experience [get]
+func (c *CandidateExperienceController) GetExperience(ctx *gin.Context) {
     candidateID, err := uuid.Parse(ctx.Param("id"))
     if err != nil {
         ctx.Error(err)
@@ -74,7 +74,7 @@ func (c *CandidateExperienceController) GetExperienceByID(ctx *gin.Context) {
         return
     }
 
-    experience, err := c.service.GetExperienceByCandidateID(candidateID)
+    experience, err := c.service.GetExperience(candidateID)
     if err != nil {
         ctx.Error(err)
         return
@@ -96,10 +96,10 @@ func (c *CandidateExperienceController) GetExperienceByID(ctx *gin.Context) {
 // @Description Delete an experience record by candidate ID
 // @Tags Candidates - Experience
 // @Produce json
-// @Param id path string true "Candidate ID"
+// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id}/experience [delete]
+// @Router /candidates/{candidate_id}/experience [delete]
 func (c *CandidateExperienceController) DeleteExperience(ctx *gin.Context) {
     candidateID, err := uuid.Parse(ctx.Param("id"))
     if err != nil {

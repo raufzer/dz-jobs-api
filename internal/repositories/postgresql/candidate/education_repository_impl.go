@@ -28,7 +28,7 @@ func (r *SQLCandidateEducationRepository) CreateEducation(education *models.Cand
 	return nil
 }
 
-func (r *SQLCandidateEducationRepository) GetEducationByCandidateID(id uuid.UUID) ([]models.CandidateEducation, error) {
+func (r *SQLCandidateEducationRepository) GetEducation(id uuid.UUID) ([]models.CandidateEducation, error) {
 	rows, err := r.db.Query(`SELECT education_id, candidate_id, degree, institution, start_date, end_date, description FROM candidate_education WHERE candidate_id = $1`, id)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch education: %w", err)

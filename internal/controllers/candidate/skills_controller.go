@@ -19,18 +19,18 @@ func NewCandidateSkillsController(service serviceInterfaces.CandidateSkillsServi
 	return &CandidateSkillsController{service: service}
 }
 
-// CreateSkill godoc
-// @Summary Create a new skill
-// @Description Create a new skill for a candidate
+// AddSkill godoc
+// @Summary Add a new skill
+// @Description Add a new skill for a candidate
 // @Tags Candidates - Skills
 // @Accept json
 // @Produce json
-// @Param id path string true "Candidate ID"
-// @Param skill body request.AddSkillRequest true "Skill request"
+// @Param candidate_id path string true "Candidate ID"
+// @Param Skill body request.AddSkillRequest true "Skill request"
 // @Success 201 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id}/skills [post]
-func (c *CandidateSkillsController) CreateSkill(ctx *gin.Context) {
+// @Router /candidates/{candidate_id}/skills [post]
+func (c *CandidateSkillsController) AddSkill(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
@@ -58,16 +58,16 @@ func (c *CandidateSkillsController) CreateSkill(ctx *gin.Context) {
 	})
 }
 
-// GetSkillsByID godoc
+// GetSkills godoc
 // @Summary Get skills by candidate ID
 // @Description Get all skills for a candidate by candidate ID
 // @Tags Candidates - Skills
 // @Produce json
-// @Param id path string true "Candidate ID"
+// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id}/skills [get]
-func (c *CandidateSkillsController) GetSkillsByID(ctx *gin.Context) {
+// @Router /candidates/{candidate_id}/skills [get]
+func (c *CandidateSkillsController) GetSkills(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
@@ -75,7 +75,7 @@ func (c *CandidateSkillsController) GetSkillsByID(ctx *gin.Context) {
 		return
 	}
 
-	skills, err := c.service.GetSkillsByCandidateID(candidateID)
+	skills, err := c.service.GetSkills(candidateID)
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -97,11 +97,11 @@ func (c *CandidateSkillsController) GetSkillsByID(ctx *gin.Context) {
 // @Description Delete a skill by candidate ID and skill name
 // @Tags Candidates - Skills
 // @Produce json
-// @Param id path string true "Candidate ID"
-// @Param skill path string true "Skill name"
+// @Param candidate_id path string true "Candidate ID"
+// @Param skill_name path string true "Skill name"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /candidates/{id}/skills/{skill} [delete]
+// @Router /candidates/{candidate_id}/skills/{skill_name} [delete]
 func (c *CandidateSkillsController) DeleteSkill(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {

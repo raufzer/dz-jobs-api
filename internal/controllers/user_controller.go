@@ -30,14 +30,14 @@ func NewUserController(service serviceInterfaces.UserService) *UserController {
 // @Success 201 {object} response.Response
 // @Failure 400 {object} response.Response
 // @Router /admin/users [post]
-func (uc *UserController) CreateUser(ctx *gin.Context) {
+func (c *UserController) CreateUser(ctx *gin.Context) {
 	var req request.CreateUsersRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
-	user, err := uc.userService.CreateUser(req)
+	user, err := c.userService.CreateUser(req)
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -58,15 +58,15 @@ func (uc *UserController) CreateUser(ctx *gin.Context) {
 // @Param id path string true "User ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /admin/users/{id} [get]
-func (uc *UserController) GetUser(ctx *gin.Context) {
+// @Router /admin/users/{user_id} [get]
+func (c *UserController) GetUser(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
-	user, err := uc.userService.GetUserByID(id)
+	user, err := c.userService.GetUser(id)
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -89,8 +89,8 @@ func (uc *UserController) GetUser(ctx *gin.Context) {
 // @Param user body request.UpdateUserRequest true "User request"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /admin/users/{id} [put]
-func (uc *UserController) UpdateUser(ctx *gin.Context) {
+// @Router /admin/users/{user_id} [put]
+func (c *UserController) UpdateUser(ctx *gin.Context) {
 	var req request.UpdateUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
@@ -102,7 +102,7 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 		ctx.Error(err)
 		return
 	}
-	updatedUser, err := uc.userService.UpdateUser(id, req)
+	updatedUser, err := c.userService.UpdateUser(id, req)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -124,8 +124,8 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
 // @Router /admin/users [get]
-func (uc *UserController) GetAllUsers(ctx *gin.Context) {
-	users, err := uc.userService.GetAllUsers()
+func (c *UserController) GetAllUsers(ctx *gin.Context) {
+	users, err := c.userService.GetAllUsers()
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -153,15 +153,15 @@ func (uc *UserController) GetAllUsers(ctx *gin.Context) {
 // @Param id path string true "User ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /admin/users/{id} [delete]
-func (uc *UserController) DeleteUser(ctx *gin.Context) {
+// @Router /admin/users/{user_id} [delete]
+func (c *UserController) DeleteUser(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
-	err = uc.userService.DeleteUser(id)
+	err = c.userService.DeleteUser(id)
 	if err != nil {
 		ctx.Error(err)
 		return
