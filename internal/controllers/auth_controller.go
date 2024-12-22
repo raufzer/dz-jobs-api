@@ -107,9 +107,18 @@ func (c *AuthController) RefreshToken(ctx *gin.Context) {
 // @Success 200 {object} response.Response
 // @Router /auth/logout [post]
 func (c *AuthController) Logout(ctx *gin.Context) {
+	refreshToken, err := ctx.Cookie("refresh_token")
+	if err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
+	userID, _, _ := c.authService.ValidateToken(refreshToken)
+	c.authService.Logout(userID, refreshToken)
 	isProduction := c.config.ServerPort != "9090"
 	utils.SetAuthCookie(ctx, "access_token", "", -1, c.config.Domain, isProduction)
 	utils.SetAuthCookie(ctx, "refresh_token", "", -1, c.config.Domain, isProduction)
+
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",

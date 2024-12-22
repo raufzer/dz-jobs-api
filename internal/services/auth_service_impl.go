@@ -96,6 +96,14 @@ func (s *AuthService) RefreshAccessToken(userID, userRole, refreshToken string) 
 	return accessToken, nil
 }
 
+func (s *AuthService) Logout(userID, refreshToken string) error {
+	err := s.redisRepository.DeleteRefreshToken(userID)
+	if err != nil {
+		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete refresh token")
+	}
+	return nil
+}
+
 func (s *AuthService) SendOTP(email string) error {
 	otp := utils.GenerateSecureOTP(6)
 	err := s.redisRepository.StoreOTP(email, otp, 5*time.Minute)
