@@ -10,6 +10,7 @@ import (
 
 type AppConfig struct {
 	Domain                   string
+	FrontDomain              string
 	ServerPort               string
 	DatabaseURI              string
 	RedisURI                 string
@@ -54,6 +55,7 @@ func LoadConfig() (*AppConfig, error) {
 
 	config := &AppConfig{
 		Domain:                   utils.GetEnv("DOMAIN"),
+		FrontDomain:              utils.GetEnv("FRONT_DOMAIN"),
 		ServerPort:               utils.GetEnv("SERVER_PORT"),
 		DatabaseURI:              utils.GetEnv("DATABASE_URI"),
 		RedisURI:                 utils.GetEnv("REDIS_URI"),

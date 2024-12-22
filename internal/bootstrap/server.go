@@ -15,7 +15,7 @@ func CreateServer(appConfig *config.AppConfig) *gin.Engine {
 	server := gin.Default()
 
 	// CORS setup
-	server.Use(config.SetupCORS(appConfig.Domain))
+	server.Use(config.SetupCORS(appConfig.FrontDomain, appConfig.Domain))
 
 	// Global middleware
 	server.Use(gin.Recovery())

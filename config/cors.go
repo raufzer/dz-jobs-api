@@ -5,9 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupCORS(domain string) gin.HandlerFunc {
+func SetupCORS(frontDomain string, domain string) gin.HandlerFunc {
 	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{domain}
+	corsConfig.AllowOrigins = []string{frontDomain, domain}
 	corsConfig.AllowCredentials = true
 	corsConfig.AddAllowHeaders("Authorization", "Content-Type")
 	return cors.New(corsConfig)
