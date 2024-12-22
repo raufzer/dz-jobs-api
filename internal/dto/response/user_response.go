@@ -16,11 +16,6 @@ type UserResponse struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-// type LoginResponse struct {
-// 	TokenType string `json:"token_type"`
-// 	Token     string `json:"token"`
-// }
-
 func ToUserResponse(user *models.User) UserResponse {
 	return UserResponse{
 		ID:        user.ID,
