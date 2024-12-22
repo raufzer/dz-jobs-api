@@ -81,14 +81,14 @@ const docTemplate = `{
         },
         "/admin/users/{user_id}": {
             "get": {
-                "description": "Get user details by ID",
+                "description": "Get user details by user ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Users"
                 ],
-                "summary": "Get user by ID",
+                "summary": "Get user",
                 "parameters": [
                     {
                         "type": "string",
@@ -114,7 +114,7 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Update user details",
+                "description": "Update user details by user ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -159,7 +159,7 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "Delete user by ID",
+                "description": "Delete user by user ID",
                 "produces": [
                     "application/json"
                 ],
@@ -509,7 +509,7 @@ const docTemplate = `{
                 "tags": [
                     "Candidates - Candidate"
                 ],
-                "summary": "Get candidate by ID",
+                "summary": "Get candidate",
                 "parameters": [
                     {
                         "type": "string",
@@ -535,7 +535,7 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Update candidate details with profile picture and resume",
+                "description": "Update candidate details with profile picture and resume  by ID",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -627,7 +627,7 @@ const docTemplate = `{
                 "tags": [
                     "Candidates - Certifications"
                 ],
-                "summary": "Get certifications by candidate ID",
+                "summary": "Get certifications",
                 "parameters": [
                     {
                         "type": "string",
@@ -704,7 +704,7 @@ const docTemplate = `{
                 "tags": [
                     "Candidates - Education"
                 ],
-                "summary": "Get education records by candidate ID",
+                "summary": "Get education records",
                 "parameters": [
                     {
                         "type": "string",
@@ -730,7 +730,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Add a new education record for a candidate",
+                "description": "Add a new education record for a candidate by candidate ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -817,7 +817,7 @@ const docTemplate = `{
                 "tags": [
                     "Candidates - Experience"
                 ],
-                "summary": "Get experience records by candidate ID",
+                "summary": "Get experience records",
                 "parameters": [
                     {
                         "type": "string",
@@ -843,7 +843,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Add a new experience record for a candidate",
+                "description": "Add a new experience record for a candidate by candidate ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -930,7 +930,7 @@ const docTemplate = `{
                 "tags": [
                     "Candidates - Personal Info"
                 ],
-                "summary": "Get personal information by candidate ID",
+                "summary": "Get personal information",
                 "parameters": [
                     {
                         "type": "string",
@@ -956,7 +956,7 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Update personal information for a candidate",
+                "description": "Update personal information for a candidate by candidate ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -1001,7 +1001,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Add personal information for a candidate",
+                "description": "Add personal information for a candidate by candidate ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -1046,7 +1046,7 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "Delete personal information for a candidate",
+                "description": "Delete personal information for a candidate by candidate ID",
                 "produces": [
                     "application/json"
                 ],
@@ -1088,7 +1088,7 @@ const docTemplate = `{
                 "tags": [
                     "Candidates - Portfolio"
                 ],
-                "summary": "Get projects by candidate ID",
+                "summary": "Get all projects (portfolio)",
                 "parameters": [
                     {
                         "type": "string",
@@ -1114,7 +1114,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Add a new project for a candidate",
+                "description": "Add a new project for a candidate by candidate ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -1210,7 +1210,7 @@ const docTemplate = `{
                 "tags": [
                     "Candidates - Skills"
                 ],
-                "summary": "Get skills by candidate ID",
+                "summary": "Get skills",
                 "parameters": [
                     {
                         "type": "string",
@@ -1236,7 +1236,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Add a new skill for a candidate",
+                "description": "Add a new skill for a candidate by candidate ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -1325,7 +1325,7 @@ const docTemplate = `{
         },
         "/candidates/{id}/certifications": {
             "post": {
-                "description": "Add a new certification for a candidate",
+                "description": "Add a new certification for a candidate by candidate ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -1417,16 +1417,16 @@ const docTemplate = `{
                 }
             }
         },
-        "/recruiters/{id}": {
+        "/recruiters/{recruiter_id}": {
             "get": {
-                "description": "Get recruiter details by ID",
+                "description": "Get recruiter details by recruiter ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Recruiters"
                 ],
-                "summary": "Get recruiter by ID",
+                "summary": "Get recruiter",
                 "parameters": [
                     {
                         "type": "string",
@@ -1452,7 +1452,7 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Update recruiter details with company logo",
+                "description": "Update recruiter details with company logo by recruiter ID",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -1504,7 +1504,7 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "Delete recruiter by ID",
+                "description": "Delete recruiter by recruiter ID",
                 "produces": [
                     "application/json"
                 ],

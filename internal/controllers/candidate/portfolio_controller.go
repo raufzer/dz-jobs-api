@@ -21,7 +21,7 @@ func NewCandidatePortfolioController(service serviceInterfaces.CandidatePortfoli
 
 // AddProject godoc
 // @Summary Add a new project
-// @Description Add a new project for a candidate
+// @Description Add a new project for a candidate by candidate ID
 // @Tags Candidates - Portfolio
 // @Accept json
 // @Produce json
@@ -58,7 +58,7 @@ func (c *CandidatePortfolioController) AddProject(ctx *gin.Context) {
 }
 
 // GetPortfolio godoc
-// @Summary Get projects by candidate ID
+// @Summary Get all projects (portfolio)
 // @Description Get all projects for a candidate by candidate ID
 // @Tags Candidates - Portfolio
 // @Produce json

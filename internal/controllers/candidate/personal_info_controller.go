@@ -21,7 +21,7 @@ func NewCandidatePersonalInfoController(service serviceInterfaces.CandidatePerso
 
 // AddPersonalInfo godoc
 // @Summary Add personal information
-// @Description Add personal information for a candidate
+// @Description Add personal information for a candidate by candidate ID
 // @Tags Candidates - Personal Info
 // @Accept json
 // @Produce json
@@ -60,7 +60,7 @@ func (c *CandidatePersonalInfoController) AddPersonalInfo(ctx *gin.Context) {
 }
 
 // GetPersonal godoc
-// @Summary Get personal information by candidate ID
+// @Summary Get personal information
 // @Description Get personal information for a candidate by candidate ID
 // @Tags Candidates - Personal Info
 // @Produce json
@@ -92,7 +92,7 @@ func (c *CandidatePersonalInfoController) GetPersonalInfo(ctx *gin.Context) {
 
 // UpdatePersonalInfo godoc
 // @Summary Update personal information
-// @Description Update personal information for a candidate
+// @Description Update personal information for a candidate by candidate ID
 // @Tags Candidates - Personal Info
 // @Accept json
 // @Produce json
@@ -132,7 +132,7 @@ func (c *CandidatePersonalInfoController) UpdatePersonalInfo(ctx *gin.Context) {
 
 // DeletePersonalInfo godoc
 // @Summary Delete personal information
-// @Description Delete personal information for a candidate
+// @Description Delete personal information for a candidate by candidate ID
 // @Tags Candidates - Personal Info
 // @Produce json
 // @Param candidate_id path string true "Candidate ID"

@@ -21,7 +21,7 @@ func NewCandidateSkillsController(service serviceInterfaces.CandidateSkillsServi
 
 // AddSkill godoc
 // @Summary Add a new skill
-// @Description Add a new skill for a candidate
+// @Description Add a new skill for a candidate by candidate ID
 // @Tags Candidates - Skills
 // @Accept json
 // @Produce json
@@ -59,7 +59,7 @@ func (c *CandidateSkillsController) AddSkill(ctx *gin.Context) {
 }
 
 // GetSkills godoc
-// @Summary Get skills by candidate ID
+// @Summary Get skills
 // @Description Get all skills for a candidate by candidate ID
 // @Tags Candidates - Skills
 // @Produce json

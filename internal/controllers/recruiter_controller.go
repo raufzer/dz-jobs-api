@@ -69,14 +69,14 @@ func (c *RecruiterController) CreateRecruiter(ctx *gin.Context) {
 }
 
 // GetRecruiter godoc
-// @Summary Get recruiter by ID
-// @Description Get recruiter details by ID
+// @Summary Get recruiter
+// @Description Get recruiter details by recruiter ID
 // @Tags Recruiters
 // @Produce json
 // @Param id path string true "Recruiter ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /recruiters/{id} [get]
+// @Router /recruiters/{recruiter_id} [get]
 func (c *RecruiterController) GetRecruiter(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
@@ -99,7 +99,7 @@ func (c *RecruiterController) GetRecruiter(ctx *gin.Context) {
 
 // UpdateRecruiter godoc
 // @Summary Update recruiter
-// @Description Update recruiter details with company logo
+// @Description Update recruiter details with company logo by recruiter ID
 // @Tags Recruiters
 // @Accept multipart/form-data
 // @Produce json
@@ -108,7 +108,7 @@ func (c *RecruiterController) GetRecruiter(ctx *gin.Context) {
 // @Param recruiter body request.UpdateRecruiterRequest true "Recruiter request"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /recruiters/{id} [put]
+// @Router /recruiters/{recruiter_id} [put]
 func (c *RecruiterController) UpdateRecruiter(ctx *gin.Context) {
 	var req request.UpdateRecruiterRequest
 	if err := ctx.ShouldBind(&req); err != nil {
@@ -142,13 +142,13 @@ func (c *RecruiterController) UpdateRecruiter(ctx *gin.Context) {
 
 // DeleteRecruiter godoc
 // @Summary Delete recruiter
-// @Description Delete recruiter by ID
+// @Description Delete recruiter by recruiter ID
 // @Tags Recruiters
 // @Produce json
 // @Param id path string true "Recruiter ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
-// @Router /recruiters/{id} [delete]
+// @Router /recruiters/{recruiter_id} [delete]
 func (c *RecruiterController) DeleteRecruiter(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {

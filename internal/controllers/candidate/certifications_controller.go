@@ -21,7 +21,7 @@ func NewCandidateCertificationsController(service serviceInterfaces.CandidateCer
 
 // AddCertification godoc
 // @Summary Add a new certification
-// @Description Add a new certification for a candidate
+// @Description Add a new certification for a candidate by candidate ID
 // @Tags Candidates - Certifications
 // @Accept json
 // @Produce json
@@ -58,7 +58,7 @@ func (c *CandidateCertificationsController) AddCertification(ctx *gin.Context) {
 }
 
 // GetCertifications godoc
-// @Summary Get certifications by candidate ID
+// @Summary Get certifications
 // @Description Get all certifications for a candidate by candidate ID
 // @Tags Candidates - Certifications
 // @Produce json

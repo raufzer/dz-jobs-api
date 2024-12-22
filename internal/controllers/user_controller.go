@@ -51,8 +51,8 @@ func (c *UserController) CreateUser(ctx *gin.Context) {
 }
 
 // GetUser godoc
-// @Summary Get user by ID
-// @Description Get user details by ID
+// @Summary Get user
+// @Description Get user details by user ID
 // @Tags Users
 // @Produce json
 // @Param id path string true "User ID"
@@ -81,7 +81,7 @@ func (c *UserController) GetUser(ctx *gin.Context) {
 
 // UpdateUser godoc
 // @Summary Update user
-// @Description Update user details
+// @Description Update user details by user ID
 // @Tags Users
 // @Accept json
 // @Produce json
@@ -147,7 +147,7 @@ func (c *UserController) GetAllUsers(ctx *gin.Context) {
 
 // DeleteUser godoc
 // @Summary Delete user
-// @Description Delete user by ID
+// @Description Delete user by user ID
 // @Tags Users
 // @Produce json
 // @Param id path string true "User ID"

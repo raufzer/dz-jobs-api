@@ -68,7 +68,7 @@ func (c *CandidateController) CreateCandidate(ctx *gin.Context) {
 }
 
 // GetCandidate godoc
-// @Summary Get candidate by ID
+// @Summary Get candidate
 // @Description Get candidate details by ID
 // @Tags Candidates - Candidate
 // @Produce json
@@ -95,7 +95,7 @@ func (c *CandidateController) GetCandidate(ctx *gin.Context) {
 
 // UpdateCandidate godoc
 // @Summary Update candidate
-// @Description Update candidate details with profile picture and resume
+// @Description Update candidate details with profile picture and resume  by ID
 // @Tags Candidates - Candidate
 // @Accept multipart/form-data
 // @Produce json

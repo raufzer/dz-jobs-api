@@ -21,7 +21,7 @@ func NewCandidateEducationController(service serviceInterfaces.CandidateEducatio
 
 // AddEducation godoc
 // @Summary Add a new education record
-// @Description Add a new education record for a candidate
+// @Description Add a new education record for a candidate by candidate ID
 // @Tags Candidates - Education
 // @Accept json
 // @Produce json
@@ -59,7 +59,7 @@ func (c *CandidateEducationController) AddEducation(ctx *gin.Context) {
 }
 
 // GetEducation godoc
-// @Summary Get education records by candidate ID
+// @Summary Get education records
 // @Description Get all education records for a candidate by candidate ID
 // @Tags Candidates - Education
 // @Produce json

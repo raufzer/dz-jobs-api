@@ -21,7 +21,7 @@ func NewCandidateExperienceController(service serviceInterfaces.CandidateExperie
 
 // AddExperience godoc
 // @Summary Add a new experience record
-// @Description Add a new experience record for a candidate
+// @Description Add a new experience record for a candidate by candidate ID
 // @Tags Candidates - Experience
 // @Accept json
 // @Produce json
@@ -58,7 +58,7 @@ func (c *CandidateExperienceController) AddExperience(ctx *gin.Context) {
 }
 
 // GetExperience godoc
-// @Summary Get experience records by candidate ID
+// @Summary Get experience records
 // @Description Get all experience records for a candidate by candidate ID
 // @Tags Candidates - Experience
 // @Produce json
