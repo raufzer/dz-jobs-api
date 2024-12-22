@@ -98,6 +98,31 @@ definitions:
     - email
     - name
     type: object
+  request.CreateRecruiterRequest:
+    properties:
+      company_contact:
+        type: string
+      company_description:
+        type: string
+      company_location:
+        type: string
+      company_name:
+        type: string
+      company_website:
+        type: string
+      social_links:
+        type: string
+      verified_status:
+        type: boolean
+    required:
+    - company_contact
+    - company_description
+    - company_location
+    - company_name
+    - company_website
+    - social_links
+    - verified_status
+    type: object
   request.CreateUsersRequest:
     properties:
       email:
@@ -144,6 +169,27 @@ definitions:
         type: string
     required:
     - email
+    type: object
+  request.UpdateRecruiterRequest:
+    properties:
+      company_contact:
+        type: string
+      company_description:
+        type: string
+      company_location:
+        type: string
+      company_name:
+        maxLength: 150
+        minLength: 3
+        type: string
+      company_website:
+        type: string
+      social_links:
+        type: string
+      verified_status:
+        type: boolean
+    required:
+    - social_links
     type: object
   request.UpdateUserRequest:
     properties:
@@ -1082,4 +1128,115 @@ paths:
       summary: Delete skill
       tags:
       - Candidates - Skills
+  /recruiters:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create a new recruiter with company logo
+      parameters:
+      - description: Company Logo
+        in: formData
+        name: company_logo
+        required: true
+        type: file
+      - description: Recruiter request
+        in: body
+        name: recruiter
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateRecruiterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Create a new recruiter
+      tags:
+      - Recruiters
+  /recruiters/{id}:
+    delete:
+      description: Delete recruiter by ID
+      parameters:
+      - description: Recruiter ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Delete recruiter
+      tags:
+      - Recruiters
+    get:
+      description: Get recruiter details by ID
+      parameters:
+      - description: Recruiter ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get recruiter by ID
+      tags:
+      - Recruiters
+    put:
+      consumes:
+      - multipart/form-data
+      description: Update recruiter details with company logo
+      parameters:
+      - description: Recruiter ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Company Logo
+        in: formData
+        name: company_logo
+        required: true
+        type: file
+      - description: Recruiter request
+        in: body
+        name: recruiter
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateRecruiterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Update recruiter
+      tags:
+      - Recruiters
 swagger: "2.0"

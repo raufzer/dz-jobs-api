@@ -1367,6 +1367,173 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/recruiters": {
+            "post": {
+                "description": "Create a new recruiter with company logo",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recruiters"
+                ],
+                "summary": "Create a new recruiter",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Company Logo",
+                        "name": "company_logo",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "description": "Recruiter request",
+                        "name": "recruiter",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.CreateRecruiterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/recruiters/{id}": {
+            "get": {
+                "description": "Get recruiter details by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recruiters"
+                ],
+                "summary": "Get recruiter by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Recruiter ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update recruiter details with company logo",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recruiters"
+                ],
+                "summary": "Update recruiter",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Recruiter ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Company Logo",
+                        "name": "company_logo",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "description": "Recruiter request",
+                        "name": "recruiter",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateRecruiterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete recruiter by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recruiters"
+                ],
+                "summary": "Delete recruiter",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Recruiter ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -1516,6 +1683,41 @@ const docTemplate = `{
                 }
             }
         },
+        "request.CreateRecruiterRequest": {
+            "type": "object",
+            "required": [
+                "company_contact",
+                "company_description",
+                "company_location",
+                "company_name",
+                "company_website",
+                "social_links",
+                "verified_status"
+            ],
+            "properties": {
+                "company_contact": {
+                    "type": "string"
+                },
+                "company_description": {
+                    "type": "string"
+                },
+                "company_location": {
+                    "type": "string"
+                },
+                "company_name": {
+                    "type": "string"
+                },
+                "company_website": {
+                    "type": "string"
+                },
+                "social_links": {
+                    "type": "string"
+                },
+                "verified_status": {
+                    "type": "boolean"
+                }
+            }
+        },
         "request.CreateUsersRequest": {
             "type": "object",
             "required": [
@@ -1581,6 +1783,37 @@ const docTemplate = `{
             "properties": {
                 "email": {
                     "type": "string"
+                }
+            }
+        },
+        "request.UpdateRecruiterRequest": {
+            "type": "object",
+            "required": [
+                "social_links"
+            ],
+            "properties": {
+                "company_contact": {
+                    "type": "string"
+                },
+                "company_description": {
+                    "type": "string"
+                },
+                "company_location": {
+                    "type": "string"
+                },
+                "company_name": {
+                    "type": "string",
+                    "maxLength": 150,
+                    "minLength": 3
+                },
+                "company_website": {
+                    "type": "string"
+                },
+                "social_links": {
+                    "type": "string"
+                },
+                "verified_status": {
+                    "type": "boolean"
                 }
             }
         },

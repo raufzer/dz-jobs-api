@@ -24,6 +24,7 @@ type AppDependencies struct {
 	SkillsController         *candidateControllers.CandidateSkillsController
 	CertificationsController *candidateControllers.CandidateCertificationsController
 	PortfolioController      *candidateControllers.CandidatePortfolioController
+	RecruiterController      *controllers.RecruiterController
 }
 
 func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
@@ -49,6 +50,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	skillsRepo := candidatePostgresql.NewCandidateSkillsRepository(dbConfig.DB)
 	certificationRepo := candidatePostgresql.NewCandidateCertificationsRepository(dbConfig.DB)
 	portfolioRepo := candidatePostgresql.NewCandidatePortfolioRepository(dbConfig.DB)
+	recruiterRepo := postgresql.NewRecruiterRepository(dbConfig.DB)
 
 	// Initialize Services
 	authService := services.NewAuthService(
@@ -64,6 +66,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	skillsService := candidateServices.NewCandidateSkillService(skillsRepo)
 	certificationsService := candidateServices.NewCandidateCertificationsService(certificationRepo)
 	portfolioService := candidateServices.NewCandidatePortfolioService(portfolioRepo)
+	recruiterService := services.NewRecruiterService(recruiterRepo, cfg)
 
 	// Initialize Controllers
 	userController := controllers.NewUserController(userService)
@@ -75,6 +78,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	skillsController := candidateControllers.NewCandidateSkillsController(skillsService)
 	certificationsController := candidateControllers.NewCandidateCertificationsController(certificationsService)
 	portfolioController := candidateControllers.NewCandidatePortfolioController(portfolioService)
+	recruiterController := controllers.NewRecruiterController(recruiterService)
 
 	// Return dependencies
 	return &AppDependencies{
@@ -88,5 +92,6 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 		SkillsController:         skillsController,
 		CertificationsController: certificationsController,
 		PortfolioController:      portfolioController,
+		RecruiterController:      recruiterController,
 	}, nil
 }
