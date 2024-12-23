@@ -84,6 +84,144 @@ definitions:
     required:
     - skill
     type: object
+  candidate.CandidateResponse:
+    properties:
+      candidate_id:
+        type: string
+      profile_picture:
+        type: string
+      resume:
+        type: string
+    type: object
+  candidate.CertificationResponse:
+    properties:
+      candidate_id:
+        type: string
+      certification_id:
+        type: string
+      certification_name:
+        type: string
+      expiration_date:
+        type: string
+      issue_date:
+        type: string
+      issued_by:
+        type: string
+    type: object
+  candidate.CertificationsResponseData:
+    properties:
+      certifications:
+        items:
+          $ref: '#/definitions/candidate.CertificationResponse'
+        type: array
+      total:
+        type: integer
+    type: object
+  candidate.EducationResponse:
+    properties:
+      candidate_id:
+        type: string
+      degree:
+        type: string
+      description:
+        type: string
+      education_id:
+        type: string
+      end_date:
+        type: string
+      institution:
+        type: string
+      start_date:
+        type: string
+    type: object
+  candidate.EducationsResponseData:
+    properties:
+      educations:
+        items:
+          $ref: '#/definitions/candidate.EducationResponse'
+        type: array
+      total:
+        type: integer
+    type: object
+  candidate.ExperienceResponse:
+    properties:
+      candidate_id:
+        type: string
+      company:
+        type: string
+      description:
+        type: string
+      end_date:
+        type: string
+      experience_id:
+        type: string
+      job_title:
+        type: string
+      start_date:
+        type: string
+    type: object
+  candidate.ExperiencesResponseData:
+    properties:
+      experiences:
+        items:
+          $ref: '#/definitions/candidate.ExperienceResponse'
+        type: array
+      total:
+        type: integer
+    type: object
+  candidate.PersonalInfoResponse:
+    properties:
+      address:
+        type: string
+      candidate_id:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
+  candidate.PortfolioResponse:
+    properties:
+      candidate_id:
+        type: string
+      category:
+        type: string
+      description:
+        type: string
+      project_id:
+        type: string
+      project_link:
+        type: string
+      project_name:
+        type: string
+    type: object
+  candidate.PortfoliosResponseData:
+    properties:
+      projects:
+        items:
+          $ref: '#/definitions/candidate.PortfolioResponse'
+        type: array
+      total:
+        type: integer
+    type: object
+  candidate.SkillResponse:
+    properties:
+      candidate_id:
+        type: string
+      skill:
+        type: string
+    type: object
+  candidate.SkillsResponseData:
+    properties:
+      skills:
+        items:
+          $ref: '#/definitions/candidate.SkillResponse'
+        type: array
+      total:
+        type: integer
+    type: object
   candidate.UpdatePersonalInfoRequest:
     properties:
       address:
@@ -273,6 +411,36 @@ definitions:
       updated_at:
         type: string
     type: object
+  response.JobsResponseData:
+    properties:
+      jobs:
+        items:
+          $ref: '#/definitions/response.JobResponse'
+        type: array
+      total:
+        type: integer
+    type: object
+  response.RecruiterResponse:
+    properties:
+      company_contact:
+        type: string
+      company_description:
+        type: string
+      company_location:
+        type: string
+      company_logo:
+        type: string
+      company_name:
+        type: string
+      company_website:
+        type: string
+      recruiter_id:
+        type: string
+      social_links:
+        type: string
+      verified_status:
+        type: boolean
+    type: object
   response.Response:
     properties:
       code:
@@ -282,6 +450,30 @@ definitions:
         type: string
       status:
         type: string
+    type: object
+  response.UserResponse:
+    properties:
+      createdAt:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      role:
+        type: string
+      updatedAt:
+        type: string
+      user_id:
+        type: string
+    type: object
+  response.UsersResponseData:
+    properties:
+      total:
+        type: integer
+      users:
+        items:
+          $ref: '#/definitions/response.UserResponse'
+        type: array
     type: object
 host: dz-jobs-api-production.up.railway.app
 info:
@@ -297,11 +489,24 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Users retrieved successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.UsersResponseData'
+              type: object
+        "401":
+          description: Unauthorized
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Get all users
@@ -322,11 +527,32 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created
+          description: User created successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.UserResponse'
+              type: object
+        "400":
+          description: Invalid user ID
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Create a new user
@@ -345,11 +571,27 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: User deleted successfully
           schema:
             $ref: '#/definitions/response.Response'
         "400":
-          description: Bad Request
+          description: Invalid user ID
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Delete user
@@ -367,11 +609,32 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: User found
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.UserResponse'
+              type: object
+        "400":
+          description: Invalid user ID
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Get user
@@ -397,11 +660,32 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: User updated successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.UserResponse'
+              type: object
+        "400":
+          description: Invalid user ID
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Update user
@@ -434,11 +718,20 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Successfully logged in!
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.UserResponse'
+              type: object
+        "400":
+          description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Login user
@@ -451,7 +744,11 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Successfully logged out!
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Logout user
@@ -464,11 +761,11 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Access token refreshed successfully!
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Refresh access token
@@ -490,11 +787,24 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created
+          description: User created successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.UserResponse'
+              type: object
+        "400":
+          description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "409":
+          description: User already exists
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Register user
@@ -516,11 +826,15 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Password reset successfully!
           schema:
             $ref: '#/definitions/response.Response'
         "400":
-          description: Bad Request
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Reset password
@@ -542,11 +856,15 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: OTP sent successfully!
           schema:
             $ref: '#/definitions/response.Response'
         "400":
-          description: Bad Request
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Send OTP for password reset
@@ -568,11 +886,15 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: OTP verify successfully!
           schema:
             $ref: '#/definitions/response.Response'
         "400":
-          description: Bad Request
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Verify OTP
@@ -598,11 +920,28 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created
+          description: Candidate created successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/candidate.CandidateResponse'
+              type: object
+        "400":
+          description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Create a new candidate
@@ -621,11 +960,27 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Candidate deleted successfully
           schema:
             $ref: '#/definitions/response.Response'
         "400":
-          description: Bad Request
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Candidate not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Delete candidate
@@ -643,11 +998,32 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Candidate found
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/candidate.CandidateResponse'
+              type: object
+        "400":
+          description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Candidate not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Get candidate
@@ -677,11 +1053,32 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Candidate updated successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/candidate.CandidateResponse'
+              type: object
+        "400":
+          description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Candidate not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Update candidate
@@ -700,11 +1097,32 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Certifications retrieved successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/candidate.CertificationsResponseData'
+              type: object
+        "400":
+          description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Certifications not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Get certifications
@@ -728,11 +1146,27 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Certification deleted successfully
           schema:
             $ref: '#/definitions/response.Response'
         "400":
-          description: Bad Request
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Certification not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Delete certification
@@ -751,11 +1185,27 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Education deleted successfully
           schema:
             $ref: '#/definitions/response.Response'
         "400":
-          description: Bad Request
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Education not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Delete education record
@@ -773,11 +1223,32 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Education information retrieved successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/candidate.EducationsResponseData'
+              type: object
+        "400":
+          description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Education not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Get education records
@@ -803,11 +1274,32 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created
+          description: Education created successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/candidate.EducationResponse'
+              type: object
+        "400":
+          description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Candidate not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Add a new education record
@@ -826,11 +1318,27 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Experience deleted successfully
           schema:
             $ref: '#/definitions/response.Response'
         "400":
-          description: Bad Request
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Experience not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Delete experience record
@@ -848,11 +1356,32 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Experience retrieved successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/candidate.ExperiencesResponseData'
+              type: object
+        "400":
+          description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Experience not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Get experience records
@@ -878,11 +1407,32 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created
+          description: Experience created successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/candidate.ExperienceResponse'
+              type: object
+        "400":
+          description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Candidate not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Add a new experience record
@@ -901,11 +1451,27 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Personal information deleted successfully
           schema:
             $ref: '#/definitions/response.Response'
         "400":
-          description: Bad Request
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Personal Info not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Delete personal information
@@ -925,9 +1491,30 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.Response'
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/candidate.PersonalInfoResponse'
+              type: object
         "400":
-          description: Bad Request
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Personal Info not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Get personal information
@@ -955,9 +1542,30 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/response.Response'
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/candidate.PersonalInfoResponse'
+              type: object
         "400":
-          description: Bad Request
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Candidate not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Add personal information
@@ -985,9 +1593,30 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.Response'
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/candidate.PersonalInfoResponse'
+              type: object
         "400":
-          description: Bad Request
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Personal Info not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Update personal information
@@ -1006,11 +1635,32 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Projects retrieved successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/candidate.PortfoliosResponseData'
+              type: object
+        "400":
+          description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Projects Info not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Get all projects (portfolio)
@@ -1036,11 +1686,32 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created
+          description: Project created successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/candidate.PortfolioResponse'
+              type: object
+        "400":
+          description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Candidate not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Add a new project
@@ -1064,11 +1735,27 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Project deleted successfully
           schema:
             $ref: '#/definitions/response.Response'
         "400":
-          description: Bad Request
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Project Info not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Delete project
@@ -1087,11 +1774,32 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Skills retrieved successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/candidate.SkillsResponseData'
+              type: object
+        "400":
+          description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Skills Info not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Get skills
@@ -1117,11 +1825,32 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created
+          description: Skill created successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/candidate.SkillResponse'
+              type: object
+        "400":
+          description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Candidate not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Add a new skill
@@ -1145,11 +1874,27 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Skill deleted successfully
           schema:
             $ref: '#/definitions/response.Response'
         "400":
-          description: Bad Request
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Skill Info not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Delete skill
@@ -1176,11 +1921,32 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created
+          description: Certification created successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/candidate.CertificationResponse'
+              type: object
+        "400":
+          description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Candidate not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
           schema:
             $ref: '#/definitions/response.Response'
       summary: Add a new certification
@@ -1207,11 +1973,28 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created
+          description: Recruiter created successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.RecruiterResponse'
+              type: object
+        "400":
+          description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/response.Response'
       summary: Create a new recruiter
@@ -1230,11 +2013,27 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Recruiter deleted successfully
           schema:
             $ref: '#/definitions/response.Response'
         "400":
-          description: Bad Request
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Recruiter not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/response.Response'
       summary: Delete recruiter
@@ -1252,11 +2051,32 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Recruiter found
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.RecruiterResponse'
+              type: object
+        "400":
+          description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Recruiter not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/response.Response'
       summary: Get recruiter
@@ -1287,11 +2107,32 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Recruiter updated successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.RecruiterResponse'
+              type: object
+        "400":
+          description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Recruiter not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/response.Response'
       summary: Update recruiter
@@ -1299,7 +2140,8 @@ paths:
       - Recruiters - Recruiter
   /recruiters/{recruiter_id}/jobs:
     get:
-      description: Retrieve a list of jobs filtered by their status (e.g., open, closed)
+      description: 'Retrieve a list of jobs filtered by their status (e.g., open,
+        closed) "{total: int, jobs: []response.JobResponse}"}'
       parameters:
       - description: Job status (e.g., open, closed)
         in: query
@@ -1310,16 +2152,32 @@ paths:
       - application/json
       responses:
         "200":
-          description: Job listings retrieved successfully
+          description: Jobs retrieved successfully
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
             - properties:
                 Data:
-                  type: object
+                  $ref: '#/definitions/response.JobsResponseData'
               type: object
         "400":
-          description: Invalid status query
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Jobs not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/response.Response'
       summary: Get job listings by status
@@ -1357,6 +2215,14 @@ paths:
           description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal server error
           schema:
@@ -1378,6 +2244,18 @@ paths:
       responses:
         "200":
           description: Job deleted successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
           schema:
             $ref: '#/definitions/response.Response'
         "404":
@@ -1412,11 +2290,23 @@ paths:
                   $ref: '#/definitions/response.JobResponse'
               type: object
         "400":
-          description: Invalid job ID
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
           schema:
             $ref: '#/definitions/response.Response'
         "404":
-          description: Job not found
+          description: Jobs not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/response.Response'
       summary: Get job details
@@ -1443,6 +2333,18 @@ paths:
                 Data:
                   $ref: '#/definitions/response.JobResponse'
               type: object
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
         "404":
           description: Job not found
           schema:
@@ -1475,6 +2377,18 @@ paths:
                 Data:
                   $ref: '#/definitions/response.JobResponse'
               type: object
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
         "404":
           description: Job not found
           schema:
@@ -1519,8 +2433,16 @@ paths:
           description: Invalid input
           schema:
             $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
         "404":
-          description: Job not found
+          description: Job notfound
           schema:
             $ref: '#/definitions/response.Response'
         "500":
