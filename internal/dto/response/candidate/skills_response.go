@@ -11,10 +11,25 @@ type SkillResponse struct {
 	Skill       string    `json:"skill"`
 }
 
+func ToSkillResponse(skill *models.CandidateSkills) SkillResponse {
+	return SkillResponse{
+		CandidateID: skill.CandidateID,
+		Skill:       skill.Skill,
+	}
+}
 
-func ToSkillsResponse(skill *models.CandidateSkills) SkillResponse {
-    return SkillResponse{
-        CandidateID: skill.CandidateID,
-        Skill:       skill.Skill,
-    }
+type SkillsResponseData struct {
+	Total int            `json:"total"`
+	Skills []SkillResponse `json:"skills"`
+}
+
+func ToSkillsResponse(skills []models.CandidateSkills) SkillsResponseData {
+	var skillResponses []SkillResponse
+	for _, skill := range skills {
+		skillResponses = append(skillResponses, ToSkillResponse(&skill))
+	}
+	return SkillsResponseData{
+		Total:  len(skills),
+		Skills: skillResponses,
+	}
 }

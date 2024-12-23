@@ -27,3 +27,19 @@ func ToEducationResponse(education *models.CandidateEducation) EducationResponse
 		Description: education.Description,
 	}
 }
+
+type EducationsResponseData struct {
+	Total     int                `json:"total"`
+	Educations []EducationResponse `json:"educations"`
+}
+
+func ToEducationsResponse(educations []models.CandidateEducation) EducationsResponseData {
+	var educationResponses []EducationResponse
+	for _, edu := range educations {
+		educationResponses = append(educationResponses, ToEducationResponse(&edu))
+	}
+	return EducationsResponseData{
+		Total:      len(educations),
+		Educations: educationResponses,
+	}
+}

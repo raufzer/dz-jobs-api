@@ -27,3 +27,19 @@ func ToExperienceResponse(experience *models.CandidateExperience) ExperienceResp
 		Description:  experience.Description,
 	}
 }
+
+type ExperiencesResponseData struct {
+	Total       int                `json:"total"`
+	Experiences []ExperienceResponse `json:"experiences"`
+}
+
+func ToExperiencesResponse(experiences []models.CandidateExperience) ExperiencesResponseData {
+	var experienceResponses []ExperienceResponse
+	for _, exp := range experiences {
+		experienceResponses = append(experienceResponses, ToExperienceResponse(&exp))
+	}
+	return ExperiencesResponseData{
+		Total:       len(experiences),
+		Experiences: experienceResponses,
+	}
+}

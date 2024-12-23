@@ -25,3 +25,19 @@ func ToCertificationResponse(certification *models.CandidateCertification) Certi
 		ExpirationDate:    certification.ExpirationDate,
 	}
 }
+
+type CertificationsResponseData struct {
+	Total          int                     `json:"total"`
+	Certifications []CertificationResponse `json:"certifications"`
+}
+
+func ToCertificationsResponse(certifications []models.CandidateCertification) CertificationsResponseData {
+	var certificationResponses []CertificationResponse
+	for _, cer := range certifications {
+		certificationResponses = append(certificationResponses, ToCertificationResponse(&cer))
+	}
+	return CertificationsResponseData{
+		Total:          len(certifications),
+		Certifications: certificationResponses,
+	}
+}

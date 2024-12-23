@@ -25,3 +25,19 @@ func ToPortfolioResponse(portfolio *models.CandidatePortfolio) PortfolioResponse
 		Description: portfolio.Description,
 	}
 }
+
+type PortfoliosResponseData struct {
+	Total      int                `json:"total"`
+	Projects []PortfolioResponse `json:"projects"`
+}
+
+func ToPortfoliosResponse(projects []models.CandidatePortfolio) PortfoliosResponseData {
+	var portfolioResponses []PortfolioResponse
+	for _, project := range projects {
+		portfolioResponses = append(portfolioResponses, ToPortfolioResponse(&project))
+	}
+	return PortfoliosResponseData{
+		Total:      len(projects),
+		Projects: portfolioResponses,
+	}
+}

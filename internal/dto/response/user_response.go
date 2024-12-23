@@ -26,3 +26,19 @@ func ToUserResponse(user *models.User) UserResponse {
 		UpdatedAt: user.UpdatedAt,
 	}
 }
+
+type UsersResponseData struct {
+	Total int            `json:"total"`
+	Users []UserResponse `json:"users"`
+}
+
+func ToUsersResponse(users []*models.User) UsersResponseData {
+	var userResponses []UserResponse
+	for _, user := range users {
+		userResponses = append(userResponses, ToUserResponse(user))
+	}
+	return UsersResponseData{
+		Total: len(users),
+		Users: userResponses,
+	}
+}
