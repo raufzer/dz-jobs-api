@@ -33,7 +33,7 @@ func RegisterRoutes(
 	basePath := router.Group("/v1")
 
 	// Public routes (no authentication required)
-	RegisterPublicRoutes(basePath, authController)
+	RegisterPublicRoutes(basePath, authController, jobController)
 
 	// Protected routes (authentication required)
 	protected := basePath.Group("/")
@@ -57,8 +57,10 @@ func RegisterRoutes(
 func RegisterPublicRoutes(
 	router *gin.RouterGroup,
 	authController *controllers.AuthController,
+	jobController *controllers.JobController,
 ) {
 	AuthRoutes(router, authController)
+	JobRoutes(router, jobController)
 }
 
 // RegisterProtectedRoutes handles routes that require authentication
@@ -138,7 +140,7 @@ func RegisterRecruiterRoutes(
 	recruiterRoutes := router.Group("/:recruiter_id")
 	recruiterRoutes.Use(middlewares.RecruiterOwnershipMiddleware())
 	RecruiterRoutes(recruiterRoutes, recruiterController)
-	JobRoutes(recruiterRoutes, jobController)
+	RecruiterJobRoutes(recruiterRoutes, jobController)
 }
 
 // RegisterSwaggerRoutes handles the Swagger documentation routes
