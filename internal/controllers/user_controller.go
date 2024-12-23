@@ -27,8 +27,13 @@ func NewUserController(service serviceInterfaces.UserService) *UserController {
 // @Accept json
 // @Produce json
 // @Param user body request.CreateUsersRequest true "User request"
-// @Success 201 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 201 {object} response.Response{Data=response.UserResponse} "User created successfully"
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 400 {object} response.Response "Invalid user ID"
+// @Failure 401 {object} response.Response "Unauthorized"
+// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 404 {object} response.Response "User not found"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /admin/users [post]
 func (c *UserController) CreateUser(ctx *gin.Context) {
 	var req request.CreateUsersRequest
@@ -56,8 +61,12 @@ func (c *UserController) CreateUser(ctx *gin.Context) {
 // @Tags Users
 // @Produce json
 // @Param id path string true "User ID"
-// @Success 200 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 200 {object} response.Response{Data=response.UserResponse} "User found"
+// @Failure 400 {object} response.Response "Invalid user ID"
+// @Failure 401 {object} response.Response "Unauthorized"
+// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 404 {object} response.Response "User not found"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /admin/users/{user_id} [get]
 func (c *UserController) GetUser(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("user_id"))
@@ -87,8 +96,13 @@ func (c *UserController) GetUser(ctx *gin.Context) {
 // @Produce json
 // @Param id path string true "User ID"
 // @Param user body request.UpdateUserRequest true "User request"
-// @Success 200 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 200 {object} response.Response{Data=response.UserResponse} "User updated successfully"
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 400 {object} response.Response "Invalid user ID"
+// @Failure 401 {object} response.Response "Unauthorized"
+// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 404 {object} response.Response "User not found"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /admin/users/{user_id} [put]
 func (c *UserController) UpdateUser(ctx *gin.Context) {
 	var req request.UpdateUserRequest
@@ -121,8 +135,10 @@ func (c *UserController) UpdateUser(ctx *gin.Context) {
 // @Description Get all users
 // @Tags Users
 // @Produce json
-// @Success 200 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 200 {object} response.Response{Data=response.UsersResponseData} "Users retrieved successfully"
+// @Failure 401 {object} response.Response "Unauthorized"
+// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /admin/users [get]
 func (c *UserController) GetAllUsers(ctx *gin.Context) {
 	users, err := c.userService.GetAllUsers()
@@ -130,18 +146,11 @@ func (c *UserController) GetAllUsers(ctx *gin.Context) {
 		ctx.Error(err)
 		return
 	}
-	userResponses := make([]response.UserResponse, len(users))
-	for i, user := range users {
-		userResponses[i] = response.ToUserResponse(user)
-	}
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",
 		Message: "Users retrieved successfully",
-		Data: gin.H{
-			"total": len(users),
-			"users": userResponses,
-		},
+		Data: response.ToUsersResponse(users),
 	})
 }
 
@@ -151,8 +160,12 @@ func (c *UserController) GetAllUsers(ctx *gin.Context) {
 // @Tags Users
 // @Produce json
 // @Param id path string true "User ID"
-// @Success 200 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 200 {object} response.Response"User deleted successfully"
+// @Failure 400 {object} response.Response "Invalid user ID"
+// @Failure 401 {object} response.Response "Unauthorized"
+// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 404 {object} response.Response "User not found"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /admin/users/{user_id} [delete]
 func (c *UserController) DeleteUser(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("user_id"))

@@ -27,8 +27,12 @@ func NewCandidatePersonalInfoController(service serviceInterfaces.CandidatePerso
 // @Produce json
 // @Param candidate_id path string true "Candidate ID"
 // @Param personal_info body request.AddPersonalInfoRequest true "Personal Info request"
-// @Success 201 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 201 {object} response.Response{Data=responseCandidate.PersonalInfoResponse}
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 401 {object} response.Response "Unauthorized"
+// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 404 {object} response.Response "Candidate not found"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /candidates/{candidate_id}/personal-info [post]
 func (c *CandidatePersonalInfoController) AddPersonalInfo(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
@@ -65,8 +69,13 @@ func (c *CandidatePersonalInfoController) AddPersonalInfo(ctx *gin.Context) {
 // @Tags Candidates - Personal Info
 // @Produce json
 // @Param candidate_id path string true "Candidate ID"
-// @Success 200 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 200 {object} response.Response{Data=responseCandidate.PersonalInfoResponse}
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 401 {object} response.Response "Unauthorized"
+// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 404 {object} response.Response "Candidate not found"
+// @Failure 404 {object} response.Response "Personal Info not found"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /candidates/{candidate_id}/personal-info [get]
 func (c *CandidatePersonalInfoController) GetPersonalInfo(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
@@ -98,8 +107,13 @@ func (c *CandidatePersonalInfoController) GetPersonalInfo(ctx *gin.Context) {
 // @Produce json
 // @Param candidate_id path string true "Candidate ID"
 // @Param personal_info body request.UpdatePersonalInfoRequest true "Personal Info request"
-// @Success 200 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 200 {object} response.Response{Data=responseCandidate.PersonalInfoResponse}
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 401 {object} response.Response "Unauthorized"
+// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 404 {object} response.Response "Candidate not found"
+// @Failure 404 {object} response.Response "Personal Info not found"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /candidates/{candidate_id}/personal-info [put]
 func (c *CandidatePersonalInfoController) UpdatePersonalInfo(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
@@ -136,8 +150,13 @@ func (c *CandidatePersonalInfoController) UpdatePersonalInfo(ctx *gin.Context) {
 // @Tags Candidates - Personal Info
 // @Produce json
 // @Param candidate_id path string true "Candidate ID"
-// @Success 200 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 200 {object} response.Response "Personal information deleted successfully"
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 401 {object} response.Response "Unauthorized"
+// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 404 {object} response.Response "Candidate not found"
+// @Failure 404 {object} response.Response "Personal Info not found"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /candidates/{candidate_id}/personal-info [delete]
 func (c *CandidatePersonalInfoController) DeletePersonalInfo(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))

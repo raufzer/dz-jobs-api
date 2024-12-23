@@ -27,8 +27,12 @@ func NewCandidatePortfolioController(service serviceInterfaces.CandidatePortfoli
 // @Produce json
 // @Param candidate_id path string true "Candidate ID"
 // @Param project body request.AddProjectRequest true "Project request"
-// @Success 201 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 201 {object} response.Response{Data=responseCandidate.PortfolioResponse} "Project created successfully"
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 401 {object} response.Response "Unauthorized"
+// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 404 {object} response.Response "Candidate not found"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /candidates/{candidate_id}/portfolio [post]
 func (c *CandidatePortfolioController) AddProject(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
@@ -63,8 +67,13 @@ func (c *CandidatePortfolioController) AddProject(ctx *gin.Context) {
 // @Tags Candidates - Portfolio
 // @Produce json
 // @Param candidate_id path string true "Candidate ID"
-// @Success 200 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 200 {object} response.Response{Data=responseCandidate.PortfoliosResponseData} "Projects retrieved successfully"
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 401 {object} response.Response "Unauthorized"
+// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 404 {object} response.Response "Candidate not found"
+// @Failure 404 {object} response.Response "Projects Info not found"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /candidates/{candidate_id}/portfolio [get]
 func (c *CandidatePortfolioController) GetPortfolio(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
@@ -79,15 +88,11 @@ func (c *CandidatePortfolioController) GetPortfolio(ctx *gin.Context) {
 		ctx.Error(err)
 		return
 	}
-	var projectResponses []responseCandidate.PortfolioResponse
-	for _, proj := range projects {
-		projectResponses = append(projectResponses, responseCandidate.ToPortfolioResponse(&proj))
-	}
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",
 		Message: "Projects retrieved successfully",
-		Data:    projectResponses,
+		Data:    responseCandidate.ToPortfoliosResponse(projects),
 	})
 }
 
@@ -98,8 +103,13 @@ func (c *CandidatePortfolioController) GetPortfolio(ctx *gin.Context) {
 // @Produce json
 // @Param candidate_id path string true "Candidate ID"
 // @Param project_id path string true "Project ID"
-// @Success 200 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 200 {object} response.Response "Project deleted successfully"
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 401 {object} response.Response "Unauthorized"
+// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 404 {object} response.Response "Candidate not found"
+// @Failure 404 {object} response.Response "Project Info not found"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /candidates/{candidate_id}/portfolio/{project_id} [delete]
 func (c *CandidatePortfolioController) DeleteProject(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))

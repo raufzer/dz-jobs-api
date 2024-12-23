@@ -27,8 +27,12 @@ func NewCandidateSkillsController(service serviceInterfaces.CandidateSkillsServi
 // @Produce json
 // @Param candidate_id path string true "Candidate ID"
 // @Param Skill body request.AddSkillRequest true "Skill request"
-// @Success 201 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 201 {object} response.Response{Data=responseCandidate.SkillResponse} "Skill created successfully"
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 401 {object} response.Response "Unauthorized"
+// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 404 {object} response.Response "Candidate not found"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /candidates/{candidate_id}/skills [post]
 func (c *CandidateSkillsController) AddSkill(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
@@ -54,7 +58,7 @@ func (c *CandidateSkillsController) AddSkill(ctx *gin.Context) {
 		Code:    http.StatusCreated,
 		Status:  "Created",
 		Message: "Skill created successfully",
-		Data:    responseCandidate.ToSkillsResponse(skill),
+		Data:    responseCandidate.ToSkillResponse(skill),
 	})
 }
 
@@ -64,8 +68,13 @@ func (c *CandidateSkillsController) AddSkill(ctx *gin.Context) {
 // @Tags Candidates - Skills
 // @Produce json
 // @Param candidate_id path string true "Candidate ID"
-// @Success 200 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 200 {object} response.Response{Data=responseCandidate.SkillsResponseData} "Skills retrieved successfully"
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 401 {object} response.Response "Unauthorized"
+// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 404 {object} response.Response "Candidate not found"
+// @Failure 404 {object} response.Response "Skills Info not found"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /candidates/{candidate_id}/skills [get]
 func (c *CandidateSkillsController) GetSkills(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
@@ -80,15 +89,12 @@ func (c *CandidateSkillsController) GetSkills(ctx *gin.Context) {
 		ctx.Error(err)
 		return
 	}
-	var skillResponses []responseCandidate.SkillResponse
-	for _, skl := range skills {
-		skillResponses = append(skillResponses, responseCandidate.ToSkillsResponse(&skl))
-	}
+
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",
 		Message: "Skills information retrieved successfully",
-		Data:    skillResponses,
+		Data:   responseCandidate.ToSkillsResponse(skills),
 	})
 }
 
@@ -99,8 +105,13 @@ func (c *CandidateSkillsController) GetSkills(ctx *gin.Context) {
 // @Produce json
 // @Param candidate_id path string true "Candidate ID"
 // @Param skill_name path string true "Skill name"
-// @Success 200 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 200 {object} response.Response "Skill deleted successfully"
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 401 {object} response.Response "Unauthorized"
+// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 404 {object} response.Response "Candidate not found"
+// @Failure 404 {object} response.Response "Skill Info not found"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /candidates/{candidate_id}/skills/{skill_name} [delete]
 func (c *CandidateSkillsController) DeleteSkill(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))

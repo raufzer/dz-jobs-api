@@ -34,8 +34,9 @@ func NewAuthController(service serviceInterfaces.AuthService, config *config.App
 // @Accept json
 // @Produce json
 // @Param request body request.LoginRequest true "Login request"
-// @Success 200 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 200 {object} response.Response{Data=response.UserResponse} "Successfully logged in!"
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /auth/login [post]
 func (c *AuthController) Login(ctx *gin.Context) {
 	var req request.LoginRequest
@@ -66,8 +67,8 @@ func (c *AuthController) Login(ctx *gin.Context) {
 // @Description Refresh access token using refresh token
 // @Tags Auth
 // @Produce json
-// @Success 200 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 200 {object} response.Response "Access token refreshed successfully!"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /auth/refresh-token [post]
 func (c *AuthController) RefreshToken(ctx *gin.Context) {
 	refreshToken, err := ctx.Cookie("refresh_token")
@@ -104,7 +105,8 @@ func (c *AuthController) RefreshToken(ctx *gin.Context) {
 // @Description Logout user and clear cookies
 // @Tags Auth
 // @Produce json
-// @Success 200 {object} response.Response
+// @Success 200 {object} response.Response "Successfully logged out!"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /auth/logout [post]
 func (c *AuthController) Logout(ctx *gin.Context) {
 	refreshToken, err := ctx.Cookie("refresh_token")
@@ -133,8 +135,10 @@ func (c *AuthController) Logout(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param request body request.CreateUsersRequest true "Register request"
-// @Success 201 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 201 {object} response.Response{Data=response.UserResponse} "User created successfully"
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 409 {object} response.Response "User already exists"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /auth/register [post]
 func (c *AuthController) Register(ctx *gin.Context) {
 	var req request.CreateUsersRequest
@@ -164,8 +168,9 @@ func (c *AuthController) Register(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param request body request.SendOTPRequest true "Send OTP request"
-// @Success 200 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 200 {object} response.Response "OTP sent successfully!"
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /auth/send-reset-otp [post]
 func (c *AuthController) SendResetOTP(ctx *gin.Context) {
 	var req request.SendOTPRequest
@@ -194,8 +199,9 @@ func (c *AuthController) SendResetOTP(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param request body request.VerifyOTPRequest true "Verify OTP request"
-// @Success 200 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 200 {object} response.Response "OTP verify successfully!"
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /auth/verify-otp [post]
 func (c *AuthController) VerifyOTP(ctx *gin.Context) {
 	var req request.VerifyOTPRequest
@@ -225,8 +231,9 @@ func (c *AuthController) VerifyOTP(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param request body request.ResetPasswordRequest true "Reset password request"
-// @Success 200 {object} response.Response
-// @Failure 400 {object} response.Response
+// @Success 200 {object} response.Response "Password reset successfully!"
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /auth/reset-password [post]
 func (c *AuthController) ResetPassword(ctx *gin.Context) {
 	token, err := ctx.Cookie("reset_token")
