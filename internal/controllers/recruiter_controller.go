@@ -23,7 +23,7 @@ func NewRecruiterController(service serviceInterfaces.RecruiterService) *Recruit
 // CreateRecruiter godoc
 // @Summary Create a new recruiter
 // @Description Create a new recruiter with company logo
-// @Tags Recruiters
+// @Tags Recruiters - Recruiter 
 // @Accept multipart/form-data
 // @Produce json
 // @Param company_logo formData file true "Company Logo"
@@ -70,10 +70,10 @@ func (c *RecruiterController) CreateRecruiter(ctx *gin.Context) {
 
 // GetRecruiter godoc
 // @Summary Get recruiter
-// @Description Get recruiter details by recruiter ID
-// @Tags Recruiters
+// @Description Get recruiter details by recruiter_id
+// @Tags Recruiters - Recruiter 
 // @Produce json
-// @Param id path string true "Recruiter ID"
+// @Param recruiter_id path string true "Recruiter ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
 // @Router /recruiters/{recruiter_id} [get]
@@ -99,11 +99,11 @@ func (c *RecruiterController) GetRecruiter(ctx *gin.Context) {
 
 // UpdateRecruiter godoc
 // @Summary Update recruiter
-// @Description Update recruiter details with company logo by recruiter ID
-// @Tags Recruiters
+// @Description Update recruiter details with company logo by recruiter_id
+// @Tags Recruiters - Recruiter 
 // @Accept multipart/form-data
 // @Produce json
-// @Param id path string true "Recruiter ID"
+// @Param recruiter_id path string true "Recruiter ID"
 // @Param company_logo formData file true "Company Logo"
 // @Param recruiter body request.UpdateRecruiterRequest true "Recruiter request"
 // @Success 200 {object} response.Response
@@ -142,10 +142,10 @@ func (c *RecruiterController) UpdateRecruiter(ctx *gin.Context) {
 
 // DeleteRecruiter godoc
 // @Summary Delete recruiter
-// @Description Delete recruiter by recruiter ID
-// @Tags Recruiters
+// @Description Delete recruiter by recruiter_id
+// @Tags Recruiters - Recruiter 
 // @Produce json
-// @Param id path string true "Recruiter ID"
+// @Param recruiter_id path string true "Recruiter ID"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
 // @Router /recruiters/{recruiter_id} [delete]
