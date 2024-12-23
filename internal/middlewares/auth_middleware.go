@@ -28,6 +28,12 @@ func AuthMiddleware(config *config.AppConfig) gin.HandlerFunc {
 
 		c.Set("userID", claims.UserID)
 		c.Set("role", claims.Role)
+		c.Set("role", claims.Role)
+		if claims.Role == "candidate" {
+			c.Set("candidate_id", claims.UserID)
+		} else if claims.Role == "recruiter" {
+			c.Set("recruiter_id", claims.UserID)
+		}
 		c.Set("purpose", claims.Purpose)
 		c.Next()
 	}
