@@ -51,6 +51,9 @@ func (s *UserService) CreateUser(req request.CreateUsersRequest) (*models.User, 
 }
 
 func (s *UserService) GetUser(id uuid.UUID) (*models.User, error) {
+	if id == uuid.Nil {
+		return nil, utils.NewCustomError(http.StatusBadRequest, "Invalid user ID")
+	}
 	user, err := s.userRepository.GetUserByID(id)
 	if err != nil {
 		if err == sql.ErrNoRows {
