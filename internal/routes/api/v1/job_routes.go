@@ -13,7 +13,7 @@ func JobRoutes(rg *gin.RouterGroup, jobController *controllers.JobController) {
 		jobs.GET("/:job_id", jobController.GetJobDetails)
 		jobs.GET("/", jobController.GetJobListingsByStatus)
 		jobs.PUT("/:job_id", jobController.EditJob)
-		jobs.PUT("/:job_id/desactivate", jobController.DesactivateJob)
+		jobs.PUT("/:job_id/desactivate", jobController.DeactivateJob)
 		jobs.PUT("/:job_id/repost", jobController.RepostJob)
 		jobs.DELETE("/:job_id", jobController.DeleteJob)
 	}

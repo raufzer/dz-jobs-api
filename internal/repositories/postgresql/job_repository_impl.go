@@ -125,7 +125,7 @@ func (r *SQLJobRepository) UpdateJob(jobID int64, job *models.Job) error {
 	return nil
 }
 
-func (r *SQLJobRepository) DesactivateJob(jobID int64) error {
+func (r *SQLJobRepository) DeactivateJob(jobID int64) error {
 	query := `UPDATE jobs SET 
         status = $1, 
         updated_at = $2 

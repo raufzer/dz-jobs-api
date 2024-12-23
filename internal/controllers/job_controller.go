@@ -163,7 +163,7 @@ func (c *JobController) EditJob(ctx *gin.Context) {
 	})
 }
 
-// DesactivateJob deactivates a job
+// DeactivateJob deactivates a job
 // @Summary Deactivate a job
 // @Description Disable a specific job by job_id
 // @Tags Recruiters - Jobs 
@@ -172,8 +172,8 @@ func (c *JobController) EditJob(ctx *gin.Context) {
 // @Success 200 {object} response.Response{Data=response.JobResponse} "Job deactivated successfully"
 // @Failure 404 {object} response.Response "Job not found"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /recruiters/{recruiter_id}/jobs/{job_id}/desactivate [put]
-func (c *JobController) DesactivateJob(ctx *gin.Context) {
+// @Router /recruiters/{recruiter_id}/jobs/{job_id}/deactivate [put]
+func (c *JobController) DeactivateJob(ctx *gin.Context) {
 	jobIDStr := ctx.Param("job_id")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
 	if err != nil {
@@ -181,7 +181,7 @@ func (c *JobController) DesactivateJob(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	updatedJob, err := c.jobService.DesactivateJob(jobID)
+	updatedJob, err := c.jobService.DeactivateJob(jobID)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()

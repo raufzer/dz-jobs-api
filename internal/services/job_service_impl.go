@@ -79,10 +79,10 @@ func (s *JobService) EditJob(jobID int64, req request.EditJobRequest) (*models.J
 	return s.jobRepository.GetJobDetails(jobID)
 }
 
-func (s *JobService) DesactivateJob(jobID int64) (*models.Job, error) {
+func (s *JobService) DeactivateJob(jobID int64) (*models.Job, error) {
 
 
-	if err := s.jobRepository.DesactivateJob(jobID); err != nil {
+	if err := s.jobRepository.DeactivateJob(jobID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, utils.NewCustomError(http.StatusNotFound, "Job not found")
 		}
