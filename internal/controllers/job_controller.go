@@ -70,7 +70,7 @@ func (c *JobController) PostNewJob(ctx *gin.Context) {
 // @Success 200 {object} response.Response{Data=response.JobResponse} "Job details found"
 // @Failure 400 {object} response.Response "Invalid job ID"
 // @Failure 404 {object} response.Response "Job not found"
-// @Router /jobs/{job_id} [get]
+// @Router /recruiters/{recruiter_id}/jobs/{job_id} [get]
 func (c *JobController) GetJobDetails(ctx *gin.Context) {
 	jobIDStr := ctx.Param("job_id")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
@@ -100,7 +100,7 @@ func (c *JobController) GetJobDetails(ctx *gin.Context) {
 // @Param status query string true "Job status (e.g., open, closed)"
 // @Success 200 {object} response.Response{Data=object} "Job listings retrieved successfully"
 // @Failure 400 {object} response.Response "Invalid status query"
-// @Router /jobs [get]
+// @Router /recruiters/{recruiter_id}/jobs [get]
 func (c *JobController) GetJobListingsByStatus(ctx *gin.Context) {
 	jobs, err := c.jobService.GetJobListingsByStatus(ctx.Query("status"))
 	if err != nil {
@@ -134,7 +134,7 @@ func (c *JobController) GetJobListingsByStatus(ctx *gin.Context) {
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 404 {object} response.Response "Job not found"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /jobs/{job_id} [put]
+// @Router /recruiters/{recruiter_id}/jobs{job_id} [put]
 func (c *JobController) EditJob(ctx *gin.Context) {
 	var req request.EditJobRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -172,7 +172,7 @@ func (c *JobController) EditJob(ctx *gin.Context) {
 // @Success 200 {object} response.Response{Data=response.JobResponse} "Job deactivated successfully"
 // @Failure 404 {object} response.Response "Job not found"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /jobs/{job_id}/desactivate [put]
+// @Router /recruiters/{recruiter_id}/jobs/{job_id}/desactivate [put]
 func (c *JobController) DesactivateJob(ctx *gin.Context) {
 	jobIDStr := ctx.Param("job_id")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
@@ -204,7 +204,7 @@ func (c *JobController) DesactivateJob(ctx *gin.Context) {
 // @Success 200 {object} response.Response{Data=response.JobResponse} "Job reposted successfully"
 // @Failure 404 {object} response.Response "Job not found"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /jobs/{job_id}/repost [put]
+// @Router /recruiters/{recruiter_id}/jobs/{job_id}/repost [put]
 func (c *JobController) RepostJob(ctx *gin.Context) {
 	jobIDStr := ctx.Param("job_id")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
@@ -236,7 +236,7 @@ func (c *JobController) RepostJob(ctx *gin.Context) {
 // @Success 200 {object} response.Response "Job deleted successfully"
 // @Failure 404 {object} response.Response "Job not found"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /jobs/{job_id} [delete]
+// @Router /recruiters/{recruiter_id}/jobs/{job_id} [delete]
 func (c *JobController) DeleteJob(ctx *gin.Context) {
 	jobIDStr := ctx.Param("job_id")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
