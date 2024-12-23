@@ -32,18 +32,10 @@ func NewRecruiterController(service serviceInterfaces.RecruiterService) *Recruit
 // @Failure 400 {object} response.Response
 // @Router /recruiters [post]
 func (c *RecruiterController) CreateRecruiter(ctx *gin.Context) {
-	accessToken, err := ctx.Cookie("access_token")
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
-	userID, err := c.recruiterService.ExtractTokenDetails(accessToken)
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
+
+	recuiterID := ctx.MustGet("recruiter_id")
+	userID := recuiterID.(string)
+
 	companyLogoFile, err := ctx.FormFile("company_logo")
 	if err != nil {
 		ctx.Error(err)

@@ -13,5 +13,4 @@ type RecruiterService interface {
 	UpdateRecruiter(recruiter_id uuid.UUID, req request.UpdateRecruiterRequest, companyLogo *multipart.FileHeader) (*models.Recruiter, error)
 	GetRecruiter(recruiter_id uuid.UUID) (*models.Recruiter, error)
 	DeleteRecruiter(recruiter_id uuid.UUID) error
-	ExtractTokenDetails(token string) (string, error)
 }

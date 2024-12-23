@@ -108,11 +108,3 @@ func (s *CandidateService) DeleteCandidate(candidateID uuid.UUID) error {
 	return nil
 }
 
-func (s *CandidateService) ExtractTokenDetails(token string) (string, error) {
-
-	claims, err := utils.ExtractTokenDetails(token, s.config.AccessTokenSecret)
-	if err != nil {
-		return "", utils.NewCustomError(http.StatusUnauthorized, "Invalid or expired token")
-	}
-	return claims.UserID, nil
-}

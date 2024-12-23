@@ -30,18 +30,8 @@ func NewCandidateController(service serviceInterfaces.CandidateService) *Candida
 // @Failure 400 {object} response.Response
 // @Router /candidates [post]
 func (c *CandidateController) CreateCandidate(ctx *gin.Context) {
-	accessToken, err := ctx.Cookie("access_token")
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
-	userID, err := c.service.ExtractTokenDetails(accessToken)
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
+	candidateID := ctx.MustGet("candidate_id")
+	userID := candidateID.(string)
 	profilePictureFile, err := ctx.FormFile("profile_picture")
 	if err != nil {
 		ctx.Error(err)

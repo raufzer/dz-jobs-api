@@ -61,22 +61,11 @@ func ValidateToken(tokenString string, secretKey string, expectedPurpose string)
 
 	return nil, fmt.Errorf("invalid token claims")
 }
-func ExtractTokenDetails(tokenString string, secretKey string) (*TokenClaims, error) {
-	token, _, err := new(jwt.Parser).ParseUnverified(tokenString, &TokenClaims{})
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse token: %w", err)
-	}
 
-	if claims, ok := token.Claims.(*TokenClaims); ok {
-		return claims, nil
-	}
-
-	return nil, fmt.Errorf("invalid token claims")
-}
 func GenerateSecureOTP(length int) string {
 	const charset = "0123456789"
 	otp := make([]byte, length)
-	randomBytes := generateRandomBytes(length) // Use existing function
+	randomBytes := generateRandomBytes(length)
 
 	for i := 0; i < length; i++ {
 		otp[i] = charset[int(randomBytes[i])%len(charset)]
