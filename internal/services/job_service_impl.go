@@ -22,7 +22,7 @@ func NewJobService(jobRepo interfaces.JobRepository) *JobService {
 }
 
 func (s *JobService) PostNewJob(recruiterID uuid.UUID, req request.PostNewJobRequest) (*models.Job, error) {
-	job := &models.Job{	
+	job := &models.Job{
 		Title:          req.Title,
 		Description:    req.Description,
 		Location:       req.Location,
@@ -42,24 +42,49 @@ func (s *JobService) PostNewJob(recruiterID uuid.UUID, req request.PostNewJobReq
 	return job, nil
 }
 
-func (s *JobService) GetJobDetails(jobID int64) (*models.Job, error) {
-	job, err := s.jobRepository.GetJobDetails(jobID)
+func (s *JobService) GetJobDetails(jobID int64, recruiterID uuid.UUID) (*models.Job, error) {
+	// Validate ownership
+	job, err := s.jobRepository.GetJobDetails(jobID,recruiterID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, utils.NewCustomError(http.StatusNotFound, "Job not found")
 		}
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Error fetching job details")
 	}
+
+	// Check if the recruiter is the owner of the job
+	if job.RecruiterID != recruiterID {
+		return nil, utils.NewCustomError(http.StatusForbidden, "You do not own this job")
+	}
+
 	return job, nil
 }
-func (s *JobService) GetJobListingsByStatus(status string) ([]*models.Job, error) {
-	jobs, err := s.jobRepository.GetJobListingsByStatus(status)
+
+func (s *JobService) GetJobListingsByStatus(status string, recruiterID uuid.UUID) ([]*models.Job, error) {
+	// Fetch only jobs that the recruiter owns and match the status
+	jobs, err := s.jobRepository.GetJobListingsByStatus(status, recruiterID)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch jobs by status: "+status)
 	}
 	return jobs, nil
 }
-func (s *JobService) EditJob(jobID int64, req request.EditJobRequest) (*models.Job, error) {
+
+func (s *JobService) EditJob(jobID int64, req request.EditJobRequest, recruiterID uuid.UUID) (*models.Job, error) {
+	// Validate ownership
+	job, err := s.jobRepository.GetJobDetails(jobID,recruiterID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, utils.NewCustomError(http.StatusNotFound, "Job not found")
+		}
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Error fetching job details")
+	}
+
+	// Check if the recruiter is the owner of the job
+	if job.RecruiterID != recruiterID {
+		return nil, utils.NewCustomError(http.StatusForbidden, "You do not own this job")
+	}
+
+	// Update the job details
 	updatedJob := &models.Job{
 		Title:          req.Title,
 		Description:    req.Description,
@@ -69,44 +94,85 @@ func (s *JobService) EditJob(jobID int64, req request.EditJobRequest) (*models.J
 		UpdatedAt:      time.Now(),
 	}
 
-	if err := s.jobRepository.UpdateJob(jobID, updatedJob); err != nil {
+	if err := s.jobRepository.UpdateJob(jobID, recruiterID, updatedJob); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, utils.NewCustomError(http.StatusNotFound, "Job not found")
 		}
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to update job")
 	}
 
-	return s.jobRepository.GetJobDetails(jobID)
+	return s.jobRepository.GetJobDetails(jobID,recruiterID)
 }
 
-func (s *JobService) DeactivateJob(jobID int64) (*models.Job, error) {
-
-
-	if err := s.jobRepository.DeactivateJob(jobID); err != nil {
+func (s *JobService) DeactivateJob(jobID int64, recruiterID uuid.UUID) (*models.Job, error) {
+	// Validate ownership
+	job, err := s.jobRepository.GetJobDetails(jobID,recruiterID)
+	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, utils.NewCustomError(http.StatusNotFound, "Job not found")
 		}
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to desactivate job")
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Error fetching job details")
 	}
 
-	return s.jobRepository.GetJobDetails(jobID)
-}
+	// Check if the recruiter is the owner of the job
+	if job.RecruiterID != recruiterID {
+		return nil, utils.NewCustomError(http.StatusForbidden, "You do not own this job")
+	}
 
-func (s *JobService) RepostJob(jobID int64) (*models.Job, error) {
-
-
-	if err := s.jobRepository.RepostJob(jobID); err != nil {
+	// Deactivate the job
+	if err := s.jobRepository.DeactivateJob(jobID,recruiterID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, utils.NewCustomError(http.StatusNotFound, "Job not found")
 		}
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to desactivate job")
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to deactivate job")
 	}
 
-	return s.jobRepository.GetJobDetails(jobID)
+	return s.jobRepository.GetJobDetails(jobID,recruiterID)
 }
 
-func (s *JobService) DeleteJob(jobID int64) error {
-	err := s.jobRepository.DeleteJob(jobID)
+func (s *JobService) RepostJob(jobID int64, recruiterID uuid.UUID) (*models.Job, error) {
+	// Validate ownership
+	job, err := s.jobRepository.GetJobDetails(jobID,recruiterID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, utils.NewCustomError(http.StatusNotFound, "Job not found")
+		}
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Error fetching job details")
+	}
+
+	// Check if the recruiter is the owner of the job
+	if job.RecruiterID != recruiterID {
+		return nil, utils.NewCustomError(http.StatusForbidden, "You do not own this job")
+	}
+
+	// Repost the job
+	if err := s.jobRepository.RepostJob(jobID,recruiterID); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, utils.NewCustomError(http.StatusNotFound, "Job not found")
+		}
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to repost job")
+	}
+
+	return s.jobRepository.GetJobDetails(jobID,recruiterID)
+}
+
+func (s *JobService) DeleteJob(jobID int64, recruiterID uuid.UUID) error {
+	// Validate ownership
+	job, err := s.jobRepository.GetJobDetails(jobID, recruiterID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return utils.NewCustomError(http.StatusNotFound, "Job not found")
+		}
+		return utils.NewCustomError(http.StatusInternalServerError, "Error fetching job details")
+	}
+
+	// Check if the recruiter is the owner of the job
+	if job.RecruiterID != recruiterID {
+		return utils.NewCustomError(http.StatusForbidden, "You do not own this job")
+	}
+
+	// Delete the job
+	err = s.jobRepository.DeleteJob(jobID,recruiterID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return utils.NewCustomError(http.StatusNotFound, "Job not found")
@@ -114,4 +180,32 @@ func (s *JobService) DeleteJob(jobID int64) error {
 		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete job")
 	}
 	return nil
+}
+
+func (s *JobService) GetAllJobs() ([]*models.Job, error) {
+    jobs, err := s.jobRepository.GetAllJobs()
+    if err != nil {
+        return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch all jobs")
+    }
+    return jobs, nil
+}
+
+
+func (s *JobService) SearchJobs(filters request.JobFilters) ([]*models.Job, error) {
+    jobs, err := s.jobRepository.GetJobListings(filters)
+    if err != nil {
+        return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to search jobs")
+    }
+    return jobs, nil
+}
+
+func (s *JobService) GetJobDetailsPublic(jobID int64) (*models.Job, error) {
+	job, err := s.jobRepository.GetJobDetailsPublic(jobID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, utils.NewCustomError(http.StatusNotFound, "Job not found")
+		}
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Error fetching job details")
+	}
+	return job, nil
 }
