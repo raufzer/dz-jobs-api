@@ -77,7 +77,7 @@ func (c *CandidateController) CreateCandidate(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id} [get]
 func (c *CandidateController) GetCandidate(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("id"))
+	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -106,7 +106,7 @@ func (c *CandidateController) GetCandidate(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id} [put]
 func (c *CandidateController) UpdateCandidate(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("id"))
+	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -150,7 +150,7 @@ func (c *CandidateController) UpdateCandidate(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id} [delete]
 func (c *CandidateController) DeleteCandidate(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("id"))
+	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()

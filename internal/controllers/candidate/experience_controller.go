@@ -31,7 +31,7 @@ func NewCandidateExperienceController(service serviceInterfaces.CandidateExperie
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id}/experience [post]
 func (c *CandidateExperienceController) AddExperience(ctx *gin.Context) {
-    candidateID, err := uuid.Parse(ctx.Param("id"))
+    candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
     if err != nil {
         ctx.Error(err)
         ctx.Abort()
@@ -67,7 +67,7 @@ func (c *CandidateExperienceController) AddExperience(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id}/experience [get]
 func (c *CandidateExperienceController) GetExperience(ctx *gin.Context) {
-    candidateID, err := uuid.Parse(ctx.Param("id"))
+    candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
     if err != nil {
         ctx.Error(err)
         ctx.Abort()
@@ -101,7 +101,7 @@ func (c *CandidateExperienceController) GetExperience(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id}/experience [delete]
 func (c *CandidateExperienceController) DeleteExperience(ctx *gin.Context) {
-    candidateID, err := uuid.Parse(ctx.Param("id"))
+    candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
     if err != nil {
         ctx.Error(err)
         ctx.Abort()

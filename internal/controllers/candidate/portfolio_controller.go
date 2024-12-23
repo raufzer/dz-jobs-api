@@ -31,7 +31,7 @@ func NewCandidatePortfolioController(service serviceInterfaces.CandidatePortfoli
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id}/portfolio [post]
 func (c *CandidatePortfolioController) AddProject(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("id"))
+	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -67,7 +67,7 @@ func (c *CandidatePortfolioController) AddProject(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id}/portfolio [get]
 func (c *CandidatePortfolioController) GetPortfolio(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("id"))
+	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -102,7 +102,7 @@ func (c *CandidatePortfolioController) GetPortfolio(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id}/portfolio/{project_id} [delete]
 func (c *CandidatePortfolioController) DeleteProject(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("id"))
+	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()

@@ -31,7 +31,7 @@ func NewCandidateCertificationsController(service serviceInterfaces.CandidateCer
 // @Failure 400 {object} response.Response
 // @Router /candidates/{id}/certifications [post]
 func (c *CandidateCertificationsController) AddCertification(ctx *gin.Context) {
-    candidateID, err := uuid.Parse(ctx.Param("id"))
+    candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
     if err != nil {
         ctx.Error(err)
         ctx.Abort()
@@ -67,7 +67,7 @@ func (c *CandidateCertificationsController) AddCertification(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id}/certifications [get]
 func (c *CandidateCertificationsController) GetCertifications(ctx *gin.Context) {
-    candidateID, err := uuid.Parse(ctx.Param("id"))
+    candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
     if err != nil {
         ctx.Error(err)
         ctx.Abort()
@@ -102,7 +102,7 @@ func (c *CandidateCertificationsController) GetCertifications(ctx *gin.Context) 
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id}/certifications/{certification_id} [delete]
 func (c *CandidateCertificationsController) DeleteCertification(ctx *gin.Context) {
-    candidateID, err := uuid.Parse(ctx.Param("id"))
+    candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
     if err != nil {
         ctx.Error(err)
         ctx.Abort()

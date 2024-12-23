@@ -60,7 +60,7 @@ func (c *UserController) CreateUser(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /admin/users/{user_id} [get]
 func (c *UserController) GetUser(ctx *gin.Context) {
-	id, err := uuid.Parse(ctx.Param("id"))
+	id, err := uuid.Parse(ctx.Param("user_id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -97,7 +97,7 @@ func (c *UserController) UpdateUser(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	id, err := uuid.Parse(ctx.Param("id"))
+	id, err := uuid.Parse(ctx.Param("user_id"))
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -155,7 +155,7 @@ func (c *UserController) GetAllUsers(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /admin/users/{user_id} [delete]
 func (c *UserController) DeleteUser(ctx *gin.Context) {
-	id, err := uuid.Parse(ctx.Param("id"))
+	id, err := uuid.Parse(ctx.Param("user_id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()

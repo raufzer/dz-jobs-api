@@ -31,7 +31,7 @@ func NewCandidateEducationController(service serviceInterfaces.CandidateEducatio
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id}/education [post]
 func (c *CandidateEducationController) AddEducation(ctx *gin.Context) {
-    candidateID, err := uuid.Parse(ctx.Param("id"))
+    candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
     if err != nil {
         ctx.Error(err)
         ctx.Abort()
@@ -68,7 +68,7 @@ func (c *CandidateEducationController) AddEducation(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id}/education [get]
 func (c *CandidateEducationController) GetEducation(ctx *gin.Context) {
-    candidateID, err := uuid.Parse(ctx.Param("id"))
+    candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
     if err != nil {
         ctx.Error(err)
         ctx.Abort()
@@ -102,7 +102,7 @@ func (c *CandidateEducationController) GetEducation(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id}/education [delete]
 func (c *CandidateEducationController) DeleteEducation(ctx *gin.Context) {
-    candidateID, err := uuid.Parse(ctx.Param("id"))
+    candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
     if err != nil {
         ctx.Error(err)
         ctx.Abort()

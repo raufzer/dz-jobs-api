@@ -31,7 +31,7 @@ func NewCandidateSkillsController(service serviceInterfaces.CandidateSkillsServi
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id}/skills [post]
 func (c *CandidateSkillsController) AddSkill(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("id"))
+	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -68,7 +68,7 @@ func (c *CandidateSkillsController) AddSkill(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id}/skills [get]
 func (c *CandidateSkillsController) GetSkills(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("id"))
+	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -103,14 +103,14 @@ func (c *CandidateSkillsController) GetSkills(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id}/skills/{skill_name} [delete]
 func (c *CandidateSkillsController) DeleteSkill(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("id"))
+	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 
-	err = c.service.DeleteSkill(candidateID, ctx.Param("skill"))
+	err = c.service.DeleteSkill(candidateID, ctx.Param("skill_name"))
 	if err != nil {
 		ctx.Error(err)
 		return

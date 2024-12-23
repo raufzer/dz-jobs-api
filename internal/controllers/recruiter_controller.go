@@ -78,7 +78,7 @@ func (c *RecruiterController) CreateRecruiter(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /recruiters/{recruiter_id} [get]
 func (c *RecruiterController) GetRecruiter(ctx *gin.Context) {
-	id, err := uuid.Parse(ctx.Param("id"))
+	id, err := uuid.Parse(ctx.Param("recruiter_id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -116,7 +116,7 @@ func (c *RecruiterController) UpdateRecruiter(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	id, err := uuid.Parse(ctx.Param("id"))
+	id, err := uuid.Parse(ctx.Param("recruiter_id"))
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -150,7 +150,7 @@ func (c *RecruiterController) UpdateRecruiter(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /recruiters/{recruiter_id} [delete]
 func (c *RecruiterController) DeleteRecruiter(ctx *gin.Context) {
-	id, err := uuid.Parse(ctx.Param("id"))
+	id, err := uuid.Parse(ctx.Param("recruiter_id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()

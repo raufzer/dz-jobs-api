@@ -31,7 +31,7 @@ func NewCandidatePersonalInfoController(service serviceInterfaces.CandidatePerso
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id}/personal-info [post]
 func (c *CandidatePersonalInfoController) AddPersonalInfo(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("id"))
+	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -69,7 +69,7 @@ func (c *CandidatePersonalInfoController) AddPersonalInfo(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id}/personal-info [get]
 func (c *CandidatePersonalInfoController) GetPersonalInfo(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("id"))
+	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -102,7 +102,7 @@ func (c *CandidatePersonalInfoController) GetPersonalInfo(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id}/personal-info [put]
 func (c *CandidatePersonalInfoController) UpdatePersonalInfo(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("id"))
+	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -140,7 +140,7 @@ func (c *CandidatePersonalInfoController) UpdatePersonalInfo(ctx *gin.Context) {
 // @Failure 400 {object} response.Response
 // @Router /candidates/{candidate_id}/personal-info [delete]
 func (c *CandidatePersonalInfoController) DeletePersonalInfo(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("id"))
+	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
