@@ -1739,7 +1739,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recruiters/{recruiter_id}/jobs/{job_id}/desactivate": {
+        "/recruiters/{recruiter_id}/jobs/{job_id}/deactivate": {
             "put": {
                 "description": "Disable a specific job by job_id",
                 "produces": [
