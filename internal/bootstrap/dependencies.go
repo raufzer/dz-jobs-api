@@ -25,6 +25,7 @@ type AppDependencies struct {
 	CertificationsController *candidateControllers.CandidateCertificationsController
 	PortfolioController      *candidateControllers.CandidatePortfolioController
 	RecruiterController      *controllers.RecruiterController
+	JobController            *controllers.JobController
 }
 
 func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
@@ -51,6 +52,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	certificationRepo := candidatePostgresql.NewCandidateCertificationsRepository(dbConfig.DB)
 	portfolioRepo := candidatePostgresql.NewCandidatePortfolioRepository(dbConfig.DB)
 	recruiterRepo := postgresql.NewRecruiterRepository(dbConfig.DB)
+	jobRepo := postgresql.NewJobRepository(dbConfig.DB)
 
 	// Initialize Services
 	authService := services.NewAuthService(
@@ -67,6 +69,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	certificationsService := candidateServices.NewCandidateCertificationsService(certificationRepo)
 	portfolioService := candidateServices.NewCandidatePortfolioService(portfolioRepo)
 	recruiterService := services.NewRecruiterService(recruiterRepo, cfg)
+	jobService := services.NewJobService(jobRepo)
 
 	// Initialize Controllers
 	userController := controllers.NewUserController(userService)
@@ -79,6 +82,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	certificationsController := candidateControllers.NewCandidateCertificationsController(certificationsService)
 	portfolioController := candidateControllers.NewCandidatePortfolioController(portfolioService)
 	recruiterController := controllers.NewRecruiterController(recruiterService)
+	jobController := controllers.NewJobController(jobService)
 
 	// Return dependencies
 	return &AppDependencies{
@@ -93,5 +97,6 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 		CertificationsController: certificationsController,
 		PortfolioController:      portfolioController,
 		RecruiterController:      recruiterController,
+		JobController:            jobController,
 	}, nil
 }

@@ -41,6 +41,7 @@ func main() {
 		deps.SkillsController,
 		deps.CertificationsController,
 		deps.PortfolioController,
+		deps.JobController,
 		appConfig,
 	)
 
