@@ -7,7 +7,7 @@ import (
 )
 
 func PortfolioRoutes(rg *gin.RouterGroup, candidatePortfolioController *controllers.CandidatePortfolioController) {
-	portfolioRoute := rg.Group("/:candidate_id/portfolio")
+	portfolioRoute := rg.Group("/portfolio")
 
 	portfolioRoute.POST("/", candidatePortfolioController.AddProject)
 	portfolioRoute.GET("/", candidatePortfolioController.GetPortfolio)

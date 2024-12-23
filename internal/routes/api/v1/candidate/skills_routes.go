@@ -7,7 +7,7 @@ import (
 )
 
 func SkillsRoutes(rg *gin.RouterGroup, candidateSkillsController *controllers.CandidateSkillsController) {
-	skillsRoute := rg.Group("/:candidate_id/skills")
+	skillsRoute := rg.Group("/skills")
 
 	skillsRoute.POST("/", candidateSkillsController.AddSkill)
 	skillsRoute.GET("/", candidateSkillsController.GetSkills)

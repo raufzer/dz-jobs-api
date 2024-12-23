@@ -28,6 +28,7 @@ func RegisterRoutes(
     skillsController *candidateControllers.CandidateSkillsController,
     certificationsController *candidateControllers.CandidateCertificationsController,
     portfolioController *candidateControllers.CandidatePortfolioController,
+    jobController *controllers.JobController,
     appConfig *config.AppConfig,
 ) {
     // Base path
@@ -50,6 +51,7 @@ func RegisterRoutes(
         skillsController,
         certificationsController,
         portfolioController,
+        jobController,
     )
 }
 
@@ -73,6 +75,7 @@ func RegisterProtectedRoutes(
     skillsController *candidateControllers.CandidateSkillsController,
     certificationsController *candidateControllers.CandidateCertificationsController,
     portfolioController *candidateControllers.CandidatePortfolioController,
+    jobController *controllers.JobController,
 ) {
     // Admin-specific routes
     adminGroup := router.Group("/admin")
@@ -96,7 +99,7 @@ func RegisterProtectedRoutes(
     // Recruiter-specific routes
     recruiterGroup := router.Group("/recruiters")
     recruiterGroup.Use(middlewares.RoleMiddleware("recruiter", "admin"))
-    RegisterRecruiterRoutes(recruiterGroup, recruiterController)
+    RegisterRecruiterRoutes(recruiterGroup, recruiterController, jobController)
 }
 
 // RegisterAdminRoutes handles routes accessible only to admins
@@ -118,6 +121,8 @@ func RegisterCandidateRoutes(
     certificationsController *candidateControllers.CandidateCertificationsController,
     portfolioController *candidateControllers.CandidatePortfolioController,
 ) {
+    candidateRoutes := router.Group("/:candidate_id")
+    candidateRoutes.Use(middlewares.CandidateOwnershipMiddleware())
     v1.CandidateRoutes(router, candidateController)
     v1.PersonalInfoRoutes(router, personalInfoController)
     v1.EducationRoutes(router, educationController)
@@ -130,8 +135,12 @@ func RegisterCandidateRoutes(
 func RegisterRecruiterRoutes(
     router *gin.RouterGroup,
     recruiterController *controllers.RecruiterController,
+    jobController *controllers.JobController,
 ) {
+    recruiterRoutes := router.Group("/:recruiter_id")
+    recruiterRoutes.Use(middlewares.RecruiterOwnershipMiddleware())
     RecruiterRoutes(router, recruiterController)
+    JobRoutes(router, jobController)
 }
 
 // RegisterSwaggerRoutes handles the Swagger documentation routes
