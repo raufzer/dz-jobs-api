@@ -1544,7 +1544,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Jobs"
+                    "Recruiters - Jobs"
                 ],
                 "summary": "Delete a job",
                 "parameters": [

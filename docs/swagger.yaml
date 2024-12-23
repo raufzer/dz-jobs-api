@@ -1240,7 +1240,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Delete a job
       tags:
-      - Jobs
+      - Recruiters - Jobs
     get:
       description: Retrieve the details of a specific job by job_id
       parameters:

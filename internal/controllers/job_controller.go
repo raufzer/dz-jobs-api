@@ -230,7 +230,7 @@ func (c *JobController) RepostJob(ctx *gin.Context) {
 // DeleteJob godoc
 // @Summary Delete a job
 // @Description Remove a specific job from the system by its ID
-// @Tags Jobs
+// @Tags Recruiters - Jobs 
 // @Produce json
 // @Param job_id path int true "Job ID"
 // @Success 200 {object} response.Response "Job deleted successfully"
