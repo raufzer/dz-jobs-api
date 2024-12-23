@@ -19,3 +19,12 @@ type EditJobRequest struct {
 	RequiredSkills string     `json:"required_skills,omitempty"`
 	Status         string     `json:"status,omitempty"`
 }
+
+type JobFilters struct {
+    Status          string   `json:"status"`
+    Location        string   `json:"location"`
+    SalaryRangeMin  float64  `json:"salary_range_min"`
+    SalaryRangeMax  float64  `json:"salary_range_max"`
+    Skills          []string `json:"skills"`
+    Keyword         string   `json:"keyword"`
+}
