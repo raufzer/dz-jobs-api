@@ -121,13 +121,13 @@ func RegisterCandidateRoutes(
 ) {
 	candidateRoutes := router.Group("/:candidate_id")
 	candidateRoutes.Use(middlewares.CandidateOwnershipMiddleware())
-	CandidateRoutes(router, candidateController)
-	PersonalInfoRoutes(router, personalInfoController)
-	EducationRoutes(router, educationController)
-	ExperienceRoutes(router, experienceController)
-	SkillsRoutes(router, skillsController)
-	CertificationsRoutes(router, certificationsController)
-	PortfolioRoutes(router, portfolioController)
+	CandidateRoutes(candidateRoutes, candidateController)
+	PersonalInfoRoutes(candidateRoutes, personalInfoController)
+	EducationRoutes(candidateRoutes, educationController)
+	ExperienceRoutes(candidateRoutes, experienceController)
+	SkillsRoutes(candidateRoutes, skillsController)
+	CertificationsRoutes(candidateRoutes, certificationsController)
+	PortfolioRoutes(candidateRoutes, portfolioController)
 }
 
 func RegisterRecruiterRoutes(
@@ -137,8 +137,8 @@ func RegisterRecruiterRoutes(
 ) {
 	recruiterRoutes := router.Group("/:recruiter_id")
 	recruiterRoutes.Use(middlewares.RecruiterOwnershipMiddleware())
-	RecruiterRoutes(router, recruiterController)
-	JobRoutes(router, jobController)
+	RecruiterRoutes(recruiterRoutes, recruiterController)
+	JobRoutes(recruiterRoutes, jobController)
 }
 
 // RegisterSwaggerRoutes handles the Swagger documentation routes

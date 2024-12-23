@@ -7,9 +7,8 @@ import (
 
 func ExperienceRoutes(rg *gin.RouterGroup, candidateExperienceController *controllers.CandidateExperienceController) {
 	experienceRoute := rg.Group("/experience")
-	
-		experienceRoute.POST("/", candidateExperienceController.AddExperience)
-		experienceRoute.GET("/", candidateExperienceController.GetExperience)
-		experienceRoute.DELETE("/", candidateExperienceController.DeleteExperience)
-	
+	experienceRoute.POST("/", candidateExperienceController.AddExperience)
+	experienceRoute.GET("/", candidateExperienceController.GetExperience)
+	experienceRoute.DELETE("/", candidateExperienceController.DeleteExperience)
+
 }

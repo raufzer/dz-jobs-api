@@ -8,7 +8,6 @@ import (
 
 func PersonalInfoRoutes(rg *gin.RouterGroup, candidatePersonalInfoController *controllers.CandidatePersonalInfoController) {
 	personalInfoRoute := rg.Group("/personal-info")
-
 	personalInfoRoute.POST("/", candidatePersonalInfoController.AddPersonalInfo)
 	personalInfoRoute.GET("/", candidatePersonalInfoController.GetPersonalInfo)
 	personalInfoRoute.PUT("/", candidatePersonalInfoController.UpdatePersonalInfo)
