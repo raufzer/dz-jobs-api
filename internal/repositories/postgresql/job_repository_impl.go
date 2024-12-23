@@ -269,28 +269,39 @@ func (r *SQLJobRepository) GetAllJobs() ([]*models.Job, error) {
 func (r *SQLJobRepository) GetJobListings(filters request.JobFilters) ([]*models.Job, error) {
     query := `SELECT job_id, title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status
               FROM jobs WHERE 1=1`
-
     
     args := []interface{}{}
+    paramCount := 1 
+    
     if filters.Status != "" {
-        query += " AND status = $1"
+        query += fmt.Sprintf(" AND status = $%d", paramCount)
         args = append(args, filters.Status)
+        paramCount++
     }
+    
     if filters.Location != "" {
-        query += " AND location = $2"
+        query += fmt.Sprintf(" AND location = $%d", paramCount)
         args = append(args, filters.Location)
+        paramCount++
     }
+    
     if filters.SalaryRangeMin > 0 && filters.SalaryRangeMax > 0 {
-        query += " AND salary_range BETWEEN $3 AND $4"
+        query += fmt.Sprintf(" AND salary_range BETWEEN $%d AND $%d", paramCount, paramCount+1)
         args = append(args, filters.SalaryRangeMin, filters.SalaryRangeMax)
+        paramCount += 2
     }
+    
     if len(filters.Skills) > 0 {
-        query += " AND required_skills @> $5" 
+        query += fmt.Sprintf(" AND required_skills @> $%d", paramCount)
         args = append(args, filters.Skills)
+        paramCount++
     }
+    
     if filters.Keyword != "" {
-        query += " AND (title ILIKE $6 OR description ILIKE $7)"
+        query += fmt.Sprintf(" AND (title ILIKE $%d OR description ILIKE $%d)", 
+            paramCount, paramCount+1)
         args = append(args, "%"+filters.Keyword+"%", "%"+filters.Keyword+"%")
+        paramCount += 2
     }
 
     rows, err := r.db.Query(query, args...)
