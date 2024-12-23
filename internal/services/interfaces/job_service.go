@@ -1,7 +1,7 @@
 package interfaces
 
 import (
-		"dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/models"
 
 	"github.com/google/uuid"

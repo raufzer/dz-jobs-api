@@ -718,7 +718,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "Data": {
-                                            "$ref": "#/definitions/candidate.CandidateResponse"
+                                            "$ref": "#/definitions/response.CandidateResponse"
                                         }
                                     }
                                 }
@@ -783,7 +783,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "Data": {
-                                            "$ref": "#/definitions/candidate.CandidateResponse"
+                                            "$ref": "#/definitions/response.CandidateResponse"
                                         }
                                     }
                                 }
@@ -869,7 +869,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "Data": {
-                                            "$ref": "#/definitions/candidate.CandidateResponse"
+                                            "$ref": "#/definitions/response.CandidateResponse"
                                         }
                                     }
                                 }
@@ -997,7 +997,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "Data": {
-                                            "$ref": "#/definitions/candidate.CertificationsResponseData"
+                                            "$ref": "#/definitions/response.CertificationsResponseData"
                                         }
                                     }
                                 }
@@ -1134,7 +1134,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "Data": {
-                                            "$ref": "#/definitions/candidate.EducationsResponseData"
+                                            "$ref": "#/definitions/response.EducationsResponseData"
                                         }
                                     }
                                 }
@@ -1199,7 +1199,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/candidate.AddEducationRequest"
+                            "$ref": "#/definitions/request.AddEducationRequest"
                         }
                     }
                 ],
@@ -1215,7 +1215,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "Data": {
-                                            "$ref": "#/definitions/candidate.EducationResponse"
+                                            "$ref": "#/definitions/response.EducationResponse"
                                         }
                                     }
                                 }
@@ -1343,7 +1343,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "Data": {
-                                            "$ref": "#/definitions/candidate.ExperiencesResponseData"
+                                            "$ref": "#/definitions/response.ExperiencesResponseData"
                                         }
                                     }
                                 }
@@ -1408,7 +1408,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/candidate.AddExperienceRequest"
+                            "$ref": "#/definitions/request.AddExperienceRequest"
                         }
                     }
                 ],
@@ -1424,7 +1424,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "Data": {
-                                            "$ref": "#/definitions/candidate.ExperienceResponse"
+                                            "$ref": "#/definitions/response.ExperienceResponse"
                                         }
                                     }
                                 }
@@ -1552,7 +1552,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "Data": {
-                                            "$ref": "#/definitions/candidate.PersonalInfoResponse"
+                                            "$ref": "#/definitions/response.PersonalInfoResponse"
                                         }
                                     }
                                 }
@@ -1617,7 +1617,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/candidate.UpdatePersonalInfoRequest"
+                            "$ref": "#/definitions/request.UpdatePersonalInfoRequest"
                         }
                     }
                 ],
@@ -1633,7 +1633,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "Data": {
-                                            "$ref": "#/definitions/candidate.PersonalInfoResponse"
+                                            "$ref": "#/definitions/response.PersonalInfoResponse"
                                         }
                                     }
                                 }
@@ -1698,7 +1698,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/candidate.AddPersonalInfoRequest"
+                            "$ref": "#/definitions/request.AddPersonalInfoRequest"
                         }
                     }
                 ],
@@ -1714,7 +1714,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "Data": {
-                                            "$ref": "#/definitions/candidate.PersonalInfoResponse"
+                                            "$ref": "#/definitions/response.PersonalInfoResponse"
                                         }
                                     }
                                 }
@@ -1842,7 +1842,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "Data": {
-                                            "$ref": "#/definitions/candidate.PortfoliosResponseData"
+                                            "$ref": "#/definitions/response.PortfoliosResponseData"
                                         }
                                     }
                                 }
@@ -1907,7 +1907,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/candidate.AddProjectRequest"
+                            "$ref": "#/definitions/request.AddProjectRequest"
                         }
                     }
                 ],
@@ -1923,7 +1923,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "Data": {
-                                            "$ref": "#/definitions/candidate.PortfolioResponse"
+                                            "$ref": "#/definitions/response.PortfolioResponse"
                                         }
                                     }
                                 }
@@ -2060,7 +2060,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "Data": {
-                                            "$ref": "#/definitions/candidate.SkillsResponseData"
+                                            "$ref": "#/definitions/response.SkillsResponseData"
                                         }
                                     }
                                 }
@@ -2125,7 +2125,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/candidate.AddSkillRequest"
+                            "$ref": "#/definitions/request.AddSkillRequest"
                         }
                     }
                 ],
@@ -2141,7 +2141,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "Data": {
-                                            "$ref": "#/definitions/candidate.SkillResponse"
+                                            "$ref": "#/definitions/response.SkillResponse"
                                         }
                                     }
                                 }
@@ -2274,7 +2274,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/candidate.AddCertificationRequest"
+                            "$ref": "#/definitions/request.AddCertificationRequest"
                         }
                     }
                 ],
@@ -2290,7 +2290,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "Data": {
-                                            "$ref": "#/definitions/candidate.CertificationResponse"
+                                            "$ref": "#/definitions/response.CertificationResponse"
                                         }
                                     }
                                 }
@@ -3124,7 +3124,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "candidate.AddCertificationRequest": {
+        "request.AddCertificationRequest": {
             "type": "object",
             "required": [
                 "certification_name",
@@ -3146,7 +3146,7 @@ const docTemplate = `{
                 }
             }
         },
-        "candidate.AddEducationRequest": {
+        "request.AddEducationRequest": {
             "type": "object",
             "required": [
                 "degree",
@@ -3171,7 +3171,7 @@ const docTemplate = `{
                 }
             }
         },
-        "candidate.AddExperienceRequest": {
+        "request.AddExperienceRequest": {
             "type": "object",
             "required": [
                 "company",
@@ -3196,7 +3196,7 @@ const docTemplate = `{
                 }
             }
         },
-        "candidate.AddPersonalInfoRequest": {
+        "request.AddPersonalInfoRequest": {
             "type": "object",
             "required": [
                 "email",
@@ -3217,7 +3217,7 @@ const docTemplate = `{
                 }
             }
         },
-        "candidate.AddProjectRequest": {
+        "request.AddProjectRequest": {
             "type": "object",
             "required": [
                 "project_link",
@@ -3238,247 +3238,13 @@ const docTemplate = `{
                 }
             }
         },
-        "candidate.AddSkillRequest": {
+        "request.AddSkillRequest": {
             "type": "object",
             "required": [
                 "skill"
             ],
             "properties": {
                 "skill": {
-                    "type": "string"
-                }
-            }
-        },
-        "candidate.CandidateResponse": {
-            "type": "object",
-            "properties": {
-                "candidate_id": {
-                    "type": "string"
-                },
-                "profile_picture": {
-                    "type": "string"
-                },
-                "resume": {
-                    "type": "string"
-                }
-            }
-        },
-        "candidate.CertificationResponse": {
-            "type": "object",
-            "properties": {
-                "candidate_id": {
-                    "type": "string"
-                },
-                "certification_id": {
-                    "type": "string"
-                },
-                "certification_name": {
-                    "type": "string"
-                },
-                "expiration_date": {
-                    "type": "string"
-                },
-                "issue_date": {
-                    "type": "string"
-                },
-                "issued_by": {
-                    "type": "string"
-                }
-            }
-        },
-        "candidate.CertificationsResponseData": {
-            "type": "object",
-            "properties": {
-                "certifications": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/candidate.CertificationResponse"
-                    }
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "candidate.EducationResponse": {
-            "type": "object",
-            "properties": {
-                "candidate_id": {
-                    "type": "string"
-                },
-                "degree": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "education_id": {
-                    "type": "string"
-                },
-                "end_date": {
-                    "type": "string"
-                },
-                "institution": {
-                    "type": "string"
-                },
-                "start_date": {
-                    "type": "string"
-                }
-            }
-        },
-        "candidate.EducationsResponseData": {
-            "type": "object",
-            "properties": {
-                "educations": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/candidate.EducationResponse"
-                    }
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "candidate.ExperienceResponse": {
-            "type": "object",
-            "properties": {
-                "candidate_id": {
-                    "type": "string"
-                },
-                "company": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "end_date": {
-                    "type": "string"
-                },
-                "experience_id": {
-                    "type": "string"
-                },
-                "job_title": {
-                    "type": "string"
-                },
-                "start_date": {
-                    "type": "string"
-                }
-            }
-        },
-        "candidate.ExperiencesResponseData": {
-            "type": "object",
-            "properties": {
-                "experiences": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/candidate.ExperienceResponse"
-                    }
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "candidate.PersonalInfoResponse": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "candidate_id": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                }
-            }
-        },
-        "candidate.PortfolioResponse": {
-            "type": "object",
-            "properties": {
-                "candidate_id": {
-                    "type": "string"
-                },
-                "category": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "project_id": {
-                    "type": "string"
-                },
-                "project_link": {
-                    "type": "string"
-                },
-                "project_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "candidate.PortfoliosResponseData": {
-            "type": "object",
-            "properties": {
-                "projects": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/candidate.PortfolioResponse"
-                    }
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "candidate.SkillResponse": {
-            "type": "object",
-            "properties": {
-                "candidate_id": {
-                    "type": "string"
-                },
-                "skill": {
-                    "type": "string"
-                }
-            }
-        },
-        "candidate.SkillsResponseData": {
-            "type": "object",
-            "properties": {
-                "skills": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/candidate.SkillResponse"
-                    }
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "candidate.UpdatePersonalInfoRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "name"
-            ],
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "phone": {
                     "type": "string"
                 }
             }
@@ -3637,6 +3403,27 @@ const docTemplate = `{
                 }
             }
         },
+        "request.UpdatePersonalInfoRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "name"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
         "request.UpdateRecruiterRequest": {
             "type": "object",
             "required": [
@@ -3704,6 +3491,137 @@ const docTemplate = `{
                 }
             }
         },
+        "response.CandidateResponse": {
+            "type": "object",
+            "properties": {
+                "candidate_id": {
+                    "type": "string"
+                },
+                "profile_picture": {
+                    "type": "string"
+                },
+                "resume": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.CertificationResponse": {
+            "type": "object",
+            "properties": {
+                "candidate_id": {
+                    "type": "string"
+                },
+                "certification_id": {
+                    "type": "string"
+                },
+                "certification_name": {
+                    "type": "string"
+                },
+                "expiration_date": {
+                    "type": "string"
+                },
+                "issue_date": {
+                    "type": "string"
+                },
+                "issued_by": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.CertificationsResponseData": {
+            "type": "object",
+            "properties": {
+                "certifications": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.CertificationResponse"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.EducationResponse": {
+            "type": "object",
+            "properties": {
+                "candidate_id": {
+                    "type": "string"
+                },
+                "degree": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "education_id": {
+                    "type": "string"
+                },
+                "end_date": {
+                    "type": "string"
+                },
+                "institution": {
+                    "type": "string"
+                },
+                "start_date": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.EducationsResponseData": {
+            "type": "object",
+            "properties": {
+                "educations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.EducationResponse"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.ExperienceResponse": {
+            "type": "object",
+            "properties": {
+                "candidate_id": {
+                    "type": "string"
+                },
+                "company": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "end_date": {
+                    "type": "string"
+                },
+                "experience_id": {
+                    "type": "string"
+                },
+                "job_title": {
+                    "type": "string"
+                },
+                "start_date": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.ExperiencesResponseData": {
+            "type": "object",
+            "properties": {
+                "experiences": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.ExperienceResponse"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
         "response.JobResponse": {
             "type": "object",
             "properties": {
@@ -3746,6 +3664,63 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/response.JobResponse"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.PersonalInfoResponse": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "candidate_id": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.PortfolioResponse": {
+            "type": "object",
+            "properties": {
+                "candidate_id": {
+                    "type": "string"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "project_id": {
+                    "type": "string"
+                },
+                "project_link": {
+                    "type": "string"
+                },
+                "project_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.PortfoliosResponseData": {
+            "type": "object",
+            "properties": {
+                "projects": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.PortfolioResponse"
                     }
                 },
                 "total": {
@@ -3797,6 +3772,31 @@ const docTemplate = `{
                 },
                 "status": {
                     "type": "string"
+                }
+            }
+        },
+        "response.SkillResponse": {
+            "type": "object",
+            "properties": {
+                "candidate_id": {
+                    "type": "string"
+                },
+                "skill": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.SkillsResponseData": {
+            "type": "object",
+            "properties": {
+                "skills": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.SkillResponse"
+                    }
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },

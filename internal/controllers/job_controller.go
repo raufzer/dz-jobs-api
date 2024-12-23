@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"dz-jobs-api/internal/dto/request"
-	"dz-jobs-api/internal/dto/response"
-	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
+    "dz-jobs-api/internal/dto/request"
+    "dz-jobs-api/internal/dto/response"
+    serviceInterfaces "dz-jobs-api/internal/services/interfaces"
 	"net/http"
 	"strconv"
 

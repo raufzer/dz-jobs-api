@@ -3,13 +3,10 @@ package bootstrap
 import (
 	"dz-jobs-api/config"
 	"dz-jobs-api/internal/controllers"
-	candidateControllers "dz-jobs-api/internal/controllers/candidate"
 	"dz-jobs-api/internal/integrations"
 	"dz-jobs-api/internal/repositories/postgresql"
-	candidatePostgresql "dz-jobs-api/internal/repositories/postgresql/candidate"
 	"dz-jobs-api/internal/repositories/redis"
 	"dz-jobs-api/internal/services"
-	candidateServices "dz-jobs-api/internal/services/candidate"
 	"dz-jobs-api/pkg/utils"
 )
 
@@ -17,13 +14,13 @@ type AppDependencies struct {
 	UserController           *controllers.UserController
 	AuthController           *controllers.AuthController
 	RedisClient              *config.RedisConfig
-	CandidateController      *candidateControllers.CandidateController
-	PersonalInfoController   *candidateControllers.CandidatePersonalInfoController
-	EducationController      *candidateControllers.CandidateEducationController
-	ExperienceController     *candidateControllers.CandidateExperienceController
-	SkillsController         *candidateControllers.CandidateSkillsController
-	CertificationsController *candidateControllers.CandidateCertificationsController
-	PortfolioController      *candidateControllers.CandidatePortfolioController
+	CandidateController      *controllers.CandidateController
+	PersonalInfoController   *controllers.CandidatePersonalInfoController
+	EducationController      *controllers.CandidateEducationController
+	ExperienceController     *controllers.CandidateExperienceController
+	SkillsController         *controllers.CandidateSkillsController
+	CertificationsController *controllers.CandidateCertificationsController
+	PortfolioController      *controllers.CandidatePortfolioController
 	RecruiterController      *controllers.RecruiterController
 	JobController            *controllers.JobController
 }
@@ -44,13 +41,13 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	// Initialize Repositories
 	userRepo := postgresql.NewUserRepository(dbConfig.DB)
 	redisRepo := redis.NewRedisRepository(redisConfig.Client)
-	candidateRepo := candidatePostgresql.NewCandidateRepository(dbConfig.DB)
-	personalInfoRepo := candidatePostgresql.NewCandidatePersonalInfoRepository(dbConfig.DB)
-	educationRepo := candidatePostgresql.NewCandidateEducationRepository(dbConfig.DB)
-	experienceRepo := candidatePostgresql.NewCandidateExperienceRepository(dbConfig.DB)
-	skillsRepo := candidatePostgresql.NewCandidateSkillsRepository(dbConfig.DB)
-	certificationRepo := candidatePostgresql.NewCandidateCertificationsRepository(dbConfig.DB)
-	portfolioRepo := candidatePostgresql.NewCandidatePortfolioRepository(dbConfig.DB)
+	candidateRepo := postgresql.NewCandidateRepository(dbConfig.DB)
+	personalInfoRepo := postgresql.NewCandidatePersonalInfoRepository(dbConfig.DB)
+	educationRepo := postgresql.NewCandidateEducationRepository(dbConfig.DB)
+	experienceRepo := postgresql.NewCandidateExperienceRepository(dbConfig.DB)
+	skillsRepo := postgresql.NewCandidateSkillsRepository(dbConfig.DB)
+	certificationRepo := postgresql.NewCandidateCertificationsRepository(dbConfig.DB)
+	portfolioRepo := postgresql.NewCandidatePortfolioRepository(dbConfig.DB)
 	recruiterRepo := postgresql.NewRecruiterRepository(dbConfig.DB)
 	jobRepo := postgresql.NewJobRepository(dbConfig.DB)
 
@@ -61,26 +58,26 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 		cfg,
 	)
 	userService := services.NewUserService(userRepo)
-	candidateService := candidateServices.NewCandidateService(candidateRepo, cfg)
-	personalInfoService := candidateServices.NewCandidatePersonalInfoService(personalInfoRepo)
-	educationService := candidateServices.NewCandidateEducationService(educationRepo, cfg)
-	experienceService := candidateServices.NewCandidateExperienceService(experienceRepo)
-	skillsService := candidateServices.NewCandidateSkillService(skillsRepo)
-	certificationsService := candidateServices.NewCandidateCertificationsService(certificationRepo)
-	portfolioService := candidateServices.NewCandidatePortfolioService(portfolioRepo)
+	candidateService := services.NewCandidateService(candidateRepo, cfg)
+	personalInfoService := services.NewCandidatePersonalInfoService(personalInfoRepo)
+	educationService := services.NewCandidateEducationService(educationRepo, cfg)
+	experienceService := services.NewCandidateExperienceService(experienceRepo)
+	skillsService := services.NewCandidateSkillService(skillsRepo)
+	certificationsService := services.NewCandidateCertificationsService(certificationRepo)
+	portfolioService := services.NewCandidatePortfolioService(portfolioRepo)
 	recruiterService := services.NewRecruiterService(recruiterRepo, cfg)
 	jobService := services.NewJobService(jobRepo)
 
 	// Initialize Controllers
 	userController := controllers.NewUserController(userService)
 	authController := controllers.NewAuthController(authService, cfg)
-	candidateController := candidateControllers.NewCandidateController(candidateService)
-	personalInfoController := candidateControllers.NewCandidatePersonalInfoController(personalInfoService)
-	educationController := candidateControllers.NewCandidateEducationController(educationService)
-	experienceController := candidateControllers.NewCandidateExperienceController(experienceService)
-	skillsController := candidateControllers.NewCandidateSkillsController(skillsService)
-	certificationsController := candidateControllers.NewCandidateCertificationsController(certificationsService)
-	portfolioController := candidateControllers.NewCandidatePortfolioController(portfolioService)
+	candidateController := controllers.NewCandidateController(candidateService)
+	personalInfoController := controllers.NewCandidatePersonalInfoController(personalInfoService)
+	educationController := controllers.NewCandidateEducationController(educationService)
+	experienceController := controllers.NewCandidateExperienceController(experienceService)
+	skillsController := controllers.NewCandidateSkillsController(skillsService)
+	certificationsController := controllers.NewCandidateCertificationsController(certificationsService)
+	portfolioController := controllers.NewCandidatePortfolioController(portfolioService)
 	recruiterController := controllers.NewRecruiterController(recruiterService)
 	jobController := controllers.NewJobController(jobService)
 

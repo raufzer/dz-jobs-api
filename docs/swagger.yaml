@@ -1,6 +1,6 @@
 basePath: /v1
 definitions:
-  candidate.AddCertificationRequest:
+  request.AddCertificationRequest:
     properties:
       certification_name:
         type: string
@@ -15,7 +15,7 @@ definitions:
     - issue_date
     - issued_by
     type: object
-  candidate.AddEducationRequest:
+  request.AddEducationRequest:
     properties:
       degree:
         type: string
@@ -32,7 +32,7 @@ definitions:
     - institution
     - start_date
     type: object
-  candidate.AddExperienceRequest:
+  request.AddExperienceRequest:
     properties:
       company:
         type: string
@@ -49,7 +49,7 @@ definitions:
     - job_title
     - start_date
     type: object
-  candidate.AddPersonalInfoRequest:
+  request.AddPersonalInfoRequest:
     properties:
       address:
         type: string
@@ -63,7 +63,7 @@ definitions:
     - email
     - name
     type: object
-  candidate.AddProjectRequest:
+  request.AddProjectRequest:
     properties:
       category:
         type: string
@@ -77,164 +77,12 @@ definitions:
     - project_link
     - project_name
     type: object
-  candidate.AddSkillRequest:
+  request.AddSkillRequest:
     properties:
       skill:
         type: string
     required:
     - skill
-    type: object
-  candidate.CandidateResponse:
-    properties:
-      candidate_id:
-        type: string
-      profile_picture:
-        type: string
-      resume:
-        type: string
-    type: object
-  candidate.CertificationResponse:
-    properties:
-      candidate_id:
-        type: string
-      certification_id:
-        type: string
-      certification_name:
-        type: string
-      expiration_date:
-        type: string
-      issue_date:
-        type: string
-      issued_by:
-        type: string
-    type: object
-  candidate.CertificationsResponseData:
-    properties:
-      certifications:
-        items:
-          $ref: '#/definitions/candidate.CertificationResponse'
-        type: array
-      total:
-        type: integer
-    type: object
-  candidate.EducationResponse:
-    properties:
-      candidate_id:
-        type: string
-      degree:
-        type: string
-      description:
-        type: string
-      education_id:
-        type: string
-      end_date:
-        type: string
-      institution:
-        type: string
-      start_date:
-        type: string
-    type: object
-  candidate.EducationsResponseData:
-    properties:
-      educations:
-        items:
-          $ref: '#/definitions/candidate.EducationResponse'
-        type: array
-      total:
-        type: integer
-    type: object
-  candidate.ExperienceResponse:
-    properties:
-      candidate_id:
-        type: string
-      company:
-        type: string
-      description:
-        type: string
-      end_date:
-        type: string
-      experience_id:
-        type: string
-      job_title:
-        type: string
-      start_date:
-        type: string
-    type: object
-  candidate.ExperiencesResponseData:
-    properties:
-      experiences:
-        items:
-          $ref: '#/definitions/candidate.ExperienceResponse'
-        type: array
-      total:
-        type: integer
-    type: object
-  candidate.PersonalInfoResponse:
-    properties:
-      address:
-        type: string
-      candidate_id:
-        type: string
-      email:
-        type: string
-      name:
-        type: string
-      phone:
-        type: string
-    type: object
-  candidate.PortfolioResponse:
-    properties:
-      candidate_id:
-        type: string
-      category:
-        type: string
-      description:
-        type: string
-      project_id:
-        type: string
-      project_link:
-        type: string
-      project_name:
-        type: string
-    type: object
-  candidate.PortfoliosResponseData:
-    properties:
-      projects:
-        items:
-          $ref: '#/definitions/candidate.PortfolioResponse'
-        type: array
-      total:
-        type: integer
-    type: object
-  candidate.SkillResponse:
-    properties:
-      candidate_id:
-        type: string
-      skill:
-        type: string
-    type: object
-  candidate.SkillsResponseData:
-    properties:
-      skills:
-        items:
-          $ref: '#/definitions/candidate.SkillResponse'
-        type: array
-      total:
-        type: integer
-    type: object
-  candidate.UpdatePersonalInfoRequest:
-    properties:
-      address:
-        type: string
-      email:
-        type: string
-      name:
-        type: string
-      phone:
-        type: string
-    required:
-    - email
-    - name
     type: object
   request.CreateRecruiterRequest:
     properties:
@@ -342,6 +190,20 @@ definitions:
     required:
     - email
     type: object
+  request.UpdatePersonalInfoRequest:
+    properties:
+      address:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    required:
+    - email
+    - name
+    type: object
   request.UpdateRecruiterRequest:
     properties:
       company_contact:
@@ -388,6 +250,91 @@ definitions:
     - email
     - otp
     type: object
+  response.CandidateResponse:
+    properties:
+      candidate_id:
+        type: string
+      profile_picture:
+        type: string
+      resume:
+        type: string
+    type: object
+  response.CertificationResponse:
+    properties:
+      candidate_id:
+        type: string
+      certification_id:
+        type: string
+      certification_name:
+        type: string
+      expiration_date:
+        type: string
+      issue_date:
+        type: string
+      issued_by:
+        type: string
+    type: object
+  response.CertificationsResponseData:
+    properties:
+      certifications:
+        items:
+          $ref: '#/definitions/response.CertificationResponse'
+        type: array
+      total:
+        type: integer
+    type: object
+  response.EducationResponse:
+    properties:
+      candidate_id:
+        type: string
+      degree:
+        type: string
+      description:
+        type: string
+      education_id:
+        type: string
+      end_date:
+        type: string
+      institution:
+        type: string
+      start_date:
+        type: string
+    type: object
+  response.EducationsResponseData:
+    properties:
+      educations:
+        items:
+          $ref: '#/definitions/response.EducationResponse'
+        type: array
+      total:
+        type: integer
+    type: object
+  response.ExperienceResponse:
+    properties:
+      candidate_id:
+        type: string
+      company:
+        type: string
+      description:
+        type: string
+      end_date:
+        type: string
+      experience_id:
+        type: string
+      job_title:
+        type: string
+      start_date:
+        type: string
+    type: object
+  response.ExperiencesResponseData:
+    properties:
+      experiences:
+        items:
+          $ref: '#/definitions/response.ExperienceResponse'
+        type: array
+      total:
+        type: integer
+    type: object
   response.JobResponse:
     properties:
       created_at:
@@ -416,6 +363,43 @@ definitions:
       jobs:
         items:
           $ref: '#/definitions/response.JobResponse'
+        type: array
+      total:
+        type: integer
+    type: object
+  response.PersonalInfoResponse:
+    properties:
+      address:
+        type: string
+      candidate_id:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
+  response.PortfolioResponse:
+    properties:
+      candidate_id:
+        type: string
+      category:
+        type: string
+      description:
+        type: string
+      project_id:
+        type: string
+      project_link:
+        type: string
+      project_name:
+        type: string
+    type: object
+  response.PortfoliosResponseData:
+    properties:
+      projects:
+        items:
+          $ref: '#/definitions/response.PortfolioResponse'
         type: array
       total:
         type: integer
@@ -450,6 +434,22 @@ definitions:
         type: string
       status:
         type: string
+    type: object
+  response.SkillResponse:
+    properties:
+      candidate_id:
+        type: string
+      skill:
+        type: string
+    type: object
+  response.SkillsResponseData:
+    properties:
+      skills:
+        items:
+          $ref: '#/definitions/response.SkillResponse'
+        type: array
+      total:
+        type: integer
     type: object
   response.UserResponse:
     properties:
@@ -926,7 +926,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 Data:
-                  $ref: '#/definitions/candidate.CandidateResponse'
+                  $ref: '#/definitions/response.CandidateResponse'
               type: object
         "400":
           description: Invalid input
@@ -1004,7 +1004,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 Data:
-                  $ref: '#/definitions/candidate.CandidateResponse'
+                  $ref: '#/definitions/response.CandidateResponse'
               type: object
         "400":
           description: Invalid input
@@ -1059,7 +1059,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 Data:
-                  $ref: '#/definitions/candidate.CandidateResponse'
+                  $ref: '#/definitions/response.CandidateResponse'
               type: object
         "400":
           description: Invalid input
@@ -1103,7 +1103,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 Data:
-                  $ref: '#/definitions/candidate.CertificationsResponseData'
+                  $ref: '#/definitions/response.CertificationsResponseData'
               type: object
         "400":
           description: Invalid input
@@ -1229,7 +1229,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 Data:
-                  $ref: '#/definitions/candidate.EducationsResponseData'
+                  $ref: '#/definitions/response.EducationsResponseData'
               type: object
         "400":
           description: Invalid input
@@ -1269,7 +1269,7 @@ paths:
         name: education
         required: true
         schema:
-          $ref: '#/definitions/candidate.AddEducationRequest'
+          $ref: '#/definitions/request.AddEducationRequest'
       produces:
       - application/json
       responses:
@@ -1280,7 +1280,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 Data:
-                  $ref: '#/definitions/candidate.EducationResponse'
+                  $ref: '#/definitions/response.EducationResponse'
               type: object
         "400":
           description: Invalid input
@@ -1362,7 +1362,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 Data:
-                  $ref: '#/definitions/candidate.ExperiencesResponseData'
+                  $ref: '#/definitions/response.ExperiencesResponseData'
               type: object
         "400":
           description: Invalid input
@@ -1402,7 +1402,7 @@ paths:
         name: experience
         required: true
         schema:
-          $ref: '#/definitions/candidate.AddExperienceRequest'
+          $ref: '#/definitions/request.AddExperienceRequest'
       produces:
       - application/json
       responses:
@@ -1413,7 +1413,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 Data:
-                  $ref: '#/definitions/candidate.ExperienceResponse'
+                  $ref: '#/definitions/response.ExperienceResponse'
               type: object
         "400":
           description: Invalid input
@@ -1495,7 +1495,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 Data:
-                  $ref: '#/definitions/candidate.PersonalInfoResponse'
+                  $ref: '#/definitions/response.PersonalInfoResponse'
               type: object
         "400":
           description: Invalid input
@@ -1535,7 +1535,7 @@ paths:
         name: personal_info
         required: true
         schema:
-          $ref: '#/definitions/candidate.AddPersonalInfoRequest'
+          $ref: '#/definitions/request.AddPersonalInfoRequest'
       produces:
       - application/json
       responses:
@@ -1546,7 +1546,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 Data:
-                  $ref: '#/definitions/candidate.PersonalInfoResponse'
+                  $ref: '#/definitions/response.PersonalInfoResponse'
               type: object
         "400":
           description: Invalid input
@@ -1586,7 +1586,7 @@ paths:
         name: personal_info
         required: true
         schema:
-          $ref: '#/definitions/candidate.UpdatePersonalInfoRequest'
+          $ref: '#/definitions/request.UpdatePersonalInfoRequest'
       produces:
       - application/json
       responses:
@@ -1597,7 +1597,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 Data:
-                  $ref: '#/definitions/candidate.PersonalInfoResponse'
+                  $ref: '#/definitions/response.PersonalInfoResponse'
               type: object
         "400":
           description: Invalid input
@@ -1641,7 +1641,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 Data:
-                  $ref: '#/definitions/candidate.PortfoliosResponseData'
+                  $ref: '#/definitions/response.PortfoliosResponseData'
               type: object
         "400":
           description: Invalid input
@@ -1681,7 +1681,7 @@ paths:
         name: project
         required: true
         schema:
-          $ref: '#/definitions/candidate.AddProjectRequest'
+          $ref: '#/definitions/request.AddProjectRequest'
       produces:
       - application/json
       responses:
@@ -1692,7 +1692,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 Data:
-                  $ref: '#/definitions/candidate.PortfolioResponse'
+                  $ref: '#/definitions/response.PortfolioResponse'
               type: object
         "400":
           description: Invalid input
@@ -1780,7 +1780,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 Data:
-                  $ref: '#/definitions/candidate.SkillsResponseData'
+                  $ref: '#/definitions/response.SkillsResponseData'
               type: object
         "400":
           description: Invalid input
@@ -1820,7 +1820,7 @@ paths:
         name: Skill
         required: true
         schema:
-          $ref: '#/definitions/candidate.AddSkillRequest'
+          $ref: '#/definitions/request.AddSkillRequest'
       produces:
       - application/json
       responses:
@@ -1831,7 +1831,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 Data:
-                  $ref: '#/definitions/candidate.SkillResponse'
+                  $ref: '#/definitions/response.SkillResponse'
               type: object
         "400":
           description: Invalid input
@@ -1916,7 +1916,7 @@ paths:
         name: certification
         required: true
         schema:
-          $ref: '#/definitions/candidate.AddCertificationRequest'
+          $ref: '#/definitions/request.AddCertificationRequest'
       produces:
       - application/json
       responses:
@@ -1927,7 +1927,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 Data:
-                  $ref: '#/definitions/candidate.CertificationResponse'
+                  $ref: '#/definitions/response.CertificationResponse'
               type: object
         "400":
           description: Invalid input
