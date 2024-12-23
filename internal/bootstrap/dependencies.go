@@ -71,7 +71,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	// Initialize Controllers
 	userController := controllers.NewUserController(userService)
 	authController := controllers.NewAuthController(authService, cfg)
-	candidateController := controllers.NewCandidateController(candidateService)
+	candidateController := controllers.NewCandidateController(candidateService, cfg)
 	personalInfoController := controllers.NewCandidatePersonalInfoController(personalInfoService)
 	educationController := controllers.NewCandidateEducationController(educationService)
 	experienceController := controllers.NewCandidateExperienceController(experienceService)

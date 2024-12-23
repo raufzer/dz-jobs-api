@@ -9,6 +9,7 @@ import (
 func CandidateRoutes(rg *gin.RouterGroup, candidateController *controllers.CandidateController) {
 
 	rg.POST("/", candidateController.CreateCandidate)
+	rg.POST("/default", candidateController.CreateDefaultCandidate)
 	rg.GET("/", candidateController.GetCandidate)
 	rg.PUT("/", candidateController.UpdateCandidate)
 	rg.DELETE("/", candidateController.DeleteCandidate)

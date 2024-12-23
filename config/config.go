@@ -28,6 +28,8 @@ type AppConfig struct {
 	CloudinaryCloudName      string
 	CloudinaryAPIKey         string
 	CloudinaryAPISecret      string
+	DefaultProfilePicture    string
+	DefaultResume            string
 }
 
 func LoadConfig() (*AppConfig, error) {
@@ -73,6 +75,8 @@ func LoadConfig() (*AppConfig, error) {
 		CloudinaryCloudName:      utils.GetEnv("CLOUDINARY_CLOUD_NAME"),
 		CloudinaryAPIKey:         utils.GetEnv("CLOUDINARY_API_KEY"),
 		CloudinaryAPISecret:      utils.GetEnv("CLOUDINARY_API_SECRET"),
+		DefaultProfilePicture:    utils.GetEnv("DEFAULT_PROFILE_PICTURE"),
+		DefaultResume:            utils.GetEnv("DEFAULT_RESUME"),
 	}
 	return config, nil
 }

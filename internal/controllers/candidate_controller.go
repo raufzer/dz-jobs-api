@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"dz-jobs-api/config"
 	"dz-jobs-api/internal/dto/response"
 	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
 	"net/http"
@@ -11,10 +12,11 @@ import (
 
 type CandidateController struct {
 	service serviceInterfaces.CandidateService
+	config  *config.AppConfig
 }
 
-func NewCandidateController(service serviceInterfaces.CandidateService) *CandidateController {
-	return &CandidateController{service: service}
+func NewCandidateController(service serviceInterfaces.CandidateService, config *config.AppConfig) *CandidateController {
+	return &CandidateController{service: service, config: config}
 }
 
 // CreateCandidate godoc
@@ -46,6 +48,37 @@ func (c *CandidateController) CreateCandidate(ctx *gin.Context) {
 		return
 	}
 	candidate, err := c.service.CreateCandidate(userID, profilePictureFile, resumeFile)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, response.Response{
+		Code:    http.StatusCreated,
+		Status:  "Created",
+		Message: "Candidate created successfully",
+		Data:    response.ToCandidateResponse(candidate),
+	})
+}
+
+// CreateCandidate godoc
+// @Summary Create a new candidate
+// @Description Create a new candidate with default profile picture and resume (when user skip profile setup process)
+// @Tags Candidates - Candidate
+// @Accept multipart/form-data
+// @Produce json
+// @Success 201 {object} response.Response{Data=response.CandidateResponse} "Candidate created successfully"
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 401 {object} response.Response "Unauthorized"
+// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
+// @Router /candidates/default [post]
+func (c *CandidateController) CreateDefaultCandidate(ctx *gin.Context) {
+	candidateID := ctx.MustGet("candidate_id")
+	userID := candidateID.(string)
+	defaultProfilePictureURL := c.config.DefaultProfilePicture
+	defaultResumeURL := c.config.DefaultResume
+	candidate, err := c.service.CreateDefaultCandidate(userID, defaultProfilePictureURL, defaultResumeURL)
 	if err != nil {
 		ctx.Error(err)
 		return

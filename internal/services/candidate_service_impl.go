@@ -55,6 +55,25 @@ func (s *CandidateService) CreateCandidate(userID string, profilePictureFile, re
 	return newCandidate, nil
 }
 
+func (s *CandidateService) CreateDefaultCandidate(userID , resumeURL, profilePictureURL string) (*models.Candidate, error) {
+	existingCandidate, _ := s.candidateRepo.GetCandidate(uuid.MustParse(userID))
+	if existingCandidate != nil {
+		return nil, utils.NewCustomError(http.StatusBadRequest, "Candidate already exists")
+	}
+
+	newCandidate := &models.Candidate{
+		CandidateID:    uuid.MustParse(userID),
+		Resume:         resumeURL,
+		ProfilePicture: profilePictureURL,
+	}
+
+	_, err := s.candidateRepo.CreateCandidate(newCandidate)
+	if err != nil {
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to create candidate")
+	}
+	return newCandidate, nil
+}
+
 func (s *CandidateService) GetCandidate(candidateID uuid.UUID) (*models.Candidate, error) {
 	candidate, err := s.candidateRepo.GetCandidate(candidateID)
 	if err != nil {

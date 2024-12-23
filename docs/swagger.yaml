@@ -1952,6 +1952,43 @@ paths:
       summary: Add a new certification
       tags:
       - Candidates - Certifications
+  /candidates/default:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create a new candidate with default profile picture and resume
+        (when user skip profile setup process)
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Candidate created successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.CandidateResponse'
+              type: object
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Create a new candidate
+      tags:
+      - Candidates - Candidate
   /recruiters:
     post:
       consumes:
