@@ -1,9 +1,9 @@
 package controllers
 
 import (
-    "dz-jobs-api/internal/dto/request"
-    "dz-jobs-api/internal/dto/response"
-    serviceInterfaces "dz-jobs-api/internal/services/interfaces"
+	"dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/dto/response"
+	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
 	"net/http"
 	"strconv"
 
@@ -26,7 +26,7 @@ func NewJobController(service serviceInterfaces.JobService) *JobController {
 // PostNewJob godoc
 // @Summary Post a new job
 // @Description Allows recruiters to post a new job
-// @Tags Recruiters - Jobs 
+// @Tags Recruiters - Jobs
 // @Accept json
 // @Produce json
 // @Param recruiter_id path string true "Recruiter ID"
@@ -66,7 +66,7 @@ func (c *JobController) PostNewJob(ctx *gin.Context) {
 // GetJobDetails godoc
 // @Summary Get job details
 // @Description Retrieve the details of a specific job by job_id
-// @Tags Recruiters - Jobs 
+// @Tags Recruiters - Jobs
 // @Produce json
 // @Param job_id path int true "Job ID"
 // @Success 200 {object} response.Response{Data=response.JobResponse} "Job details found"
@@ -84,7 +84,13 @@ func (c *JobController) GetJobDetails(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	job, err := c.jobService.GetJobDetails(jobID)
+	recruiterID, err := uuid.Parse(ctx.Param("recruiter_id"))
+	if err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
+	job, err := c.jobService.GetJobDetails(jobID, recruiterID)
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -100,7 +106,7 @@ func (c *JobController) GetJobDetails(ctx *gin.Context) {
 // GetJobListingsByStatus godoc
 // @Summary Get job listings by status
 // @Description Retrieve a list of jobs filtered by their status (e.g., open, closed) "{total: int, jobs: []response.JobResponse}"}
-// @Tags Recruiters - Jobs 
+// @Tags Recruiters - Jobs
 // @Produce json
 // @Param status query string true "Job status (e.g., open, closed)"
 // @Success 200 {object} response.Response{Data=response.JobsResponseData} "Jobs retrieved successfully"
@@ -111,7 +117,13 @@ func (c *JobController) GetJobDetails(ctx *gin.Context) {
 // @Failure 500 {object} response.Response "Internal server error"
 // @Router /recruiters/{recruiter_id}/jobs [get]
 func (c *JobController) GetJobListingsByStatus(ctx *gin.Context) {
-	jobs, err := c.jobService.GetJobListingsByStatus(ctx.Query("status"))
+	recruiterID, err := uuid.Parse(ctx.Param("recruiter_id"))
+	if err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
+	jobs, err := c.jobService.GetJobListingsByStatus(ctx.Query("status"), recruiterID)
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -121,14 +133,14 @@ func (c *JobController) GetJobListingsByStatus(ctx *gin.Context) {
 		Code:    http.StatusOK,
 		Status:  "OK",
 		Message: "Jobs retrieved successfully",
-		Data: response.ToJobsResponse(jobs),
+		Data:    response.ToJobsResponse(jobs),
 	})
 }
 
 // Edit Jobgodoc
 // @Summary Edit an existing job
 // @Description Update the details of a specific job by job_id
-// @Tags Recruiters - Jobs 
+// @Tags Recruiters - Jobs
 // @Accept json
 // @Produce json
 // @Param job_id path int true "Job ID"
@@ -141,6 +153,12 @@ func (c *JobController) GetJobListingsByStatus(ctx *gin.Context) {
 // @Failure 500 {object} response.Response "Internal server error"
 // @Router /recruiters/{recruiter_id}/jobs{job_id} [put]
 func (c *JobController) EditJob(ctx *gin.Context) {
+	recruiterID, err := uuid.Parse(ctx.Param("recruiter_id"))
+	if err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
 	var req request.EditJobRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
@@ -154,7 +172,7 @@ func (c *JobController) EditJob(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	updatedJob, err := c.jobService.EditJob(jobID, req)
+	updatedJob, err := c.jobService.EditJob(jobID, req, recruiterID)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -171,7 +189,7 @@ func (c *JobController) EditJob(ctx *gin.Context) {
 // DeactivateJob deactivates a job
 // @Summary Deactivate a job
 // @Description Disable a specific job by job_id
-// @Tags Recruiters - Jobs 
+// @Tags Recruiters - Jobs
 // @Produce json
 // @Param job_id path int true "Job ID"
 // @Success 200 {object} response.Response{Data=response.JobResponse} "Job deactivated successfully"
@@ -189,7 +207,13 @@ func (c *JobController) DeactivateJob(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	updatedJob, err := c.jobService.DeactivateJob(jobID)
+	recruiterID, err := uuid.Parse(ctx.Param("recruiter_id"))
+	if err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
+	updatedJob, err := c.jobService.DeactivateJob(jobID, recruiterID)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -206,7 +230,7 @@ func (c *JobController) DeactivateJob(ctx *gin.Context) {
 // RepostJob godoc
 // @Summary Repost a job
 // @Description Repost a deactivated job by job_id
-// @Tags Recruiters - Jobs 
+// @Tags Recruiters - Jobs
 // @Produce json
 // @Param job_id path int true "Job ID"
 // @Success 200 {object} response.Response{Data=response.JobResponse} "Job reposted successfully"
@@ -224,7 +248,13 @@ func (c *JobController) RepostJob(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	updatedJob, err := c.jobService.RepostJob(jobID)
+	recruiterID, err := uuid.Parse(ctx.Param("recruiter_id"))
+	if err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
+	updatedJob, err := c.jobService.RepostJob(jobID, recruiterID)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -241,7 +271,7 @@ func (c *JobController) RepostJob(ctx *gin.Context) {
 // DeleteJob godoc
 // @Summary Delete a job
 // @Description Remove a specific job from the system by its ID
-// @Tags Recruiters - Jobs 
+// @Tags Recruiters - Jobs
 // @Produce json
 // @Param job_id path int true "Job ID"
 // @Success 200 {object} response.Response "Job deleted successfully"
@@ -259,7 +289,13 @@ func (c *JobController) DeleteJob(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	err = c.jobService.DeleteJob(jobID)
+	recruiterID, err := uuid.Parse(ctx.Param("recruiter_id"))
+	if err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
+	err = c.jobService.DeleteJob(jobID, recruiterID)
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -268,5 +304,93 @@ func (c *JobController) DeleteJob(ctx *gin.Context) {
 		Code:    http.StatusOK,
 		Status:  "OK",
 		Message: "Job deleted successfully",
+	})
+}
+
+// GetAllJobs godoc
+// @Summary Get all jobs
+// @Description Retrieve all jobs in the system
+// @Tags Jobs
+// @Produce json
+// @Success 200 {object} response.Response{Data=response.JobsResponseData} "Jobs retrieved successfully"
+// @Failure 500 {object} response.Response "Internal server error"
+// @Router /jobs [get]
+func (c *JobController) GetAllJobs(ctx *gin.Context) {
+	jobs, err := c.jobService.GetAllJobs()
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response.Response{
+		Code:    http.StatusOK,
+		Status:  "OK",
+		Message: "Jobs retrieved successfully",
+		Data:    response.ToJobsResponse(jobs),
+	})
+}
+
+// SearchJobs godoc
+// @Summary Search for jobs
+// @Description Search for jobs using various filters
+// @Tags Jobs
+// @Accept json
+// @Produce json
+// @Param filters query request.JobFilters true "Job search filters"
+// @Success 200 {object} response.Response{Data=response.JobsResponseData} "Jobs found successfully"
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 404 {object} response.Response "Jobs not found"
+// @Failure 500 {object} response.Response "Internal server error"
+// @Router /jobs/search [get]
+func (c *JobController) SearchJobs(ctx *gin.Context) {
+	var filters request.JobFilters
+	if err := ctx.ShouldBindQuery(&filters); err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
+	jobs, err := c.jobService.SearchJobs(filters)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response.Response{
+		Code:    http.StatusOK,
+		Status:  "OK",
+		Message: "Jobs found successfully",
+		Data:    response.ToJobsResponse(jobs),
+	})
+}
+
+// GetJobDetailsPublic godoc
+// @Summary Get job details
+// @Description Retrieve the details of a specific job by job_id
+// @Tags Jobs 
+// @Produce json
+// @Param job_id path int true "Job ID"
+// @Success 200 {object} response.Response{Data=response.JobResponse} "Job details found"
+// @Failure 400 {object} response.Response "Invalid input"
+// @Failure 404 {object} response.Response "Job not found"
+// @Failure 500 {object} response.Response "Internal server error"
+// @Router /jobs/{job_id} [get]
+func (c *JobController) GetJobDetailsPublic(ctx *gin.Context) {
+	jobIDStr := ctx.Param("job_id")
+	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
+	if err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
+	job, err := c.jobService.GetJobDetailsPublic(jobID)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+	ctx.JSON(http.StatusOK, response.Response{
+		Code:    http.StatusOK,
+		Status:  "OK",
+		Message: "Job details found",
+		Data:    response.ToJobResponse(job),
 	})
 }
