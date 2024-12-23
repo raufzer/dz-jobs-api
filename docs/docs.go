@@ -1370,6 +1370,320 @@ const docTemplate = `{
                 }
             }
         },
+        "/jobs": {
+            "get": {
+                "description": "Retrieve a list of jobs filtered by their status (e.g., open, closed)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recruiters - Jobs"
+                ],
+                "summary": "Get job listings by status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Job status (e.g., open, closed)",
+                        "name": "status",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Job listings retrieved successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "Data": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid status query",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/jobs/{job_id}": {
+            "get": {
+                "description": "Retrieve the details of a specific job by job_id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recruiters - Jobs"
+                ],
+                "summary": "Get job details",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Job ID",
+                        "name": "job_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Job details found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "Data": {
+                                            "$ref": "#/definitions/response.JobResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid job ID",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Job not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update the details of a specific job by job_id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recruiters - Jobs"
+                ],
+                "summary": "Edit an existing job",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Job ID",
+                        "name": "job_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated job details",
+                        "name": "job",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.EditJobRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Job updated successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "Data": {
+                                            "$ref": "#/definitions/response.JobResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Job not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Remove a specific job from the system by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Jobs"
+                ],
+                "summary": "Delete a job",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Job ID",
+                        "name": "job_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Job deleted successfully",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Job not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/jobs/{job_id}/desactivate": {
+            "put": {
+                "description": "Disable a specific job by job_id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recruiters - Jobs"
+                ],
+                "summary": "Deactivate a job",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Job ID",
+                        "name": "job_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Job deactivated successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "Data": {
+                                            "$ref": "#/definitions/response.JobResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Job not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/jobs/{job_id}/repost": {
+            "put": {
+                "description": "Repost a deactivated job by job_id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recruiters - Jobs"
+                ],
+                "summary": "Repost a job",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Job ID",
+                        "name": "job_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Job reposted successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "Data": {
+                                            "$ref": "#/definitions/response.JobResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Job not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/recruiters": {
             "post": {
                 "description": "Create a new recruiter with company logo",
@@ -1380,7 +1694,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Recruiters"
+                    "Recruiters - Recruiter"
                 ],
                 "summary": "Create a new recruiter",
                 "parameters": [
@@ -1419,19 +1733,19 @@ const docTemplate = `{
         },
         "/recruiters/{recruiter_id}": {
             "get": {
-                "description": "Get recruiter details by recruiter ID",
+                "description": "Get recruiter details by recruiter_id",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Recruiters"
+                    "Recruiters - Recruiter"
                 ],
                 "summary": "Get recruiter",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "Recruiter ID",
-                        "name": "id",
+                        "name": "recruiter_id",
                         "in": "path",
                         "required": true
                     }
@@ -1452,7 +1766,7 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Update recruiter details with company logo by recruiter ID",
+                "description": "Update recruiter details with company logo by recruiter_id",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -1460,14 +1774,14 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Recruiters"
+                    "Recruiters - Recruiter"
                 ],
                 "summary": "Update recruiter",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "Recruiter ID",
-                        "name": "id",
+                        "name": "recruiter_id",
                         "in": "path",
                         "required": true
                     },
@@ -1504,19 +1818,19 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "Delete recruiter by recruiter ID",
+                "description": "Delete recruiter by recruiter_id",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Recruiters"
+                    "Recruiters - Recruiter"
                 ],
                 "summary": "Delete recruiter",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "Recruiter ID",
-                        "name": "id",
+                        "name": "recruiter_id",
                         "in": "path",
                         "required": true
                     }
@@ -1530,6 +1844,71 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/recruiters/{recruiter_id}/jobs": {
+            "post": {
+                "description": "Allows recruiters to post a new job",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recruiters - Jobs"
+                ],
+                "summary": "Post a new job",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Recruiter ID",
+                        "name": "recruiter_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Job details",
+                        "name": "job",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.PostNewJobRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Job posted successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "Data": {
+                                            "$ref": "#/definitions/response.JobResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -1745,6 +2124,29 @@ const docTemplate = `{
                 }
             }
         },
+        "request.EditJobRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "required_skills": {
+                    "type": "string"
+                },
+                "salary_range": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
         "request.LoginRequest": {
             "type": "object",
             "required": [
@@ -1756,6 +2158,34 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.PostNewJobRequest": {
+            "type": "object",
+            "required": [
+                "description",
+                "status",
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "required_skills": {
+                    "type": "string"
+                },
+                "salary_range": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
                     "type": "string"
                 }
             }
@@ -1851,6 +2281,41 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "otp": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.JobResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "job_id": {
+                    "type": "integer"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "recruiter_id": {
+                    "type": "string"
+                },
+                "required_skills": {
+                    "type": "string"
+                },
+                "salary_range": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
                     "type": "string"
                 }
             }

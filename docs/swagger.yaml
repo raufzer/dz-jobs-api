@@ -141,6 +141,21 @@ definitions:
     - password
     - role
     type: object
+  request.EditJobRequest:
+    properties:
+      description:
+        type: string
+      location:
+        type: string
+      required_skills:
+        type: string
+      salary_range:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+    type: object
   request.LoginRequest:
     properties:
       email:
@@ -150,6 +165,25 @@ definitions:
     required:
     - email
     - password
+    type: object
+  request.PostNewJobRequest:
+    properties:
+      description:
+        type: string
+      location:
+        type: string
+      required_skills:
+        type: string
+      salary_range:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+    required:
+    - description
+    - status
+    - title
     type: object
   request.ResetPasswordRequest:
     properties:
@@ -215,6 +249,29 @@ definitions:
     required:
     - email
     - otp
+    type: object
+  response.JobResponse:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      job_id:
+        type: integer
+      location:
+        type: string
+      recruiter_id:
+        type: string
+      required_skills:
+        type: string
+      salary_range:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
     type: object
   response.Response:
     properties:
@@ -1129,6 +1186,199 @@ paths:
       summary: Add a new certification
       tags:
       - Candidates - Certifications
+  /jobs:
+    get:
+      description: Retrieve a list of jobs filtered by their status (e.g., open, closed)
+      parameters:
+      - description: Job status (e.g., open, closed)
+        in: query
+        name: status
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Job listings retrieved successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  type: object
+              type: object
+        "400":
+          description: Invalid status query
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get job listings by status
+      tags:
+      - Recruiters - Jobs
+  /jobs/{job_id}:
+    delete:
+      description: Remove a specific job from the system by its ID
+      parameters:
+      - description: Job ID
+        in: path
+        name: job_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Job deleted successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Job not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Delete a job
+      tags:
+      - Jobs
+    get:
+      description: Retrieve the details of a specific job by job_id
+      parameters:
+      - description: Job ID
+        in: path
+        name: job_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Job details found
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.JobResponse'
+              type: object
+        "400":
+          description: Invalid job ID
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Job not found
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get job details
+      tags:
+      - Recruiters - Jobs
+    put:
+      consumes:
+      - application/json
+      description: Update the details of a specific job by job_id
+      parameters:
+      - description: Job ID
+        in: path
+        name: job_id
+        required: true
+        type: integer
+      - description: Updated job details
+        in: body
+        name: job
+        required: true
+        schema:
+          $ref: '#/definitions/request.EditJobRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Job updated successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.JobResponse'
+              type: object
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Job not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Edit an existing job
+      tags:
+      - Recruiters - Jobs
+  /jobs/{job_id}/desactivate:
+    put:
+      description: Disable a specific job by job_id
+      parameters:
+      - description: Job ID
+        in: path
+        name: job_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Job deactivated successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.JobResponse'
+              type: object
+        "404":
+          description: Job not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Deactivate a job
+      tags:
+      - Recruiters - Jobs
+  /jobs/{job_id}/repost:
+    put:
+      description: Repost a deactivated job by job_id
+      parameters:
+      - description: Job ID
+        in: path
+        name: job_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Job reposted successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.JobResponse'
+              type: object
+        "404":
+          description: Job not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Repost a job
+      tags:
+      - Recruiters - Jobs
   /recruiters:
     post:
       consumes:
@@ -1159,14 +1409,14 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Create a new recruiter
       tags:
-      - Recruiters
+      - Recruiters - Recruiter
   /recruiters/{recruiter_id}:
     delete:
-      description: Delete recruiter by recruiter ID
+      description: Delete recruiter by recruiter_id
       parameters:
       - description: Recruiter ID
         in: path
-        name: id
+        name: recruiter_id
         required: true
         type: string
       produces:
@@ -1182,13 +1432,13 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Delete recruiter
       tags:
-      - Recruiters
+      - Recruiters - Recruiter
     get:
-      description: Get recruiter details by recruiter ID
+      description: Get recruiter details by recruiter_id
       parameters:
       - description: Recruiter ID
         in: path
-        name: id
+        name: recruiter_id
         required: true
         type: string
       produces:
@@ -1204,15 +1454,15 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Get recruiter
       tags:
-      - Recruiters
+      - Recruiters - Recruiter
     put:
       consumes:
       - multipart/form-data
-      description: Update recruiter details with company logo by recruiter ID
+      description: Update recruiter details with company logo by recruiter_id
       parameters:
       - description: Recruiter ID
         in: path
-        name: id
+        name: recruiter_id
         required: true
         type: string
       - description: Company Logo
@@ -1239,5 +1489,45 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Update recruiter
       tags:
-      - Recruiters
+      - Recruiters - Recruiter
+  /recruiters/{recruiter_id}/jobs:
+    post:
+      consumes:
+      - application/json
+      description: Allows recruiters to post a new job
+      parameters:
+      - description: Recruiter ID
+        in: path
+        name: recruiter_id
+        required: true
+        type: string
+      - description: Job details
+        in: body
+        name: job
+        required: true
+        schema:
+          $ref: '#/definitions/request.PostNewJobRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Job posted successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.JobResponse'
+              type: object
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Post a new job
+      tags:
+      - Recruiters - Jobs
 swagger: "2.0"
