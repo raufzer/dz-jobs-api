@@ -20,8 +20,8 @@ func CreateServer(appConfig *config.AppConfig) *gin.Engine {
 	// Global middleware
 	server.Use(gin.Recovery())
 	server.Use(middlewares.ErrorHandlingMiddleware())
-	// server.Use(middlewares.LoggingMiddleware())
-	// server.Use(middlewares.RateLimiter(20, 10))
+	server.Use(middlewares.LoggingMiddleware())
+	server.Use(middlewares.RateLimiter(20, 10))
 	server.MaxMultipartMemory = 8 << 20 // 8 MiB
 
 	// Set-up Docs
