@@ -42,6 +42,7 @@ func main() {
 		deps.CertificationsController,
 		deps.PortfolioController,
 		deps.JobController,
+		deps.BookmarksController,
 		appConfig,
 	)
 

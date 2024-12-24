@@ -23,6 +23,7 @@ type AppDependencies struct {
 	PortfolioController      *controllers.CandidatePortfolioController
 	RecruiterController      *controllers.RecruiterController
 	JobController            *controllers.JobController
+	BookmarksController      *controllers.BookmarksController
 }
 
 func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
@@ -50,6 +51,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	portfolioRepo := postgresql.NewCandidatePortfolioRepository(dbConfig.DB)
 	recruiterRepo := postgresql.NewRecruiterRepository(dbConfig.DB)
 	jobRepo := postgresql.NewJobRepository(dbConfig.DB)
+	bookmarksRepo := postgresql.NewBookmarskRepository(dbConfig.DB)
 
 	// Initialize Services
 	authService := services.NewAuthService(
@@ -67,6 +69,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	portfolioService := services.NewCandidatePortfolioService(portfolioRepo)
 	recruiterService := services.NewRecruiterService(recruiterRepo, cfg)
 	jobService := services.NewJobService(jobRepo)
+	bookmarksService := services.NewBookmarksService(bookmarksRepo)
 
 	// Initialize Controllers
 	userController := controllers.NewUserController(userService)
@@ -80,6 +83,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	portfolioController := controllers.NewCandidatePortfolioController(portfolioService)
 	recruiterController := controllers.NewRecruiterController(recruiterService)
 	jobController := controllers.NewJobController(jobService)
+	bookmarksController := controllers.NewBookmarksController(bookmarksService)
 
 	// Return dependencies
 	return &AppDependencies{
@@ -95,5 +99,6 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 		PortfolioController:      portfolioController,
 		RecruiterController:      recruiterController,
 		JobController:            jobController,
+		BookmarksController:      bookmarksController,
 	}, nil
 }
