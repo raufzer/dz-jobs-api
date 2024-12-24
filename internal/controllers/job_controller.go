@@ -25,7 +25,7 @@ func NewJobController(service serviceInterfaces.JobService) *JobController {
 
 // PostNewJob godoc
 // @Summary Post a new job
-// @Description Allows recruiters to post a new job
+// @Description Allows recruiters to post a new job (NOTE: salary range must be in this format: 'min - max DZD')
 // @Tags Recruiters - Jobs
 // @Accept json
 // @Produce json
@@ -349,6 +349,7 @@ func (c *JobController) SearchJobs(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
+
 	jobs, err := c.jobService.SearchJobs(filters)
 	if err != nil {
 		ctx.Error(err)
@@ -366,7 +367,7 @@ func (c *JobController) SearchJobs(ctx *gin.Context) {
 // GetJobDetailsPublic godoc
 // @Summary Get job details
 // @Description Retrieve the details of a specific job by job_id
-// @Tags Jobs 
+// @Tags Jobs
 // @Produce json
 // @Param job_id path int true "Job ID"
 // @Success 200 {object} response.Response{Data=response.JobResponse} "Job details found"

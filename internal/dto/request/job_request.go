@@ -21,10 +21,10 @@ type EditJobRequest struct {
 }
 
 type JobFilters struct {
-    Status          string   `json:"status"`
-    Location        string   `json:"location"`
-    SalaryRangeMin  float64  `json:"salary_range_min"`
-    SalaryRangeMax  float64  `json:"salary_range_max"`
-    Skills          []string `json:"skills"`
-    Keyword         string   `json:"keyword"`
+    Status         string   `form:"status"`         
+    Location       string   `form:"location"`       
+    SalaryRangeMin float64  `form:"min_salary"`    
+    SalaryRangeMax float64  `form:"max_salary"`    
+    Skills         []string `form:"skills"`         
+    Keyword        string   `form:"keyword"`        
 }

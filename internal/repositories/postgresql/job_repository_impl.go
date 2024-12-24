@@ -3,6 +3,7 @@ package postgresql
 import (
 	"database/sql"
 	"dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/helpers"
 	"dz-jobs-api/internal/models"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
 	"errors"
@@ -10,6 +11,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 )
 
 type SQLJobRepository struct {
@@ -235,99 +237,100 @@ func (r *SQLJobRepository) ValidateJobOwnership(jobID int64, recruiterID uuid.UU
 	return nil
 }
 
-
 func (r *SQLJobRepository) GetAllJobs() ([]*models.Job, error) {
-    query := `SELECT job_id, title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status
+	query := `SELECT job_id, title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status
               FROM jobs`
 
-    rows, err := r.db.Query(query)
-    if err != nil {
-        return nil, fmt.Errorf("repository: failed to fetch all jobs: %w", err)
-    }
-    defer rows.Close()
+	rows, err := r.db.Query(query)
+	if err != nil {
+		return nil, fmt.Errorf("repository: failed to fetch all jobs: %w", err)
+	}
+	defer rows.Close()
 
-    var jobs []*models.Job
-    for rows.Next() {
-        job := &models.Job{}
-        err := rows.Scan(
-            &job.JobID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
-            &job.RecruiterID, &job.CreatedAt, &job.UpdatedAt, &job.Status,
-        )
-        if err != nil {
-            return nil, fmt.Errorf("repository: failed to scan job: %w", err)
-        }
-        jobs = append(jobs, job)
-    }
+	var jobs []*models.Job
+	for rows.Next() {
+		job := &models.Job{}
+		err := rows.Scan(
+			&job.JobID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
+			&job.RecruiterID, &job.CreatedAt, &job.UpdatedAt, &job.Status,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("repository: failed to scan job: %w", err)
+		}
+		jobs = append(jobs, job)
+	}
 
-    if err = rows.Err(); err != nil {
-        return nil, fmt.Errorf("repository: rows error: %w", err)
-    }
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("repository: rows error: %w", err)
+	}
 
-    return jobs, nil
+	return jobs, nil
 }
 
 func (r *SQLJobRepository) GetJobListings(filters request.JobFilters) ([]*models.Job, error) {
-    query := `SELECT job_id, title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status
+	query := `SELECT job_id, title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status
               FROM jobs WHERE 1=1`
-    
-    args := []interface{}{}
-    paramCount := 1 
-    
-    if filters.Status != "" {
-        query += fmt.Sprintf(" AND status = $%d", paramCount)
-        args = append(args, filters.Status)
-        paramCount++
-    }
-    
-    if filters.Location != "" {
-        query += fmt.Sprintf(" AND location = $%d", paramCount)
-        args = append(args, filters.Location)
-        paramCount++
-    }
-    
-    if filters.SalaryRangeMin > 0 && filters.SalaryRangeMax > 0 {
-        query += fmt.Sprintf(" AND salary_range BETWEEN $%d AND $%d", paramCount, paramCount+1)
-        args = append(args, filters.SalaryRangeMin, filters.SalaryRangeMax)
-        paramCount += 2
-    }
-    
-    if len(filters.Skills) > 0 {
-        query += fmt.Sprintf(" AND required_skills @> $%d", paramCount)
-        args = append(args, filters.Skills)
-        paramCount++
-    }
-    
-    if filters.Keyword != "" {
-        query += fmt.Sprintf(" AND (title ILIKE $%d OR description ILIKE $%d)", 
-            paramCount, paramCount+1)
-        args = append(args, "%"+filters.Keyword+"%", "%"+filters.Keyword+"%")
-        paramCount += 2
-    }
 
-    rows, err := r.db.Query(query, args...)
-    if err != nil {
-        return nil, fmt.Errorf("repository: failed to fetch jobs with filters: %w", err)
-    }
-    defer rows.Close()
+	args := []interface{}{}
+	paramCount := 1
 
-    var jobs []*models.Job
-    for rows.Next() {
-        job := &models.Job{}
-        err := rows.Scan(
-            &job.JobID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
-            &job.RecruiterID, &job.CreatedAt, &job.UpdatedAt, &job.Status,
-        )
-        if err != nil {
-            return nil, fmt.Errorf("repository: failed to scan job: %w", err)
-        }
-        jobs = append(jobs, job)
-    }
+	if filters.Status != "" {
+		query += fmt.Sprintf(" AND status = $%d", paramCount)
+		args = append(args, filters.Status)
+		paramCount++
+	}
 
-    if err = rows.Err(); err != nil {
-        return nil, fmt.Errorf("repository: rows error: %w", err)
-    }
+	if filters.Location != "" {
+		query += fmt.Sprintf(" AND location ILIKE $%d", paramCount)
+		args = append(args, "%"+filters.Location+"%")
+		paramCount++
+	}
 
-    return jobs, nil
+	if filters.SalaryRangeMin > 0 || filters.SalaryRangeMax > 0 {
+		salaryRangeQuery, salaryRangeArgs := helpers.ConvertSalaryRange(filters.SalaryRangeMin, filters.SalaryRangeMax)
+		query += fmt.Sprintf(" AND (%s)", salaryRangeQuery)
+		args = append(args, salaryRangeArgs...)
+		paramCount += len(salaryRangeArgs)
+	}
+
+	if len(filters.Skills) > 0 {
+		query += fmt.Sprintf(" AND required_skills && $%d", paramCount)
+		args = append(args, pq.Array(filters.Skills))
+		paramCount++
+	}
+
+	if filters.Keyword != "" {
+		query += fmt.Sprintf(" AND (title ILIKE $%d OR description ILIKE $%d)",
+			paramCount, paramCount+1)
+		searchTerm := "%" + filters.Keyword + "%"
+		args = append(args, searchTerm, searchTerm)
+		paramCount += 2
+	}
+
+	rows, err := r.db.Query(query, args...)
+	if err != nil {
+		return nil, fmt.Errorf("repository: failed to fetch jobs with filters: %w", err)
+	}
+	defer rows.Close()
+
+	var jobs []*models.Job
+	for rows.Next() {
+		job := &models.Job{}
+		err := rows.Scan(
+			&job.JobID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
+			&job.RecruiterID, &job.CreatedAt, &job.UpdatedAt, &job.Status,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("repository: failed to scan job: %w", err)
+		}
+		jobs = append(jobs, job)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("repository: rows error: %w", err)
+	}
+
+	return jobs, nil
 }
 
 func (r *SQLJobRepository) GetJobDetailsPublic(jobID int64) (*models.Job, error) {
