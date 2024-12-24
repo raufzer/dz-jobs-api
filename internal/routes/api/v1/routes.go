@@ -27,6 +27,7 @@ func RegisterRoutes(
 	certificationsController *controllers.CandidateCertificationsController,
 	portfolioController *controllers.CandidatePortfolioController,
 	jobController *controllers.JobController,
+	bookmarksController *controllers.BookmarksController,
 	appConfig *config.AppConfig,
 ) {
 	// Base path
@@ -50,6 +51,7 @@ func RegisterRoutes(
 		certificationsController,
 		portfolioController,
 		jobController,
+		bookmarksController,
 	)
 }
 
@@ -76,6 +78,7 @@ func RegisterProtectedRoutes(
 	certificationsController *controllers.CandidateCertificationsController,
 	portfolioController *controllers.CandidatePortfolioController,
 	jobController *controllers.JobController,
+	bookmarksController *controllers.BookmarksController,
 ) {
 	// Admin-specific routes
 	adminGroup := router.Group("/admin")
@@ -94,6 +97,8 @@ func RegisterProtectedRoutes(
 		skillsController,
 		certificationsController,
 		portfolioController,
+		bookmarksController,
+
 	)
 
 	// Recruiter-specific routes
@@ -120,6 +125,7 @@ func RegisterCandidateRoutes(
 	skillsController *controllers.CandidateSkillsController,
 	certificationsController *controllers.CandidateCertificationsController,
 	portfolioController *controllers.CandidatePortfolioController,
+	bookmarksController *controllers.BookmarksController,
 ) {
 	candidateRoutes := router.Group("/:candidate_id")
 	candidateRoutes.Use(middlewares.CandidateOwnershipMiddleware())
@@ -130,6 +136,7 @@ func RegisterCandidateRoutes(
 	SkillsRoutes(candidateRoutes, skillsController)
 	CertificationsRoutes(candidateRoutes, certificationsController)
 	PortfolioRoutes(candidateRoutes, portfolioController)
+	BookmarksRoute(candidateRoutes, bookmarksController)
 }
 
 func RegisterRecruiterRoutes(
