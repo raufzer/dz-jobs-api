@@ -2453,12 +2453,12 @@ const docTemplate = `{
                     },
                     {
                         "type": "number",
-                        "name": "salary_range_max",
+                        "name": "max_salary",
                         "in": "query"
                     },
                     {
                         "type": "number",
-                        "name": "salary_range_min",
+                        "name": "min_salary",
                         "in": "query"
                     },
                     {
@@ -2939,7 +2939,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Allows recruiters to post a new job",
+                "description": "Allows recruiters to post a new job (NOTE: salary range must be in this format: 'min - max DZD')",
                 "consumes": [
                     "application/json"
                 ],

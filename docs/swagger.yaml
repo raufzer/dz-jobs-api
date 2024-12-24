@@ -2060,10 +2060,10 @@ paths:
         name: location
         type: string
       - in: query
-        name: salary_range_max
+        name: max_salary
         type: number
       - in: query
-        name: salary_range_min
+        name: min_salary
         type: number
       - collectionFormat: csv
         in: query
@@ -2335,7 +2335,8 @@ paths:
     post:
       consumes:
       - application/json
-      description: Allows recruiters to post a new job
+      description: 'Allows recruiters to post a new job (NOTE: salary range must be
+        in this format: ''min - max DZD'')'
       parameters:
       - description: Recruiter ID
         in: path
