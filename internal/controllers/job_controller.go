@@ -105,7 +105,7 @@ func (c *JobController) GetJobDetails(ctx *gin.Context) {
 
 // GetJobListingsByStatus godoc
 // @Summary Get job listings by status
-// @Description Retrieve a list of jobs filtered by their status (e.g., open, closed) "{total: int, jobs: []response.JobResponse}"}
+// @Description Retrieve a list of jobs filtered by their status (e.g., open, closed)
 // @Tags Recruiters - Jobs
 // @Produce json
 // @Param status query string true "Job status (e.g., open, closed)"

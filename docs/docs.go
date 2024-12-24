@@ -1027,20 +1027,20 @@ const docTemplate = `{
         },
         "/candidates/{candidate_id}/bookmarks/": {
             "get": {
-                "description": "Retrieve a list of jobs bookmarked by a candidate \"{total: int, jobs: []response.JobResponse}\"}",
+                "description": "Retrieve a list of jobs bookmarked by a candidate by candidate ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Candidates - Bookmarks"
                 ],
-                "summary": "Get job listings by status",
+                "summary": "Get jobs bookmarked",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Job status (e.g., open, closed)",
-                        "name": "status",
-                        "in": "query",
+                        "description": "Candidate ID",
+                        "name": "candidate_id",
+                        "in": "path",
                         "required": true
                     }
                 ],
@@ -1290,6 +1290,87 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "Certifications not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "An unexpected error occurred",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Add a new certification for a candidate by candidate ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Candidates - Certifications"
+                ],
+                "summary": "Add a new certification",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Candidate ID",
+                        "name": "candidate_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Certification request",
+                        "name": "certification",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.AddCertificationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Certification created successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "Data": {
+                                            "$ref": "#/definitions/response.CertificationResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Candidate not found",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -2513,89 +2594,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{id}/certifications": {
-            "post": {
-                "description": "Add a new certification for a candidate by candidate ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Candidates - Certifications"
-                ],
-                "summary": "Add a new certification",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Certification request",
-                        "name": "certification",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.AddCertificationRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Certification created successfully",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "Data": {
-                                            "$ref": "#/definitions/response.CertificationResponse"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid input",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Candidate not found",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "An unexpected error occurred",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
         "/jobs": {
             "get": {
                 "description": "Retrieve all jobs in the system",
@@ -3077,7 +3075,7 @@ const docTemplate = `{
         },
         "/recruiters/{recruiter_id}/jobs": {
             "get": {
-                "description": "Retrieve a list of jobs filtered by their status (e.g., open, closed) \"{total: int, jobs: []response.JobResponse}\"}",
+                "description": "Retrieve a list of jobs filtered by their status (e.g., open, closed)",
                 "produces": [
                     "application/json"
                 ],

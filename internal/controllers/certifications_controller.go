@@ -24,7 +24,7 @@ func NewCandidateCertificationsController(service serviceInterfaces.CandidateCer
 // @Tags Candidates - Certifications
 // @Accept json
 // @Produce json
-// @Param id path string true "Candidate ID"
+// @Param candidate_id path string true "Candidate ID"
 // @Param certification body request.AddCertificationRequest true "Certification request"
 // @Success 201 {object} response.Response{Data=response.CertificationResponse} "Certification created successfully"
 // @Failure 400 {object} response.Response "Invalid input"
@@ -32,7 +32,7 @@ func NewCandidateCertificationsController(service serviceInterfaces.CandidateCer
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/{id}/certifications [post]
+// @Router /candidates/{candidate_id}/certifications [post]
 func (c *CandidateCertificationsController) AddCertification(ctx *gin.Context) {
 	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
 	if err != nil {

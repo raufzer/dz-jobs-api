@@ -61,12 +61,12 @@ func (c *BookmarksController) AddBookmark(ctx *gin.Context) {
 	})
 }
 
-// GetJobListingsByStatus godoc
-// @Summary Get job listings by status
-// @Description Retrieve a list of jobs bookmarked by a candidate "{total: int, jobs: []response.JobResponse}"}
+// GetBookmarks godoc
+// @Summary Get jobs bookmarked
+// @Description Retrieve a list of jobs bookmarked by a candidate by candidate ID
 // @Tags Candidates - Bookmarks
 // @Produce json
-// @Param status query string true "Job status (e.g., open, closed)"
+// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response{Data=response.JobsResponseData} "Jobs bookmarked retrieved successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"

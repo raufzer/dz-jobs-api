@@ -1086,12 +1086,12 @@ paths:
       - Candidates - Candidate
   /candidates/{candidate_id}/bookmarks/:
     get:
-      description: 'Retrieve a list of jobs bookmarked by a candidate "{total: int,
-        jobs: []response.JobResponse}"}'
+      description: Retrieve a list of jobs bookmarked by a candidate by candidate
+        ID
       parameters:
-      - description: Job status (e.g., open, closed)
-        in: query
-        name: status
+      - description: Candidate ID
+        in: path
+        name: candidate_id
         required: true
         type: string
       produces:
@@ -1126,7 +1126,7 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/response.Response'
-      summary: Get job listings by status
+      summary: Get jobs bookmarked
       tags:
       - Candidates - Bookmarks
   /candidates/{candidate_id}/bookmarks/job_id:
@@ -1262,6 +1262,57 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
       summary: Get certifications
+      tags:
+      - Candidates - Certifications
+    post:
+      consumes:
+      - application/json
+      description: Add a new certification for a candidate by candidate ID
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidate_id
+        required: true
+        type: string
+      - description: Certification request
+        in: body
+        name: certification
+        required: true
+        schema:
+          $ref: '#/definitions/request.AddCertificationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Certification created successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.CertificationResponse'
+              type: object
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Candidate not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Add a new certification
       tags:
       - Candidates - Certifications
   /candidates/{candidate_id}/certifications/{certification_id}:
@@ -2036,58 +2087,6 @@ paths:
       summary: Delete skill
       tags:
       - Candidates - Skills
-  /candidates/{id}/certifications:
-    post:
-      consumes:
-      - application/json
-      description: Add a new certification for a candidate by candidate ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Certification request
-        in: body
-        name: certification
-        required: true
-        schema:
-          $ref: '#/definitions/request.AddCertificationRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Certification created successfully
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                Data:
-                  $ref: '#/definitions/response.CertificationResponse'
-              type: object
-        "400":
-          description: Invalid input
-          schema:
-            $ref: '#/definitions/response.Response'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/response.Response'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.Response'
-        "404":
-          description: Candidate not found
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: An unexpected error occurred
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Add a new certification
-      tags:
-      - Candidates - Certifications
   /candidates/default:
     post:
       consumes:
@@ -2425,8 +2424,7 @@ paths:
       - Recruiters - Recruiter
   /recruiters/{recruiter_id}/jobs:
     get:
-      description: 'Retrieve a list of jobs filtered by their status (e.g., open,
-        closed) "{total: int, jobs: []response.JobResponse}"}'
+      description: Retrieve a list of jobs filtered by their status (e.g., open, closed)
       parameters:
       - description: Job status (e.g., open, closed)
         in: query
