@@ -15,7 +15,6 @@ bin/
 
 # Dependency directories
 /vendor/
-node_modules/
 
 # Configuration files
 *.env
