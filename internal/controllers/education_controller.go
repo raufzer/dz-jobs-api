@@ -24,7 +24,6 @@ func NewCandidateEducationController(service serviceInterfaces.CandidateEducatio
 // @Tags Candidates - Education
 // @Accept json
 // @Produce json
-// @Param candidate_id path string true "Candidate ID"
 // @Param education body request.AddEducationRequest true "Education request"
 // @Success 201 {object} response.Response{Data=response.EducationResponse} "Education created successfully"
 // @Failure 400 {object} response.Response "Invalid input"
@@ -32,14 +31,10 @@ func NewCandidateEducationController(service serviceInterfaces.CandidateEducatio
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/{candidate_id}/education [post]
+// @Router /candidates/education [post]
 func (c *CandidateEducationController) AddEducation(ctx *gin.Context) {
-   candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
-   if err != nil {
-       ctx.Error(err)
-       ctx.Abort()
-       return
-   }
+	userID := ctx.MustGet("candidate_id")
+	candidateID, _ := uuid.Parse(userID.(string))
 
    var req request.AddEducationRequest
    if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -66,7 +61,6 @@ func (c *CandidateEducationController) AddEducation(ctx *gin.Context) {
 // @Description Get all education records for a candidate by candidate ID
 // @Tags Candidates - Education
 // @Produce json
-// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response{Data=response.EducationsResponseData} "Education information retrieved successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
@@ -74,14 +68,10 @@ func (c *CandidateEducationController) AddEducation(ctx *gin.Context) {
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 404 {object} response.Response "Education not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/{candidate_id}/education [get]
+// @Router /candidates/education [get]
 func (c *CandidateEducationController) GetEducation(ctx *gin.Context) {
-   candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
-   if err != nil {
-       ctx.Error(err)
-       ctx.Abort()
-       return
-   }
+	userID := ctx.MustGet("candidate_id")
+	candidateID, _ := uuid.Parse(userID.(string))
 
    educations, err := c.service.GetEducation(candidateID)
    if err != nil {
@@ -101,7 +91,6 @@ func (c *CandidateEducationController) GetEducation(ctx *gin.Context) {
 // @Description Delete an education record by candidate ID
 // @Tags Candidates - Education
 // @Produce json
-// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response "Education deleted successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
@@ -109,16 +98,11 @@ func (c *CandidateEducationController) GetEducation(ctx *gin.Context) {
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 404 {object} response.Response "Education not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/{candidate_id}/education [delete]
+// @Router /candidates/education [delete]
 func (c *CandidateEducationController) DeleteEducation(ctx *gin.Context) {
-   candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
-   if err != nil {
-       ctx.Error(err)
-       ctx.Abort()
-       return
-   }
-
-   err = c.service.DeleteEducation(candidateID)
+	userID := ctx.MustGet("candidate_id")
+	candidateID, _ := uuid.Parse(userID.(string))
+   err := c.service.DeleteEducation(candidateID)
    if err != nil {
        ctx.Error(err)
        return

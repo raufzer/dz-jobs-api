@@ -97,22 +97,16 @@ func (c *CandidateController) CreateDefaultCandidate(ctx *gin.Context) {
 // @Description Get candidate details by ID
 // @Tags Candidates - Candidate
 // @Produce json
-// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response{Data=response.CandidateResponse} "Candidate found"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/{candidate_id} [get]
+// @Router /candidates [get]
 func (c *CandidateController) GetCandidate(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
-
+	userID := ctx.MustGet("candidate_id")
+	candidateID, _ := uuid.Parse(userID.(string))
 	candidate, err := c.service.GetCandidate(candidateID)
 	if err != nil {
 		ctx.Error(err)
@@ -133,7 +127,6 @@ func (c *CandidateController) GetCandidate(ctx *gin.Context) {
 // @Tags Candidates - Candidate
 // @Accept multipart/form-data
 // @Produce json
-// @Param candidate_id path string true "Candidate ID"
 // @Param profile_picture formData file true "Profile Picture"
 // @Param resume formData file true "Resume"
 // @Success 200 {object} response.Response{Data=response.CandidateResponse} "Candidate updated successfully"
@@ -142,15 +135,10 @@ func (c *CandidateController) GetCandidate(ctx *gin.Context) {
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/{candidate_id} [put]
+// @Router /candidates [put]
 func (c *CandidateController) UpdateCandidate(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
-
+	userID := ctx.MustGet("candidate_id")
+	candidateID, _ := uuid.Parse(userID.(string))
 	profilePictureFile, err := ctx.FormFile("profile_picture")
 	if err != nil {
 		ctx.Error(err)
@@ -183,23 +171,18 @@ func (c *CandidateController) UpdateCandidate(ctx *gin.Context) {
 // @Description Delete candidate by ID
 // @Tags Candidates - Candidate
 // @Produce json
-// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response "Candidate deleted successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/{candidate_id} [delete]
+// @Router /candidates [delete]
 func (c *CandidateController) DeleteCandidate(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
+	userID := ctx.MustGet("candidate_id")
+	candidateID, _ := uuid.Parse(userID.(string))
 
-	err = c.service.DeleteCandidate(candidateID)
+	err := c.service.DeleteCandidate(candidateID)
 	if err != nil {
 		ctx.Error(err)
 		return

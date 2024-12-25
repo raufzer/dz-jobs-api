@@ -24,7 +24,6 @@ func NewCandidateExperienceController(service serviceInterfaces.CandidateExperie
 // @Tags Candidates - Experience
 // @Accept json
 // @Produce json
-// @Param candidate_id path string true "Candidate ID"
 // @Param experience body request.AddExperienceRequest true "Experience request"
 // @Success 201 {object} response.Response{Data=response.ExperienceResponse} "Experience created successfully"
 // @Failure 400 {object} response.Response "Invalid input"
@@ -32,14 +31,10 @@ func NewCandidateExperienceController(service serviceInterfaces.CandidateExperie
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/{candidate_id}/experience [post]
+// @Router /candidates/experience [post]
 func (c *CandidateExperienceController) AddExperience(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
+	userID := ctx.MustGet("candidate_id")
+	candidateID, _ := uuid.Parse(userID.(string))
 	var req request.AddExperienceRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
@@ -65,7 +60,6 @@ func (c *CandidateExperienceController) AddExperience(ctx *gin.Context) {
 // @Description Get all experience records for a candidate by candidate ID
 // @Tags Candidates - Experience
 // @Produce json
-// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response{Data=response.ExperiencesResponseData} "Experience retrieved successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
@@ -73,14 +67,10 @@ func (c *CandidateExperienceController) AddExperience(ctx *gin.Context) {
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 404 {object} response.Response "Experience not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/{candidate_id}/experience [get]
+// @Router /candidates/experience [get]
 func (c *CandidateExperienceController) GetExperience(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
+	userID := ctx.MustGet("candidate_id")
+	candidateID, _ := uuid.Parse(userID.(string))
 
 	experiences, err := c.service.GetExperience(candidateID)
 	if err != nil {
@@ -101,7 +91,6 @@ func (c *CandidateExperienceController) GetExperience(ctx *gin.Context) {
 // @Description Delete an experience record by candidate ID
 // @Tags Candidates - Experience
 // @Produce json
-// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response "Experience deleted successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
@@ -109,16 +98,12 @@ func (c *CandidateExperienceController) GetExperience(ctx *gin.Context) {
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 404 {object} response.Response "Experience not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/{candidate_id}/experience [delete]
+// @Router /candidates/experience [delete]
 func (c *CandidateExperienceController) DeleteExperience(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
+	userID := ctx.MustGet("candidate_id")
+	candidateID, _ := uuid.Parse(userID.(string))
 
-	err = c.service.DeleteExperience(candidateID)
+	err := c.service.DeleteExperience(candidateID)
 	if err != nil {
 		ctx.Error(err)
 		return

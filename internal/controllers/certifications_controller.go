@@ -24,7 +24,6 @@ func NewCandidateCertificationsController(service serviceInterfaces.CandidateCer
 // @Tags Candidates - Certifications
 // @Accept json
 // @Produce json
-// @Param candidate_id path string true "Candidate ID"
 // @Param certification body request.AddCertificationRequest true "Certification request"
 // @Success 201 {object} response.Response{Data=response.CertificationResponse} "Certification created successfully"
 // @Failure 400 {object} response.Response "Invalid input"
@@ -32,14 +31,10 @@ func NewCandidateCertificationsController(service serviceInterfaces.CandidateCer
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/{candidate_id}/certifications [post]
+// @Router /candidates/certifications [post]
 func (c *CandidateCertificationsController) AddCertification(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
+	userID := ctx.MustGet("candidate_id")
+	candidateID, _ := uuid.Parse(userID.(string))
 	var req request.AddCertificationRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
@@ -65,7 +60,6 @@ func (c *CandidateCertificationsController) AddCertification(ctx *gin.Context) {
 // @Description Get all certifications for a candidate by candidate ID
 // @Tags Candidates - Certifications
 // @Produce json
-// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response{Data=response.CertificationsResponseData} "Certifications retrieved successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
@@ -73,14 +67,10 @@ func (c *CandidateCertificationsController) AddCertification(ctx *gin.Context) {
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 404 {object} response.Response "Certifications not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/{candidate_id}/certifications [get]
+// @Router /candidates/certifications [get]
 func (c *CandidateCertificationsController) GetCertifications(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
+	userID := ctx.MustGet("candidate_id")
+	candidateID, _ := uuid.Parse(userID.(string))
 
 	certifications, err := c.service.GetCertifications(candidateID)
 	if err != nil {
@@ -100,7 +90,6 @@ func (c *CandidateCertificationsController) GetCertifications(ctx *gin.Context) 
 // @Description Delete a certification by candidate ID and certification ID
 // @Tags Candidates - Certifications
 // @Produce json
-// @Param candidate_id path string true "Candidate ID"
 // @Param certification_id path string true "Certification ID"
 // @Success 200 {object} response.Response "Certification deleted successfully"
 // @Failure 400 {object} response.Response "Invalid input"
@@ -109,16 +98,12 @@ func (c *CandidateCertificationsController) GetCertifications(ctx *gin.Context) 
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 404 {object} response.Response "Certification not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/{candidate_id}/certifications/{certification_id} [delete]
+// @Router /candidates/certifications/{certification_id} [delete]
 func (c *CandidateCertificationsController) DeleteCertification(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
+	userID := ctx.MustGet("candidate_id")
+	candidateID, _ := uuid.Parse(userID.(string))
 
-	err = c.service.DeleteCertification(candidateID, ctx.Param("certification_id"))
+	err := c.service.DeleteCertification(candidateID, ctx.Param("certification_id"))
 	if err != nil {
 		ctx.Error(err)
 		return

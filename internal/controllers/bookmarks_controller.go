@@ -24,7 +24,6 @@ func NewBookmarksController(service serviceInterfaces.BookmarksService) *Bookmar
 // @Tags Candidates - Bookmarks
 // @Accept json
 // @Produce json
-// @Param candidate_id path string true "Candidate ID"
 // @Param job_id path int true "Job ID"
 // @Success 201 {object} response.Response "Job added successfully to bookmarks"
 // @Failure 400 {object} response.Response "Invalid input"
@@ -33,14 +32,10 @@ func NewBookmarksController(service serviceInterfaces.BookmarksService) *Bookmar
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 404 {object} response.Response "Job not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/{candidate_id}/bookmarks/job_id [post]
+// @Router /candidates/bookmarks/{job_id} [post]
 func (c *BookmarksController) AddBookmark(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
+	userID := ctx.MustGet("candidate_id")
+	candidateID, _ := uuid.Parse(userID.(string))
 	jobIDStr := ctx.Param("job_id")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
 	if err != nil {
@@ -66,21 +61,16 @@ func (c *BookmarksController) AddBookmark(ctx *gin.Context) {
 // @Description Retrieve a list of jobs bookmarked by a candidate by candidate ID
 // @Tags Candidates - Bookmarks
 // @Produce json
-// @Param candidate_id path string true "Candidate ID"
 // @Success 200 {object} response.Response{Data=response.JobsResponseData} "Jobs bookmarked retrieved successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /candidates/{candidate_id}/bookmarks/ [get]
+// @Router /candidates/bookmarks/ [get]
 func (c *BookmarksController) GetBookmarks(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
+	userID := ctx.MustGet("candidate_id")
+	candidateID, _ := uuid.Parse(userID.(string))
 	jobs, err := c.service.GetBookmarks(candidateID)
 	if err != nil {
 		ctx.Error(err)
@@ -101,7 +91,6 @@ func (c *BookmarksController) GetBookmarks(ctx *gin.Context) {
 // @Tags Candidates - Bookmarks
 // @Accept json
 // @Produce json
-// @Param candidate_id path string true "Candidate ID"
 // @Param job_id path int true "Job ID"
 // @Success 201 {object} response.Response "Job removed successfully from bookmarks"
 // @Failure 400 {object} response.Response "Invalid input"
@@ -110,14 +99,10 @@ func (c *BookmarksController) GetBookmarks(ctx *gin.Context) {
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 404 {object} response.Response "Job not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/{candidate_id}/bookmarks/job_id [delete]
+// @Router /candidates/bookmarks/{job_id} [delete]
 func (c *BookmarksController) RemoveBookmark(ctx *gin.Context) {
-	candidateID, err := uuid.Parse(ctx.Param("candidate_id"))
-	if err != nil {
-		ctx.Error(err)
-		ctx.Abort()
-		return
-	}
+	userID := ctx.MustGet("candidate_id")
+	candidateID, _ := uuid.Parse(userID.(string))
 	jobIDStr := ctx.Param("job_id")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
 	if err != nil {
