@@ -511,7 +511,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Get all users
       tags:
-      - Users
+      - Admin - Users
     post:
       consumes:
       - application/json
@@ -596,7 +596,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Delete user
       tags:
-      - Users
+      - Admin - Users
     get:
       description: Get user details by user ID
       parameters:
@@ -639,7 +639,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Get user
       tags:
-      - Users
+      - Admin - Users
     put:
       consumes:
       - application/json
@@ -690,15 +690,31 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Update user
       tags:
-      - Users
-  /auth/google-connect:
+      - Admin - Users
+  /auth/google/connect:
     get:
       description: Connect with Google OAuth
+      parameters:
+      - description: User role (e.g. admin, candidate, recruiter)
+        in: query
+        name: role
+        required: true
+        type: string
       produces:
       - application/json
       responses:
         "302":
-          description: Found
+          description: Redirect to Google OAuth
+          schema:
+            type: string
+        "400":
+          description: Role is missing or expired
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
+          schema:
+            $ref: '#/definitions/response.Response'
       summary: Google OAuth Connect
       tags:
       - Auth

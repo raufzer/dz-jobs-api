@@ -22,7 +22,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Users"
+                    "Admin - Users"
                 ],
                 "summary": "Get all users",
                 "responses": {
@@ -146,7 +146,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Users"
+                    "Admin - Users"
                 ],
                 "summary": "Get user",
                 "parameters": [
@@ -218,7 +218,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Users"
+                    "Admin - Users"
                 ],
                 "summary": "Update user",
                 "parameters": [
@@ -296,7 +296,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Users"
+                    "Admin - Users"
                 ],
                 "summary": "Delete user",
                 "parameters": [
@@ -348,7 +348,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/auth/google-connect": {
+        "/auth/google/connect": {
             "get": {
                 "description": "Connect with Google OAuth",
                 "produces": [
@@ -358,9 +358,33 @@ const docTemplate = `{
                     "Auth"
                 ],
                 "summary": "Google OAuth Connect",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User role (e.g. admin, candidate, recruiter)",
+                        "name": "role",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "302": {
-                        "description": "Found"
+                        "description": "Redirect to Google OAuth",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Role is missing or expired",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "An unexpected error occurred",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
                     }
                 }
             }
