@@ -350,7 +350,7 @@ const docTemplate = `{
         },
         "/auth/google/connect": {
             "get": {
-                "description": "Connect with Google OAuth",
+                "description": "Connect with Google OAuth (Register or Login)",
                 "produces": [
                     "application/json"
                 ],
@@ -361,17 +361,47 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "User role (e.g. admin, candidate, recruiter)",
+                        "description": "User role (admin, candidate, recruiter)",
                         "name": "role",
                         "in": "query",
                         "required": true
                     }
                 ],
                 "responses": {
-                    "302": {
-                        "description": "Redirect to Google OAuth",
+                    "200": {
+                        "description": "Successfully logged in!",
                         "schema": {
-                            "type": "string"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "Data": {
+                                            "$ref": "#/definitions/response.UserResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "201": {
+                        "description": "User created successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "Data": {
+                                            "$ref": "#/definitions/response.UserResponse"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "400": {
