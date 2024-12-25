@@ -9,32 +9,32 @@ import (
 )
 
 func RoleMiddleware(allowedRoles ...string) gin.HandlerFunc {
-	return func(c *gin.Context) {
+	return func(ctx *gin.Context) {
 
-		userRole, exists := c.Get("role")
+		userRole, exists := ctx.Get("role")
 		if !exists {
-			c.Error(utils.NewCustomError(http.StatusUnauthorized, "Unauthorized: No role found"))
-			c.Abort()
+			ctx.Error(utils.NewCustomError(http.StatusUnauthorized, "Unauthorized: No role found"))
+			ctx.Abort()
 			return
 		}
 
 		roleStr, ok := userRole.(string)
 		if !ok {
-			c.Error(utils.NewCustomError(http.StatusInternalServerError, "Invalid role format"))
-			c.Abort()
+			ctx.Error(utils.NewCustomError(http.StatusInternalServerError, "Invalid role format"))
+			ctx.Abort()
 			return
 		}
 
 		for _, role := range allowedRoles {
 			if strings.EqualFold(role, roleStr) {
 
-				c.Next()
+				ctx.Next()
 				return
 			}
 		}
 
-		c.Error(utils.NewCustomError(http.StatusForbidden, "Forbidden: Access denied"))
-		c.Abort()
+		ctx.Error(utils.NewCustomError(http.StatusForbidden, "Forbidden: Access denied"))
+		ctx.Abort()
 	}
 }
 

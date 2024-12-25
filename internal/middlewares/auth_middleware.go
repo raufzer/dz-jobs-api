@@ -10,31 +10,30 @@ import (
 )
 
 func AuthMiddleware(config *config.AppConfig) gin.HandlerFunc {
-	return func(c *gin.Context) {
+	return func(ctx *gin.Context) {
 
-		accessToken, err := c.Cookie("access_token")
+		accessToken, err := ctx.Cookie("access_token")
 		if err != nil {
-			c.Error(utils.NewCustomError(http.StatusUnauthorized, "No access token found"))
-			c.Abort()
+			ctx.Error(utils.NewCustomError(http.StatusUnauthorized, "No access token found"))
+			ctx.Abort()
 			return
 		}
 
 		claims, err := utils.ValidateToken(accessToken, config.AccessTokenSecret, "access")
 		if err != nil {
-			c.Error(utils.NewCustomError(http.StatusUnauthorized, "Invalid or expired access token"))
-			c.Abort()
+			ctx.Error(utils.NewCustomError(http.StatusUnauthorized, "Invalid or expired access token"))
+			ctx.Abort()
 			return
 		}
 
-		c.Set("userID", claims.UserID)
-		c.Set("role", claims.Role)
-		c.Set("role", claims.Role)
+		ctx.Set("user_id", claims.UserID)
+		ctx.Set("role", claims.Role)
+		ctx.Set("purpose", claims.Purpose)
 		if claims.Role == "candidate" {
-			c.Set("candidate_id", claims.UserID)
+			ctx.Set("candidate_id", claims.UserID)
 		} else if claims.Role == "recruiter" {
-			c.Set("recruiter_id", claims.UserID)
+			ctx.Set("recruiter_id", claims.UserID)
 		}
-		c.Set("purpose", claims.Purpose)
-		c.Next()
+		ctx.Next()
 	}
 }

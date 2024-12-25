@@ -7,33 +7,33 @@ import (
 )
 
 func CandidateOwnershipMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
+	return func(ctx *gin.Context) {
 
-		candidateID := c.Param("candidate_id")
+		candidateID := ctx.Param("candidate_id")
 
-		authCandidateID, exists := c.Get("candidate_id")
+		authCandidateID, exists := ctx.Get("candidate_id")
 		if !exists || candidateID != authCandidateID {
-			c.Error(utils.NewCustomError(http.StatusForbidden, "Forbidden: You do not own this resource"))
-			c.Abort()
+			ctx.Error(utils.NewCustomError(http.StatusForbidden, "Forbidden: You do not own this resource"))
+			ctx.Abort()
 			return
 		}
 
-		c.Next()
+		ctx.Next()
 	}
 }
 
 func RecruiterOwnershipMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
+	return func(ctx *gin.Context) {
 
-		recruiterID := c.Param("recruiter_id")
+		recruiterID := ctx.Param("recruiter_id")
 
-		authRecruiterID, exists := c.Get("recruiter_id")
+		authRecruiterID, exists := ctx.Get("recruiter_id")
 		if !exists || recruiterID != authRecruiterID {
-			c.Error(utils.NewCustomError(http.StatusForbidden, "Forbidden: You do not own this resource"))
-			c.Abort()
+			ctx.Error(utils.NewCustomError(http.StatusForbidden, "Forbidden: You do not own this resource"))
+			ctx.Abort()
 			return
 		}
 
-		c.Next()
+		ctx.Next()
 	}
 }
