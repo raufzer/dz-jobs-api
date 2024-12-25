@@ -557,7 +557,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Create a new user
       tags:
-      - Users
+      - Admin - Users
   /admin/users/{user_id}:
     delete:
       description: Delete user by user ID
