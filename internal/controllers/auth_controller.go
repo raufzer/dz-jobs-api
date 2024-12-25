@@ -265,9 +265,12 @@ func (c *AuthController) ResetPassword(ctx *gin.Context) {
 // @Summary Google OAuth Connect
 // @Description Connect with Google OAuth
 // @Tags Auth
+// @Param role query string true "User role (e.g. admin, candidate, recruiter)"
 // @Produce json
-// @Success 302
-// @Router /auth/google-connect [get]
+// @Success 302 {string} string "Redirect to Google OAuth"
+// @Failure 400 {object} response.Response "Role is missing or expired"
+// @Failure 500 {object} response.Response "An unexpected error occurred"
+// @Router /auth/google/connect [get]
 func (c *AuthController) GoogleConnect(ctx *gin.Context) {
 	role := ctx.Query("role")
 	ctx.SetCookie("role", role, 3600, "/", c.config.Domain, false, true)
