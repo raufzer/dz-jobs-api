@@ -269,7 +269,7 @@ func (c *AuthController) ResetPassword(ctx *gin.Context) {
 // @Success 302
 // @Router /auth/google-connect [get]
 func (c *AuthController) GoogleConnect(ctx *gin.Context) {
-	role := ctx.DefaultQuery("role", "candidate")
+	role := ctx.Query("role")
 	ctx.SetCookie("role", role, 3600, "/", c.config.Domain, false, true)
 	oauthConfig := integrations.InitializeGoogleOAuthConfig(c.config.GoogleClientID, c.config.GoogleClientSecret, c.config.GoogleRedirectURL)
 
