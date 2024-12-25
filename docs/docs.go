@@ -678,6 +678,145 @@ const docTemplate = `{
             }
         },
         "/candidates": {
+            "get": {
+                "description": "Get candidate details by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Candidates - Candidate"
+                ],
+                "summary": "Get candidate",
+                "responses": {
+                    "200": {
+                        "description": "Candidate found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "Data": {
+                                            "$ref": "#/definitions/response.CandidateResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Candidate not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "An unexpected error occurred",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update candidate details with profile picture and resume  by ID",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Candidates - Candidate"
+                ],
+                "summary": "Update candidate",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Profile Picture",
+                        "name": "profile_picture",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Resume",
+                        "name": "resume",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Candidate updated successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "Data": {
+                                            "$ref": "#/definitions/response.CandidateResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Candidate not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "An unexpected error occurred",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create a new candidate with profile picture and resume",
                 "consumes": [
@@ -750,222 +889,6 @@ const docTemplate = `{
                         }
                     }
                 }
-            }
-        },
-        "/candidates/default": {
-            "post": {
-                "description": "Create a new candidate with default profile picture and resume (when user skip profile setup process)",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Candidates - Candidate"
-                ],
-                "summary": "Create a new candidate",
-                "responses": {
-                    "201": {
-                        "description": "Candidate created successfully",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "Data": {
-                                            "$ref": "#/definitions/response.CandidateResponse"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid input",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "An unexpected error occurred",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/candidates/{candidate_id}": {
-            "get": {
-                "description": "Get candidate details by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Candidates - Candidate"
-                ],
-                "summary": "Get candidate",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Candidate found",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "Data": {
-                                            "$ref": "#/definitions/response.CandidateResponse"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid input",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Candidate not found",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "An unexpected error occurred",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update candidate details with profile picture and resume  by ID",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Candidates - Candidate"
-                ],
-                "summary": "Update candidate",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "Profile Picture",
-                        "name": "profile_picture",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "Resume",
-                        "name": "resume",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Candidate updated successfully",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "Data": {
-                                            "$ref": "#/definitions/response.CandidateResponse"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid input",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Candidate not found",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "An unexpected error occurred",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
             },
             "delete": {
                 "description": "Delete candidate by ID",
@@ -976,15 +899,6 @@ const docTemplate = `{
                     "Candidates - Candidate"
                 ],
                 "summary": "Delete candidate",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Candidate deleted successfully",
@@ -1025,7 +939,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{candidate_id}/bookmarks/": {
+        "/candidates/bookmarks/": {
             "get": {
                 "description": "Retrieve a list of jobs bookmarked by a candidate by candidate ID",
                 "produces": [
@@ -1035,15 +949,6 @@ const docTemplate = `{
                     "Candidates - Bookmarks"
                 ],
                 "summary": "Get jobs bookmarked",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Jobs bookmarked retrieved successfully",
@@ -1096,7 +1001,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{candidate_id}/bookmarks/job_id": {
+        "/candidates/bookmarks/{job_id}": {
             "post": {
                 "description": "Add a job to bookmarks for a candidate by candidate ID",
                 "consumes": [
@@ -1110,13 +1015,6 @@ const docTemplate = `{
                 ],
                 "summary": "Add a job to bookmarks",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    },
                     {
                         "type": "integer",
                         "description": "Job ID",
@@ -1178,13 +1076,6 @@ const docTemplate = `{
                 "summary": "Remove a job from bookmarks",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
                         "type": "integer",
                         "description": "Job ID",
                         "name": "job_id",
@@ -1232,7 +1123,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{candidate_id}/certifications": {
+        "/candidates/certifications": {
             "get": {
                 "description": "Get all certifications for a candidate by candidate ID",
                 "produces": [
@@ -1242,15 +1133,6 @@ const docTemplate = `{
                     "Candidates - Certifications"
                 ],
                 "summary": "Get certifications",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Certifications retrieved successfully",
@@ -1316,13 +1198,6 @@ const docTemplate = `{
                 "summary": "Add a new certification",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
                         "description": "Certification request",
                         "name": "certification",
                         "in": "body",
@@ -1384,7 +1259,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{candidate_id}/certifications/{certification_id}": {
+        "/candidates/certifications/{certification_id}": {
             "delete": {
                 "description": "Delete a certification by candidate ID and certification ID",
                 "produces": [
@@ -1395,13 +1270,6 @@ const docTemplate = `{
                 ],
                 "summary": "Delete certification",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    },
                     {
                         "type": "string",
                         "description": "Certification ID",
@@ -1450,7 +1318,66 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{candidate_id}/education": {
+        "/candidates/default": {
+            "post": {
+                "description": "Create a new candidate with default profile picture and resume (when user skip profile setup process)",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Candidates - Candidate"
+                ],
+                "summary": "Create a new candidate",
+                "responses": {
+                    "201": {
+                        "description": "Candidate created successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "Data": {
+                                            "$ref": "#/definitions/response.CandidateResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "An unexpected error occurred",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/candidates/education": {
             "get": {
                 "description": "Get all education records for a candidate by candidate ID",
                 "produces": [
@@ -1460,15 +1387,6 @@ const docTemplate = `{
                     "Candidates - Education"
                 ],
                 "summary": "Get education records",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Education information retrieved successfully",
@@ -1533,13 +1451,6 @@ const docTemplate = `{
                 ],
                 "summary": "Add a new education record",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    },
                     {
                         "description": "Education request",
                         "name": "education",
@@ -1610,15 +1521,6 @@ const docTemplate = `{
                     "Candidates - Education"
                 ],
                 "summary": "Delete education record",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Education deleted successfully",
@@ -1659,7 +1561,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{candidate_id}/experience": {
+        "/candidates/experience": {
             "get": {
                 "description": "Get all experience records for a candidate by candidate ID",
                 "produces": [
@@ -1669,15 +1571,6 @@ const docTemplate = `{
                     "Candidates - Experience"
                 ],
                 "summary": "Get experience records",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Experience retrieved successfully",
@@ -1742,13 +1635,6 @@ const docTemplate = `{
                 ],
                 "summary": "Add a new experience record",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    },
                     {
                         "description": "Experience request",
                         "name": "experience",
@@ -1819,15 +1705,6 @@ const docTemplate = `{
                     "Candidates - Experience"
                 ],
                 "summary": "Delete experience record",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Experience deleted successfully",
@@ -1868,7 +1745,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{candidate_id}/personal-info": {
+        "/candidates/personal-info": {
             "get": {
                 "description": "Get personal information for a candidate by candidate ID",
                 "produces": [
@@ -1878,15 +1755,6 @@ const docTemplate = `{
                     "Candidates - Personal Info"
                 ],
                 "summary": "Get personal information",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1951,13 +1819,6 @@ const docTemplate = `{
                 ],
                 "summary": "Update personal information",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    },
                     {
                         "description": "Personal Info request",
                         "name": "personal_info",
@@ -2033,13 +1894,6 @@ const docTemplate = `{
                 "summary": "Add personal information",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
                         "description": "Personal Info request",
                         "name": "personal_info",
                         "in": "body",
@@ -2109,15 +1963,6 @@ const docTemplate = `{
                     "Candidates - Personal Info"
                 ],
                 "summary": "Delete personal information",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Personal information deleted successfully",
@@ -2158,7 +2003,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{candidate_id}/portfolio": {
+        "/candidates/portfolio": {
             "get": {
                 "description": "Get all projects for a candidate by candidate ID",
                 "produces": [
@@ -2168,15 +2013,6 @@ const docTemplate = `{
                     "Candidates - Portfolio"
                 ],
                 "summary": "Get all projects (portfolio)",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Projects retrieved successfully",
@@ -2242,13 +2078,6 @@ const docTemplate = `{
                 "summary": "Add a new project",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
                         "description": "Project request",
                         "name": "project",
                         "in": "body",
@@ -2310,7 +2139,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{candidate_id}/portfolio/{project_id}": {
+        "/candidates/portfolio/{project_id}": {
             "delete": {
                 "description": "Delete a project by candidate ID and project ID",
                 "produces": [
@@ -2321,13 +2150,6 @@ const docTemplate = `{
                 ],
                 "summary": "Delete project",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    },
                     {
                         "type": "string",
                         "description": "Project ID",
@@ -2376,7 +2198,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{candidate_id}/skills": {
+        "/candidates/skills": {
             "get": {
                 "description": "Get all skills for a candidate by candidate ID",
                 "produces": [
@@ -2386,15 +2208,6 @@ const docTemplate = `{
                     "Candidates - Skills"
                 ],
                 "summary": "Get skills",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Skills retrieved successfully",
@@ -2460,13 +2273,6 @@ const docTemplate = `{
                 "summary": "Add a new skill",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
                         "description": "Skill request",
                         "name": "Skill",
                         "in": "body",
@@ -2528,7 +2334,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/{candidate_id}/skills/{skill_name}": {
+        "/candidates/skills/{skill_name}": {
             "delete": {
                 "description": "Delete a skill by candidate ID and skill name",
                 "produces": [
@@ -2539,13 +2345,6 @@ const docTemplate = `{
                 ],
                 "summary": "Delete skill",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Candidate ID",
-                        "name": "candidate_id",
-                        "in": "path",
-                        "required": true
-                    },
                     {
                         "type": "string",
                         "description": "Skill name",
@@ -2857,7 +2656,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recruiters/{recruiter_id}": {
+        "/recruiters/": {
             "get": {
                 "description": "Get recruiter details by recruiter_id",
                 "produces": [
@@ -2867,15 +2666,6 @@ const docTemplate = `{
                     "Recruiters - Recruiter"
                 ],
                 "summary": "Get recruiter",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Recruiter ID",
-                        "name": "recruiter_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Recruiter found",
@@ -2940,13 +2730,6 @@ const docTemplate = `{
                 ],
                 "summary": "Update recruiter",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Recruiter ID",
-                        "name": "recruiter_id",
-                        "in": "path",
-                        "required": true
-                    },
                     {
                         "type": "file",
                         "description": "Company Logo",
@@ -3024,15 +2807,6 @@ const docTemplate = `{
                     "Recruiters - Recruiter"
                 ],
                 "summary": "Delete recruiter",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Recruiter ID",
-                        "name": "recruiter_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Recruiter deleted successfully",

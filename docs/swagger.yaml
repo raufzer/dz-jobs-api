@@ -901,6 +901,75 @@ paths:
       tags:
       - Auth
   /candidates:
+    delete:
+      description: Delete candidate by ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Candidate deleted successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Candidate not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Delete candidate
+      tags:
+      - Candidates - Candidate
+    get:
+      description: Get candidate details by ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Candidate found
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.CandidateResponse'
+              type: object
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Candidate not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get candidate
+      tags:
+      - Candidates - Candidate
     post:
       consumes:
       - multipart/form-data
@@ -947,98 +1016,11 @@ paths:
       summary: Create a new candidate
       tags:
       - Candidates - Candidate
-  /candidates/{candidate_id}:
-    delete:
-      description: Delete candidate by ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Candidate deleted successfully
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid input
-          schema:
-            $ref: '#/definitions/response.Response'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/response.Response'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.Response'
-        "404":
-          description: Candidate not found
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: An unexpected error occurred
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Delete candidate
-      tags:
-      - Candidates - Candidate
-    get:
-      description: Get candidate details by ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Candidate found
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                Data:
-                  $ref: '#/definitions/response.CandidateResponse'
-              type: object
-        "400":
-          description: Invalid input
-          schema:
-            $ref: '#/definitions/response.Response'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/response.Response'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.Response'
-        "404":
-          description: Candidate not found
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: An unexpected error occurred
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Get candidate
-      tags:
-      - Candidates - Candidate
     put:
       consumes:
       - multipart/form-data
       description: Update candidate details with profile picture and resume  by ID
       parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       - description: Profile Picture
         in: formData
         name: profile_picture
@@ -1084,16 +1066,10 @@ paths:
       summary: Update candidate
       tags:
       - Candidates - Candidate
-  /candidates/{candidate_id}/bookmarks/:
+  /candidates/bookmarks/:
     get:
       description: Retrieve a list of jobs bookmarked by a candidate by candidate
         ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -1129,17 +1105,12 @@ paths:
       summary: Get jobs bookmarked
       tags:
       - Candidates - Bookmarks
-  /candidates/{candidate_id}/bookmarks/job_id:
+  /candidates/bookmarks/{job_id}:
     delete:
       consumes:
       - application/json
       description: Remove a job from bookmarks for a candidate by candidate ID
       parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       - description: Job ID
         in: path
         name: job_id
@@ -1180,11 +1151,6 @@ paths:
       - application/json
       description: Add a job to bookmarks for a candidate by candidate ID
       parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       - description: Job ID
         in: path
         name: job_id
@@ -1220,15 +1186,9 @@ paths:
       summary: Add a job to bookmarks
       tags:
       - Candidates - Bookmarks
-  /candidates/{candidate_id}/certifications:
+  /candidates/certifications:
     get:
       description: Get all certifications for a candidate by candidate ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -1269,11 +1229,6 @@ paths:
       - application/json
       description: Add a new certification for a candidate by candidate ID
       parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       - description: Certification request
         in: body
         name: certification
@@ -1315,15 +1270,10 @@ paths:
       summary: Add a new certification
       tags:
       - Candidates - Certifications
-  /candidates/{candidate_id}/certifications/{certification_id}:
+  /candidates/certifications/{certification_id}:
     delete:
       description: Delete a certification by candidate ID and certification ID
       parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       - description: Certification ID
         in: path
         name: certification_id
@@ -1359,15 +1309,46 @@ paths:
       summary: Delete certification
       tags:
       - Candidates - Certifications
-  /candidates/{candidate_id}/education:
+  /candidates/default:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create a new candidate with default profile picture and resume
+        (when user skip profile setup process)
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Candidate created successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.CandidateResponse'
+              type: object
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Create a new candidate
+      tags:
+      - Candidates - Candidate
+  /candidates/education:
     delete:
       description: Delete an education record by candidate ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -1400,12 +1381,6 @@ paths:
       - Candidates - Education
     get:
       description: Get all education records for a candidate by candidate ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -1446,11 +1421,6 @@ paths:
       - application/json
       description: Add a new education record for a candidate by candidate ID
       parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       - description: Education request
         in: body
         name: education
@@ -1492,15 +1462,9 @@ paths:
       summary: Add a new education record
       tags:
       - Candidates - Education
-  /candidates/{candidate_id}/experience:
+  /candidates/experience:
     delete:
       description: Delete an experience record by candidate ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -1533,12 +1497,6 @@ paths:
       - Candidates - Experience
     get:
       description: Get all experience records for a candidate by candidate ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -1579,11 +1537,6 @@ paths:
       - application/json
       description: Add a new experience record for a candidate by candidate ID
       parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       - description: Experience request
         in: body
         name: experience
@@ -1625,15 +1578,9 @@ paths:
       summary: Add a new experience record
       tags:
       - Candidates - Experience
-  /candidates/{candidate_id}/personal-info:
+  /candidates/personal-info:
     delete:
       description: Delete personal information for a candidate by candidate ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -1666,12 +1613,6 @@ paths:
       - Candidates - Personal Info
     get:
       description: Get personal information for a candidate by candidate ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -1712,11 +1653,6 @@ paths:
       - application/json
       description: Add personal information for a candidate by candidate ID
       parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       - description: Personal Info request
         in: body
         name: personal_info
@@ -1763,11 +1699,6 @@ paths:
       - application/json
       description: Update personal information for a candidate by candidate ID
       parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       - description: Personal Info request
         in: body
         name: personal_info
@@ -1809,15 +1740,9 @@ paths:
       summary: Update personal information
       tags:
       - Candidates - Personal Info
-  /candidates/{candidate_id}/portfolio:
+  /candidates/portfolio:
     get:
       description: Get all projects for a candidate by candidate ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -1858,11 +1783,6 @@ paths:
       - application/json
       description: Add a new project for a candidate by candidate ID
       parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       - description: Project request
         in: body
         name: project
@@ -1904,15 +1824,10 @@ paths:
       summary: Add a new project
       tags:
       - Candidates - Portfolio
-  /candidates/{candidate_id}/portfolio/{project_id}:
+  /candidates/portfolio/{project_id}:
     delete:
       description: Delete a project by candidate ID and project ID
       parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       - description: Project ID
         in: path
         name: project_id
@@ -1948,15 +1863,9 @@ paths:
       summary: Delete project
       tags:
       - Candidates - Portfolio
-  /candidates/{candidate_id}/skills:
+  /candidates/skills:
     get:
       description: Get all skills for a candidate by candidate ID
-      parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -1997,11 +1906,6 @@ paths:
       - application/json
       description: Add a new skill for a candidate by candidate ID
       parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       - description: Skill request
         in: body
         name: Skill
@@ -2043,15 +1947,10 @@ paths:
       summary: Add a new skill
       tags:
       - Candidates - Skills
-  /candidates/{candidate_id}/skills/{skill_name}:
+  /candidates/skills/{skill_name}:
     delete:
       description: Delete a skill by candidate ID and skill name
       parameters:
-      - description: Candidate ID
-        in: path
-        name: candidate_id
-        required: true
-        type: string
       - description: Skill name
         in: path
         name: skill_name
@@ -2087,43 +1986,6 @@ paths:
       summary: Delete skill
       tags:
       - Candidates - Skills
-  /candidates/default:
-    post:
-      consumes:
-      - multipart/form-data
-      description: Create a new candidate with default profile picture and resume
-        (when user skip profile setup process)
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Candidate created successfully
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                Data:
-                  $ref: '#/definitions/response.CandidateResponse'
-              type: object
-        "400":
-          description: Invalid input
-          schema:
-            $ref: '#/definitions/response.Response'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/response.Response'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: An unexpected error occurred
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Create a new candidate
-      tags:
-      - Candidates - Candidate
   /jobs:
     get:
       description: Retrieve all jobs in the system
@@ -2284,15 +2146,9 @@ paths:
       summary: Create a new recruiter
       tags:
       - Recruiters - Recruiter
-  /recruiters/{recruiter_id}:
+  /recruiters/:
     delete:
       description: Delete recruiter by recruiter_id
-      parameters:
-      - description: Recruiter ID
-        in: path
-        name: recruiter_id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -2325,12 +2181,6 @@ paths:
       - Recruiters - Recruiter
     get:
       description: Get recruiter details by recruiter_id
-      parameters:
-      - description: Recruiter ID
-        in: path
-        name: recruiter_id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -2371,11 +2221,6 @@ paths:
       - multipart/form-data
       description: Update recruiter details with company logo by recruiter_id
       parameters:
-      - description: Recruiter ID
-        in: path
-        name: recruiter_id
-        required: true
-        type: string
       - description: Company Logo
         in: formData
         name: company_logo
