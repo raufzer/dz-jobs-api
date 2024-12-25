@@ -3254,7 +3254,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recruiters/{recruiter_id}/jobs{job_id}": {
+        "/recruiters/jobs{job_id}": {
             "put": {
                 "description": "Update the details of a specific job by job_id",
                 "consumes": [
