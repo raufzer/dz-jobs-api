@@ -23,7 +23,7 @@ func NewUserController(service serviceInterfaces.UserService) *UserController {
 // CreateUser godoc
 // @Summary Create a new user
 // @Description Create a new user
-// @Tags Users
+// @Tags Admin - Users
 // @Accept json
 // @Produce json
 // @Param user body request.CreateUsersRequest true "User request"
