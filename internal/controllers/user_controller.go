@@ -58,7 +58,7 @@ func (c *UserController) CreateUser(ctx *gin.Context) {
 // GetUser godoc
 // @Summary Get user
 // @Description Get user details by user ID
-// @Tags Users
+// @Tags Admin - Users
 // @Produce json
 // @Param id path string true "User ID"
 // @Success 200 {object} response.Response{Data=response.UserResponse} "User found"
@@ -91,7 +91,7 @@ func (c *UserController) GetUser(ctx *gin.Context) {
 // UpdateUser godoc
 // @Summary Update user
 // @Description Update user details by user ID
-// @Tags Users
+// @Tags Admin - Users
 // @Accept json
 // @Produce json
 // @Param id path string true "User ID"
@@ -133,7 +133,7 @@ func (c *UserController) UpdateUser(ctx *gin.Context) {
 // GetAllUsers godoc
 // @Summary Get all users
 // @Description Get all users
-// @Tags Users
+// @Tags Admin - Users
 // @Produce json
 // @Success 200 {object} response.Response{Data=response.UsersResponseData} "Users retrieved successfully"
 // @Failure 401 {object} response.Response "Unauthorized"
@@ -157,7 +157,7 @@ func (c *UserController) GetAllUsers(ctx *gin.Context) {
 // DeleteUser godoc
 // @Summary Delete user
 // @Description Delete user by user ID
-// @Tags Users
+// @Tags Admin - Users
 // @Produce json
 // @Param id path string true "User ID"
 // @Success 200 {object} response.Response"User deleted successfully"
