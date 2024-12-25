@@ -2580,83 +2580,6 @@ const docTemplate = `{
             }
         },
         "/recruiters": {
-            "post": {
-                "description": "Create a new recruiter with company logo",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Recruiters - Recruiter"
-                ],
-                "summary": "Create a new recruiter",
-                "parameters": [
-                    {
-                        "type": "file",
-                        "description": "Company Logo",
-                        "name": "company_logo",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "description": "Recruiter request",
-                        "name": "recruiter",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.CreateRecruiterRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Recruiter created successfully",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "Data": {
-                                            "$ref": "#/definitions/response.RecruiterResponse"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid input",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/recruiters/": {
             "get": {
                 "description": "Get recruiter details by recruiter_id",
                 "produces": [
@@ -2798,6 +2721,81 @@ const docTemplate = `{
                     }
                 }
             },
+            "post": {
+                "description": "Create a new recruiter with company logo",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recruiters - Recruiter"
+                ],
+                "summary": "Create a new recruiter",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Company Logo",
+                        "name": "company_logo",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "description": "Recruiter request",
+                        "name": "recruiter",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.CreateRecruiterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Recruiter created successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "Data": {
+                                            "$ref": "#/definitions/response.RecruiterResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
             "delete": {
                 "description": "Delete recruiter by recruiter_id",
                 "produces": [
@@ -2847,7 +2845,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recruiters/{recruiter_id}/jobs": {
+        "/recruiters/jobs": {
             "get": {
                 "description": "Retrieve a list of jobs filtered by their status (e.g., open, closed)",
                 "produces": [
@@ -2931,13 +2929,6 @@ const docTemplate = `{
                 "summary": "Post a new job",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Recruiter ID",
-                        "name": "recruiter_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
                         "description": "Job details",
                         "name": "job",
                         "in": "body",
@@ -2993,7 +2984,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recruiters/{recruiter_id}/jobs/{job_id}": {
+        "/recruiters/jobs/{job_id}": {
             "get": {
                 "description": "Retrieve the details of a specific job by job_id",
                 "produces": [
@@ -3121,7 +3112,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recruiters/{recruiter_id}/jobs/{job_id}/deactivate": {
+        "/recruiters/jobs/{job_id}/deactivate": {
             "put": {
                 "description": "Disable a specific job by job_id",
                 "produces": [
@@ -3192,7 +3183,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recruiters/{recruiter_id}/jobs/{job_id}/repost": {
+        "/recruiters/jobs/{job_id}/repost": {
             "put": {
                 "description": "Repost a deactivated job by job_id",
                 "produces": [
