@@ -263,11 +263,12 @@ func (c *AuthController) ResetPassword(ctx *gin.Context) {
 
 // GoogleConnect godoc
 // @Summary Google OAuth Connect
-// @Description Connect with Google OAuth
+// @Description Connect with Google OAuth (Register or Login)
 // @Tags Auth
-// @Param role query string true "User role (e.g. admin, candidate, recruiter)"
+// @Param role query string true "User role (admin, candidate, recruiter)"
 // @Produce json
-// @Success 302 {string} string "Redirect to Google OAuth"
+// @Success 200 {object} response.Response{Data=response.UserResponse} "Successfully logged in!"
+// @Success 201 {object} response.Response{Data=response.UserResponse} ""User created successfully""
 // @Failure 400 {object} response.Response "Role is missing or expired"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /auth/google/connect [get]
