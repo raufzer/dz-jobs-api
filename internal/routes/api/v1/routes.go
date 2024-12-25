@@ -98,7 +98,6 @@ func RegisterProtectedRoutes(
 		certificationsController,
 		portfolioController,
 		bookmarksController,
-
 	)
 
 	// Recruiter-specific routes
@@ -127,16 +126,16 @@ func RegisterCandidateRoutes(
 	portfolioController *controllers.CandidatePortfolioController,
 	bookmarksController *controllers.BookmarksController,
 ) {
-	candidateRoutes := router.Group("/:candidate_id")
-	candidateRoutes.Use(middlewares.CandidateOwnershipMiddleware())
-	CandidateRoutes(candidateRoutes, candidateController)
-	PersonalInfoRoutes(candidateRoutes, personalInfoController)
-	EducationRoutes(candidateRoutes, educationController)
-	ExperienceRoutes(candidateRoutes, experienceController)
-	SkillsRoutes(candidateRoutes, skillsController)
-	CertificationsRoutes(candidateRoutes, certificationsController)
-	PortfolioRoutes(candidateRoutes, portfolioController)
-	BookmarksRoute(candidateRoutes, bookmarksController)
+
+	router.Use(middlewares.CandidateOwnershipMiddleware())
+	CandidateRoutes(router, candidateController)
+	PersonalInfoRoutes(router, personalInfoController)
+	EducationRoutes(router, educationController)
+	ExperienceRoutes(router, experienceController)
+	SkillsRoutes(router, skillsController)
+	CertificationsRoutes(router, certificationsController)
+	PortfolioRoutes(router, portfolioController)
+	BookmarksRoute(router, bookmarksController)
 }
 
 func RegisterRecruiterRoutes(
@@ -144,10 +143,9 @@ func RegisterRecruiterRoutes(
 	recruiterController *controllers.RecruiterController,
 	jobController *controllers.JobController,
 ) {
-	recruiterRoutes := router.Group("/:recruiter_id")
-	recruiterRoutes.Use(middlewares.RecruiterOwnershipMiddleware())
-	RecruiterRoutes(recruiterRoutes, recruiterController)
-	RecruiterJobRoutes(recruiterRoutes, jobController)
+	router.Use(middlewares.RecruiterOwnershipMiddleware())
+	RecruiterRoutes(router, recruiterController)
+	RecruiterJobRoutes(router, jobController)
 }
 
 // RegisterSwaggerRoutes handles the Swagger documentation routes
