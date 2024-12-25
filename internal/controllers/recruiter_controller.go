@@ -74,7 +74,7 @@ func (c *RecruiterController) CreateRecruiter(ctx *gin.Context) {
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "Recruiter not found"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /recruiters/ [get]
+// @Router /recruiters [get]
 func (c *RecruiterController) GetRecruiter(ctx *gin.Context) {
 	userID := ctx.MustGet("recruiter_id")
 	recruiterID, _ := uuid.Parse(userID.(string))
@@ -105,7 +105,7 @@ func (c *RecruiterController) GetRecruiter(ctx *gin.Context) {
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "Recruiter not found"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /recruiters/ [put]
+// @Router /recruiters [put]
 func (c *RecruiterController) UpdateRecruiter(ctx *gin.Context) {
 	var req request.UpdateRecruiterRequest
 	if err := ctx.ShouldBind(&req); err != nil {
@@ -145,7 +145,7 @@ func (c *RecruiterController) UpdateRecruiter(ctx *gin.Context) {
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "Recruiter not found"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /recruiters/ [delete]
+// @Router /recruiters [delete]
 func (c *RecruiterController) DeleteRecruiter(ctx *gin.Context) {
 	userID := ctx.MustGet("recruiter_id")
 	recruiterID, _ := uuid.Parse(userID.(string))

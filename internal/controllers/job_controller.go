@@ -29,14 +29,13 @@ func NewJobController(service serviceInterfaces.JobService) *JobController {
 // @Tags Recruiters - Jobs
 // @Accept json
 // @Produce json
-// @Param recruiter_id path string true "Recruiter ID"
 // @Param job body request.PostNewJobRequest true "Job details"
 // @Success 201 {object} response.Response{Data=response.JobResponse} "Job posted successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /recruiters/{recruiter_id}/jobs [post]
+// @Router /recruiters/jobs [post]
 func (c *JobController) PostNewJob(ctx *gin.Context) {
 	userID := ctx.MustGet("recruiter_id")
 	recruiterID, _ := uuid.Parse(userID.(string))
@@ -71,7 +70,7 @@ func (c *JobController) PostNewJob(ctx *gin.Context) {
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "Jobs not found"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /recruiters/{recruiter_id}/jobs/{job_id} [get]
+// @Router /recruiters/jobs/{job_id} [get]
 func (c *JobController) GetJobDetails(ctx *gin.Context) {
 	jobIDStr := ctx.Param("job_id")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
@@ -107,7 +106,7 @@ func (c *JobController) GetJobDetails(ctx *gin.Context) {
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "Jobs not found"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /recruiters/{recruiter_id}/jobs [get]
+// @Router /recruiters/jobs [get]
 func (c *JobController) GetJobListingsByStatus(ctx *gin.Context) {
 	userID := ctx.MustGet("recruiter_id")
 	recruiterID, _ := uuid.Parse(userID.(string))
@@ -182,7 +181,7 @@ func (c *JobController) EditJob(ctx *gin.Context) {
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "Job not found"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /recruiters/{recruiter_id}/jobs/{job_id}/deactivate [put]
+// @Router /recruiters/jobs/{job_id}/deactivate [put]
 func (c *JobController) DeactivateJob(ctx *gin.Context) {
 	jobIDStr := ctx.Param("job_id")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
@@ -219,7 +218,7 @@ func (c *JobController) DeactivateJob(ctx *gin.Context) {
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "Job not found"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /recruiters/{recruiter_id}/jobs/{job_id}/repost [put]
+// @Router /recruiters/jobs/{job_id}/repost [put]
 func (c *JobController) RepostJob(ctx *gin.Context) {
 	jobIDStr := ctx.Param("job_id")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
@@ -256,7 +255,7 @@ func (c *JobController) RepostJob(ctx *gin.Context) {
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "Job not found"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /recruiters/{recruiter_id}/jobs/{job_id} [delete]
+// @Router /recruiters/jobs/{job_id} [delete]
 func (c *JobController) DeleteJob(ctx *gin.Context) {
 	jobIDStr := ctx.Param("job_id")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
