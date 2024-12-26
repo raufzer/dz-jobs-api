@@ -32,6 +32,7 @@ func (s *JobService) PostNewJob(recruiterID uuid.UUID, req request.PostNewJobReq
 		CreatedAt:      time.Now(),
 		UpdatedAt:      time.Now(),
 		Status:         req.Status,
+		JobType:        req.JobType,
 	}
 
 	if err := s.jobRepository.CreateJob(job); err != nil {
@@ -89,6 +90,7 @@ func (s *JobService) EditJob(jobID int64, req request.EditJobRequest, recruiterI
 		SalaryRange:    req.SalaryRange,
 		RequiredSkills: req.RequiredSkills,
 		UpdatedAt:      time.Now(),
+		JobType:        req.JobType,
 	}
 
 	if err := s.jobRepository.UpdateJob(jobID, recruiterID, updatedJob); err != nil {

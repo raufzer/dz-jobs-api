@@ -127,7 +127,6 @@ func RegisterCandidateRoutes(
 	bookmarksController *controllers.BookmarksController,
 ) {
 
-	router.Use(middlewares.CandidateOwnershipMiddleware())
 	CandidateRoutes(router, candidateController)
 	PersonalInfoRoutes(router, personalInfoController)
 	EducationRoutes(router, educationController)
@@ -143,7 +142,6 @@ func RegisterRecruiterRoutes(
 	recruiterController *controllers.RecruiterController,
 	jobController *controllers.JobController,
 ) {
-	router.Use(middlewares.RecruiterOwnershipMiddleware())
 	RecruiterRoutes(router, recruiterController)
 	RecruiterJobRoutes(router, jobController)
 }

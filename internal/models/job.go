@@ -16,5 +16,6 @@ type Job struct {
 	RecruiterID    uuid.UUID `db:"recruiter_id"`
 	CreatedAt      time.Time `db:"created_at" default:"CURRENT_TIMESTAMP"`
 	UpdatedAt      time.Time `db:"updated_at" default:"CURRENT_TIMESTAMP"`
-	Status         string    `db:"status"`
+    Status         string    `db:"status"`
+    JobType        string    `db:"job_type"`
 }

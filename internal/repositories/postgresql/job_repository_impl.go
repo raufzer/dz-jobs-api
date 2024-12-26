@@ -27,41 +27,36 @@ func NewJobRepository(db *sql.DB) repositoryInterfaces.JobRepository {
 func (r *SQLJobRepository) CreateJob(job *models.Job) error {
 	query := `
         INSERT INTO jobs (
-            title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status
+            title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status, job_type
         ) VALUES (
-            $1, $2, $3, $4, $5, $6, $7, $8, $9
+            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
         ) RETURNING job_id
     `
 
-	var jobID int64
 	err := r.db.QueryRow(
 		query,
 		job.Title, job.Description, job.Location, job.SalaryRange, job.RequiredSkills, job.RecruiterID,
-		job.CreatedAt, job.UpdatedAt, job.Status,
-	).Scan(&jobID)
+		job.CreatedAt, job.UpdatedAt, job.Status, job.JobType,
+	).Scan(&job.JobID)
 
 	if err != nil {
 		return fmt.Errorf("repository: failed to create job: %w", err)
 	}
-
-	job.JobID = jobID
 	return nil
 }
 
 func (r *SQLJobRepository) GetJobDetails(jobID int64, recruiterID uuid.UUID) (*models.Job, error) {
-
 	if err := r.ValidateJobOwnership(jobID, recruiterID); err != nil {
 		return nil, err
 	}
 
-	query := `SELECT job_id, title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status
+	query := `SELECT job_id, title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status, job_type
               FROM jobs WHERE job_id = $1`
 
-	row := r.db.QueryRow(query, jobID)
 	job := &models.Job{}
-	err := row.Scan(
+	err := r.db.QueryRow(query, jobID).Scan(
 		&job.JobID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
-		&job.RecruiterID, &job.CreatedAt, &job.UpdatedAt, &job.Status,
+		&job.RecruiterID, &job.CreatedAt, &job.UpdatedAt, &job.Status, &job.JobType,
 	)
 
 	if err != nil {
@@ -105,36 +100,28 @@ func (r *SQLJobRepository) GetJobListingsByStatus(status string, recruiterID uui
 }
 
 func (r *SQLJobRepository) UpdateJob(jobID int64, recruiterID uuid.UUID, job *models.Job) error {
-
 	if err := r.ValidateJobOwnership(jobID, recruiterID); err != nil {
 		return err
 	}
 
 	query := `UPDATE jobs SET 
-        title = $1, 
-        description = $2, 
-        location = $3, 
-        salary_range = $4, 
-        required_skills = $5, 
-        recruiter_id = $6, 
-        updated_at = $7, 
-        status = $8
-        WHERE job_id = $9`
+        title = $1, description = $2, location = $3, salary_range = $4, required_skills = $5, 
+        recruiter_id = $6, updated_at = $7, status = $8, job_type = $9
+        WHERE job_id = $10`
 
 	result, err := r.db.Exec(
 		query,
 		job.Title, job.Description, job.Location, job.SalaryRange, job.RequiredSkills,
-		job.RecruiterID, job.UpdatedAt, job.Status, jobID,
+		job.RecruiterID, job.UpdatedAt, job.Status, job.JobType, jobID,
 	)
+
 	if err != nil {
 		return fmt.Errorf("repository: failed to update job: %w", err)
 	}
 
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
+	if rowsAffected, err := result.RowsAffected(); err != nil {
 		return fmt.Errorf("repository: failed to check rows affected: %w", err)
-	}
-	if rowsAffected == 0 {
+	} else if rowsAffected == 0 {
 		return errors.New("repository: job not found")
 	}
 
@@ -238,7 +225,7 @@ func (r *SQLJobRepository) ValidateJobOwnership(jobID int64, recruiterID uuid.UU
 }
 
 func (r *SQLJobRepository) GetAllJobs() ([]*models.Job, error) {
-	query := `SELECT job_id, title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status
+	query := `SELECT job_id, title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status, job_type
               FROM jobs`
 
 	rows, err := r.db.Query(query)
@@ -252,7 +239,7 @@ func (r *SQLJobRepository) GetAllJobs() ([]*models.Job, error) {
 		job := &models.Job{}
 		err := rows.Scan(
 			&job.JobID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
-			&job.RecruiterID, &job.CreatedAt, &job.UpdatedAt, &job.Status,
+			&job.RecruiterID, &job.CreatedAt, &job.UpdatedAt, &job.Status, &job.JobType,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("repository: failed to scan job: %w", err)
@@ -268,17 +255,23 @@ func (r *SQLJobRepository) GetAllJobs() ([]*models.Job, error) {
 }
 
 func (r *SQLJobRepository) GetJobListings(filters request.JobFilters) ([]*models.Job, error) {
-	query := `SELECT job_id, title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status
+    query := `SELECT job_id, title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status, job_type
               FROM jobs WHERE 1=1`
 
-	args := []interface{}{}
-	paramCount := 1
+    args := []interface{}{}
+    paramCount := 1
 
-	if filters.Status != "" {
-		query += fmt.Sprintf(" AND status = $%d", paramCount)
-		args = append(args, filters.Status)
-		paramCount++
-	}
+    if filters.Status != "" {
+        query += fmt.Sprintf(" AND status = $%d", paramCount)
+        args = append(args, filters.Status)
+        paramCount++
+    }
+
+    if filters.JobType != "" {
+        query += fmt.Sprintf(" AND job_type = $%d", paramCount)
+        args = append(args, filters.JobType)
+        paramCount++
+    }
 
 	if filters.Location != "" {
 		query += fmt.Sprintf(" AND location ILIKE $%d", paramCount)
@@ -308,40 +301,40 @@ func (r *SQLJobRepository) GetJobListings(filters request.JobFilters) ([]*models
 	}
 
 	rows, err := r.db.Query(query, args...)
-	if err != nil {
-		return nil, fmt.Errorf("repository: failed to fetch jobs with filters: %w", err)
-	}
-	defer rows.Close()
+    if err != nil {
+        return nil, fmt.Errorf("repository: failed to fetch jobs with filters: %w", err)
+    }
+    defer rows.Close()
 
-	var jobs []*models.Job
-	for rows.Next() {
-		job := &models.Job{}
-		err := rows.Scan(
-			&job.JobID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
-			&job.RecruiterID, &job.CreatedAt, &job.UpdatedAt, &job.Status,
-		)
-		if err != nil {
-			return nil, fmt.Errorf("repository: failed to scan job: %w", err)
-		}
-		jobs = append(jobs, job)
-	}
+    var jobs []*models.Job
+    for rows.Next() {
+        job := &models.Job{}
+        err := rows.Scan(
+            &job.JobID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
+            &job.RecruiterID, &job.CreatedAt, &job.UpdatedAt, &job.Status, &job.JobType,
+        )
+        if err != nil {
+            return nil, fmt.Errorf("repository: failed to scan job: %w", err)
+        }
+        jobs = append(jobs, job)
+    }
 
-	if err = rows.Err(); err != nil {
-		return nil, fmt.Errorf("repository: rows error: %w", err)
-	}
+    if err = rows.Err(); err != nil {
+        return nil, fmt.Errorf("repository: rows error: %w", err)
+    }
 
-	return jobs, nil
+    return jobs, nil
 }
 
 func (r *SQLJobRepository) GetJobDetailsPublic(jobID int64) (*models.Job, error) {
-	query := `SELECT job_id, title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status
+	query := `SELECT job_id, title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status, job_type
               FROM jobs WHERE job_id = $1`
 
 	row := r.db.QueryRow(query, jobID)
 	job := &models.Job{}
 	err := row.Scan(
 		&job.JobID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
-		&job.RecruiterID, &job.CreatedAt, &job.UpdatedAt, &job.Status,
+		&job.RecruiterID, &job.CreatedAt, &job.UpdatedAt, &job.Status, &job.JobType,
 	)
 
 	if err != nil {
@@ -352,3 +345,4 @@ func (r *SQLJobRepository) GetJobDetailsPublic(jobID int64) (*models.Job, error)
 	}
 	return job, nil
 }
+
