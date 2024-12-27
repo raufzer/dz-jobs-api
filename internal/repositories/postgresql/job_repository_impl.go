@@ -198,14 +198,14 @@ func (r *SQLJobRepository) ValidateJobOwnership(jobID int64, recruiterID uuid.UU
 
 	var ownerID uuid.UUID
 	if err := row.Scan(&ownerID); err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return errors.New("repository: job not found")
+		if err == sql.ErrNoRows {
+			return fmt.Errorf("repository: job not found: %w", err)
 		}
 		return fmt.Errorf("repository: failed to check job ownership: %w", err)
 	}
 
 	if ownerID != recruiterID {
-		return errors.New("repository: unauthorized access, recruiter does not own the job")
+		return fmt.Errorf("repository: unauthorized access, recruiter does not own the job")
 	}
 
 	return nil

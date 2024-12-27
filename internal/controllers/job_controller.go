@@ -67,7 +67,7 @@ func (c *JobController) PostNewJob(ctx *gin.Context) {
 // @Success 200 {object} response.Response{Data=response.JobResponse} "Job details found"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
-// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 403 {object} response.Response "You do not own this Job"
 // @Failure 404 {object} response.Response "Jobs not found"
 // @Failure 500 {object} response.Response "Internal server error"
 // @Router /recruiters/jobs/{job_id} [get]
@@ -103,7 +103,7 @@ func (c *JobController) GetJobDetails(ctx *gin.Context) {
 // @Success 200 {object} response.Response{Data=response.JobsResponseData} "Jobs retrieved successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
-// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 403 {object} response.Response "You do not own these Jobs"
 // @Failure 404 {object} response.Response "Jobs not found"
 // @Failure 500 {object} response.Response "Internal server error"
 // @Router /recruiters/jobs [get]
@@ -135,7 +135,7 @@ func (c *JobController) GetJobListingsByStatus(ctx *gin.Context) {
 // @Success 200 {object} response.Response{Data=response.JobResponse} "Job updated successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
-// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 403 {object} response.Response "You do not own this Job"
 // @Failure 404 {object} response.Response "Job notfound"
 // @Failure 500 {object} response.Response "Internal server error"
 // @Router /recruiters/jobs{job_id} [put]
@@ -178,7 +178,7 @@ func (c *JobController) EditJob(ctx *gin.Context) {
 // @Success 200 {object} response.Response{Data=response.JobResponse} "Job deactivated successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
-// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 403 {object} response.Response "You do not own this Job"
 // @Failure 404 {object} response.Response "Job not found"
 // @Failure 500 {object} response.Response "Internal server error"
 // @Router /recruiters/jobs/{job_id}/deactivate [put]
@@ -215,7 +215,7 @@ func (c *JobController) DeactivateJob(ctx *gin.Context) {
 // @Success 200 {object} response.Response{Data=response.JobResponse} "Job reposted successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
-// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 403 {object} response.Response "You do not own this Job"
 // @Failure 404 {object} response.Response "Job not found"
 // @Failure 500 {object} response.Response "Internal server error"
 // @Router /recruiters/jobs/{job_id}/repost [put]
@@ -252,7 +252,7 @@ func (c *JobController) RepostJob(ctx *gin.Context) {
 // @Success 200 {object} response.Response "Job deleted successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
-// @Failure 403 {object} response.Response "Forbidden"
+// @Failure 403 {object} response.Response "You do not own this Job"
 // @Failure 404 {object} response.Response "Job not found"
 // @Failure 500 {object} response.Response "Internal server error"
 // @Router /recruiters/jobs/{job_id} [delete]

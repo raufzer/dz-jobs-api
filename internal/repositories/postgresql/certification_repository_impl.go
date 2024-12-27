@@ -40,6 +40,9 @@ func (r *SQLCandidateCertificationRepository) GetCertifications(id uuid.UUID) ([
 		if err := rows.Scan(&certification.CertificationID, &certification.CandidateID, &certification.CertificationName, &certification.IssuedBy, &certification.IssueDate, &certification.ExpirationDate); err != nil {
 			return nil, fmt.Errorf("unable to scan certification data: %w", err)
 		}
+		if certification.CandidateID != id {
+			return nil, fmt.Errorf("repository: unauthorized access, recruiter does not own certfications with ID %d", id)
+		}
 		certifications = append(certifications, certification)
 	}
 	if err := rows.Err(); err != nil {
@@ -53,5 +56,24 @@ func (r *SQLCandidateCertificationRepository) DeleteCertification(id uuid.UUID, 
 	if err != nil {
 		return fmt.Errorf("unable to delete certification: %w", err)
 	}
+	return nil
+}
+
+func (r *SQLCandidateCertificationRepository) ValidateCertificationOwnership(id uuid.UUID, certificationName string) error {
+	query := `SELECT candidate_id FROM candidate_certifications WHERE candidate_id = $1`
+	row := r.db.QueryRow(query, id)
+
+	var ownerID uuid.UUID
+	if err := row.Scan(&ownerID); err != nil {
+		if err == sql.ErrNoRows {
+			return fmt.Errorf("repository: certification not found: %w", err)
+		}
+		return fmt.Errorf("repository: failed to check job ownership: %w", err)
+	}
+
+	if ownerID != id {
+		return fmt.Errorf("repository: unauthorized access, recruiter does not own the job")
+	}
+
 	return nil
 }
