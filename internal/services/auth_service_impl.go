@@ -97,7 +97,7 @@ func (s *AuthService) RefreshAccessToken(userID, userRole, refreshToken string) 
 }
 
 func (s *AuthService) Logout(userID, refreshToken string) error {
-	err := s.redisRepository.DeleteRefreshToken(userID)
+	err := s.redisRepository.InvalidateRefreshToken(userID)
 	if err != nil {
 		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete refresh token")
 	}
@@ -134,7 +134,7 @@ func (s *AuthService) VerifyOTP(email, otp string) (string, error) {
 		return "", utils.NewCustomError(http.StatusInternalServerError, "Failed to store reset token")
 	}
 
-	_ = s.redisRepository.DeleteOTP(email)
+	_ = s.redisRepository.InvalidateOTP(email)
 
 	return resetToken, nil
 }
@@ -161,7 +161,7 @@ func (s *AuthService) ResetPassword(email, resetToken, newPassword string) error
 		return utils.NewCustomError(http.StatusInternalServerError, "Failed to update password")
 	}
 
-	_ = s.redisRepository.DeleteResetToken(email)
+	_ = s.redisRepository.InvalidateResetToken(email)
 
 	return nil
 }
