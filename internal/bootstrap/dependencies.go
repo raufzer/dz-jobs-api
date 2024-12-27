@@ -60,14 +60,14 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 		cfg,
 	)
 	userService := services.NewUserService(userRepo)
-	candidateService := services.NewCandidateService(candidateRepo, cfg)
+	candidateService := services.NewCandidateService(candidateRepo, redisRepo, cfg)
 	personalInfoService := services.NewCandidatePersonalInfoService(personalInfoRepo)
 	educationService := services.NewCandidateEducationService(educationRepo, cfg)
 	experienceService := services.NewCandidateExperienceService(experienceRepo)
 	skillsService := services.NewCandidateSkillService(skillsRepo)
 	certificationsService := services.NewCandidateCertificationsService(certificationRepo)
 	portfolioService := services.NewCandidatePortfolioService(portfolioRepo)
-	recruiterService := services.NewRecruiterService(recruiterRepo, cfg)
+	recruiterService := services.NewRecruiterService(recruiterRepo,redisRepo, cfg)
 	jobService := services.NewJobService(jobRepo)
 	bookmarksService := services.NewBookmarksService(bookmarksRepo)
 
