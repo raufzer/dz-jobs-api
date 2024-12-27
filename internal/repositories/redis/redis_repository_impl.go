@@ -22,7 +22,7 @@ func NewRedisRepository(redisClient *redis.Client) repositoryInterfaces.RedisRep
 }
 
 func (r *RedisRepository) StoreOTP(email, otp string, expiry time.Duration) error {
-	key := fmt.Sprintf("otp:%s:", email)
+	key := fmt.Sprintf("otp:%s", email)
 	if err := r.redisClient.Set(context.Background(), key, otp, expiry).Err(); err != nil {
 		return fmt.Errorf("redis: failed to store OTP for email %s: %w", email, err)
 	}
@@ -30,7 +30,7 @@ func (r *RedisRepository) StoreOTP(email, otp string, expiry time.Duration) erro
 }
 
 func (r *RedisRepository) GetOTP(email string) (string, error) {
-	key := fmt.Sprintf("otp:%s:", email)
+	key := fmt.Sprintf("otp:%s", email)
 	result, err := r.redisClient.Get(context.Background(), key).Result()
 	if err != nil {
 		if err == redis.Nil {
@@ -42,7 +42,7 @@ func (r *RedisRepository) GetOTP(email string) (string, error) {
 }
 
 func (r *RedisRepository) InvalidateOTP(email string) error {
-	key := fmt.Sprintf("otp:%s:", email)
+	key := fmt.Sprintf("otp:%s", email)
 	if err := r.redisClient.Del(context.Background(), key).Err(); err != nil {
 		return fmt.Errorf("redis: failed to delete OTP for email %s: %w", email, err)
 	}
@@ -50,7 +50,7 @@ func (r *RedisRepository) InvalidateOTP(email string) error {
 }
 
 func (r *RedisRepository) StoreResetToken(email, token string, expiry time.Duration) error {
-	key := fmt.Sprintf("reset_token:%s:", email)
+	key := fmt.Sprintf("reset_token:%s", email)
 	if err := r.redisClient.Set(context.Background(), key, token, expiry).Err(); err != nil {
 		return fmt.Errorf("redis: failed to store reset token for email %s: %w", email, err)
 	}
@@ -58,7 +58,7 @@ func (r *RedisRepository) StoreResetToken(email, token string, expiry time.Durat
 }
 
 func (r *RedisRepository) GetResetToken(email string) (string, error) {
-	key := fmt.Sprintf("reset_token:%s:", email)
+	key := fmt.Sprintf("reset_token:%s", email)
 	result, err := r.redisClient.Get(context.Background(), key).Result()
 	if err != nil {
 		if err == redis.Nil {
@@ -70,7 +70,7 @@ func (r *RedisRepository) GetResetToken(email string) (string, error) {
 }
 
 func (r *RedisRepository) InvalidateResetToken(email string) error {
-	key := fmt.Sprintf("reset_token:%s:", email)
+	key := fmt.Sprintf("reset_token:%s", email)
 	if err := r.redisClient.Del(context.Background(), key).Err(); err != nil {
 		return fmt.Errorf("redis: failed to delete reset token for email %s: %w", email, err)
 	}
@@ -78,7 +78,7 @@ func (r *RedisRepository) InvalidateResetToken(email string) error {
 }
 
 func (r *RedisRepository) StoreRefreshToken(user_id, refreshToken string, expiry time.Duration) error {
-	key := fmt.Sprintf("refresh_token:%s:", user_id)
+	key := fmt.Sprintf("refresh_token:%s", user_id)
 	if err := r.redisClient.Set(context.Background(), key, refreshToken, expiry).Err(); err != nil {
 		return fmt.Errorf("redis: failed to store refresh token for user_id %s: %w", user_id, err)
 	}
@@ -86,7 +86,7 @@ func (r *RedisRepository) StoreRefreshToken(user_id, refreshToken string, expiry
 }
 
 func (r *RedisRepository) GetRefreshToken(user_id string) (string, error) {
-	key := fmt.Sprintf("refresh_token:%s:", user_id)
+	key := fmt.Sprintf("refresh_token:%s", user_id)
 	result, err := r.redisClient.Get(context.Background(), key).Result()
 	if err != nil {
 		if err == redis.Nil {
@@ -98,7 +98,7 @@ func (r *RedisRepository) GetRefreshToken(user_id string) (string, error) {
 }
 
 func (r *RedisRepository) InvalidateRefreshToken(user_id string) error {
-	key := fmt.Sprintf("refresh_token:%s:", user_id)
+	key := fmt.Sprintf("refresh_token:%s", user_id)
 	if err := r.redisClient.Del(context.Background(), key).Err(); err != nil {
 		return fmt.Errorf("redis: failed to delete refresh token for user_id %s: %w", user_id, err)
 	}
