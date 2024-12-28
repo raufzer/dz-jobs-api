@@ -43,11 +43,6 @@ func (s *CandidatePersonalInfoService) GetPersonalInfo(candidateID uuid.UUID) (*
 }
 
 func (s *CandidatePersonalInfoService) AddPersonalInfo(request request.AddPersonalInfoRequest, candidateID uuid.UUID) (*models.CandidatePersonalInfo, error) {
-	existingPersonalInfo, _ := s.candidatePersonalInfoRepo.GetPersonalInfo(candidateID)
-
-	if existingPersonalInfo != nil {
-		return nil, utils.NewCustomError(http.StatusBadRequest, "Personal info already exists")
-	}
 	info := &models.CandidatePersonalInfo{
 		CandidateID: candidateID,
 		Name:        request.Name,
