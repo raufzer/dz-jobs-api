@@ -53,7 +53,16 @@ definitions:
     properties:
       address:
         type: string
+      bio:
+        type: string
+      date_of_birth:
+        type: string
       email:
+        type: string
+      gender:
+        enum:
+        - male
+        - female
         type: string
       name:
         type: string
@@ -61,6 +70,7 @@ definitions:
         type: string
     required:
     - email
+    - gender
     - name
     type: object
   request.AddProjectRequest:
@@ -131,6 +141,13 @@ definitions:
     properties:
       description:
         type: string
+      job_type:
+        enum:
+        - full-time
+        - part-time
+        - freelance
+        - remote
+        type: string
       location:
         type: string
       required_skills:
@@ -138,6 +155,9 @@ definitions:
       salary_range:
         type: string
       status:
+        enum:
+        - open
+        - closed
         type: string
       title:
         type: string
@@ -156,6 +176,13 @@ definitions:
     properties:
       description:
         type: string
+      job_type:
+        enum:
+        - full-time
+        - part-time
+        - freelance
+        - remote
+        type: string
       location:
         type: string
       required_skills:
@@ -163,11 +190,15 @@ definitions:
       salary_range:
         type: string
       status:
+        enum:
+        - open
+        - closed
         type: string
       title:
         type: string
     required:
     - description
+    - job_type
     - status
     - title
     type: object
@@ -194,7 +225,16 @@ definitions:
     properties:
       address:
         type: string
+      bio:
+        type: string
+      date_of_birth:
+        type: string
       email:
+        type: string
+      gender:
+        enum:
+        - male
+        - female
         type: string
       name:
         type: string
@@ -202,6 +242,7 @@ definitions:
         type: string
     required:
     - email
+    - gender
     - name
     type: object
   request.UpdateRecruiterRequest:
@@ -371,9 +412,15 @@ definitions:
     properties:
       address:
         type: string
+      bio:
+        type: string
       candidate_id:
         type: string
+      date_of_birth:
+        type: string
       email:
+        type: string
+      gender:
         type: string
       name:
         type: string
@@ -1285,10 +1332,6 @@ paths:
           description: Unauthorized
           schema:
             $ref: '#/definitions/response.Response'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.Response'
         "404":
           description: Candidate not found
           schema:
@@ -1300,13 +1343,13 @@ paths:
       summary: Add a new certification
       tags:
       - Candidates - Certifications
-  /candidates/certifications/{certification_id}:
+  /candidates/certifications/{certification_name}:
     delete:
       description: Delete a certification by candidate ID and certification ID
       parameters:
-      - description: Certification ID
+      - description: Certification Name
         in: path
-        name: certification_id
+        name: certification_name
         required: true
         type: string
       produces:
@@ -1325,7 +1368,7 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
         "403":
-          description: Forbidden
+          description: You do not own this certification
           schema:
             $ref: '#/definitions/response.Response'
         "404":
@@ -2081,6 +2124,9 @@ paths:
       description: Search for jobs using various filters
       parameters:
       - in: query
+        name: job_type
+        type: string
+      - in: query
         name: keyword
         type: string
       - in: query
@@ -2326,7 +2372,7 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
         "403":
-          description: Forbidden
+          description: You do not own these Jobs
           schema:
             $ref: '#/definitions/response.Response'
         "404":
@@ -2408,7 +2454,7 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
         "403":
-          description: Forbidden
+          description: You do not own this Job
           schema:
             $ref: '#/definitions/response.Response'
         "404":
@@ -2451,7 +2497,7 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
         "403":
-          description: Forbidden
+          description: You do not own this Job
           schema:
             $ref: '#/definitions/response.Response'
         "404":
@@ -2495,7 +2541,7 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
         "403":
-          description: Forbidden
+          description: You do not own this Job
           schema:
             $ref: '#/definitions/response.Response'
         "404":
@@ -2539,7 +2585,7 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
         "403":
-          description: Forbidden
+          description: You do not own this Job
           schema:
             $ref: '#/definitions/response.Response'
         "404":
@@ -2591,7 +2637,7 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
         "403":
-          description: Forbidden
+          description: You do not own this Job
           schema:
             $ref: '#/definitions/response.Response'
         "404":

@@ -1292,12 +1292,6 @@ const docTemplate = `{
                             "$ref": "#/definitions/response.Response"
                         }
                     },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
                     "404": {
                         "description": "Candidate not found",
                         "schema": {
@@ -1313,7 +1307,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/certifications/{certification_id}": {
+        "/candidates/certifications/{certification_name}": {
             "delete": {
                 "description": "Delete a certification by candidate ID and certification ID",
                 "produces": [
@@ -1326,8 +1320,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Certification ID",
-                        "name": "certification_id",
+                        "description": "Certification Name",
+                        "name": "certification_name",
                         "in": "path",
                         "required": true
                     }
@@ -1352,7 +1346,7 @@ const docTemplate = `{
                         }
                     },
                     "403": {
-                        "description": "Forbidden",
+                        "description": "You do not own this certification",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -2501,6 +2495,11 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "name": "job_type",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "name": "keyword",
                         "in": "query"
                     },
@@ -2950,7 +2949,7 @@ const docTemplate = `{
                         }
                     },
                     "403": {
-                        "description": "Forbidden",
+                        "description": "You do not own these Jobs",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -3089,7 +3088,7 @@ const docTemplate = `{
                         }
                     },
                     "403": {
-                        "description": "Forbidden",
+                        "description": "You do not own this Job",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -3146,7 +3145,7 @@ const docTemplate = `{
                         }
                     },
                     "403": {
-                        "description": "Forbidden",
+                        "description": "You do not own this Job",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -3217,7 +3216,7 @@ const docTemplate = `{
                         }
                     },
                     "403": {
-                        "description": "Forbidden",
+                        "description": "You do not own this Job",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -3288,7 +3287,7 @@ const docTemplate = `{
                         }
                     },
                     "403": {
-                        "description": "Forbidden",
+                        "description": "You do not own this Job",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -3371,7 +3370,7 @@ const docTemplate = `{
                         }
                     },
                     "403": {
-                        "description": "Forbidden",
+                        "description": "You do not own this Job",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -3469,14 +3468,28 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "email",
+                "gender",
                 "name"
             ],
             "properties": {
                 "address": {
                     "type": "string"
                 },
+                "bio": {
+                    "type": "string"
+                },
+                "date_of_birth": {
+                    "type": "string"
+                },
                 "email": {
                     "type": "string"
+                },
+                "gender": {
+                    "type": "string",
+                    "enum": [
+                        "male",
+                        "female"
+                    ]
                 },
                 "name": {
                     "type": "string"
@@ -3584,6 +3597,15 @@ const docTemplate = `{
                 "description": {
                     "type": "string"
                 },
+                "job_type": {
+                    "type": "string",
+                    "enum": [
+                        "full-time",
+                        "part-time",
+                        "freelance",
+                        "remote"
+                    ]
+                },
                 "location": {
                     "type": "string"
                 },
@@ -3594,7 +3616,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                        "open",
+                        "closed"
+                    ]
                 },
                 "title": {
                     "type": "string"
@@ -3620,12 +3646,22 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "description",
+                "job_type",
                 "status",
                 "title"
             ],
             "properties": {
                 "description": {
                     "type": "string"
+                },
+                "job_type": {
+                    "type": "string",
+                    "enum": [
+                        "full-time",
+                        "part-time",
+                        "freelance",
+                        "remote"
+                    ]
                 },
                 "location": {
                     "type": "string"
@@ -3637,7 +3673,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                        "open",
+                        "closed"
+                    ]
                 },
                 "title": {
                     "type": "string"
@@ -3676,14 +3716,28 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "email",
+                "gender",
                 "name"
             ],
             "properties": {
                 "address": {
                     "type": "string"
                 },
+                "bio": {
+                    "type": "string"
+                },
+                "date_of_birth": {
+                    "type": "string"
+                },
                 "email": {
                     "type": "string"
+                },
+                "gender": {
+                    "type": "string",
+                    "enum": [
+                        "male",
+                        "female"
+                    ]
                 },
                 "name": {
                     "type": "string"
@@ -3946,10 +4000,19 @@ const docTemplate = `{
                 "address": {
                     "type": "string"
                 },
+                "bio": {
+                    "type": "string"
+                },
                 "candidate_id": {
                     "type": "string"
                 },
+                "date_of_birth": {
+                    "type": "string"
+                },
                 "email": {
+                    "type": "string"
+                },
+                "gender": {
                     "type": "string"
                 },
                 "name": {
