@@ -24,6 +24,9 @@ func (s *CandidatePersonalInfoService) UpdatePersonalInfo(id uuid.UUID, request 
 		Email:   request.Email,
 		Phone:   request.Phone,
 		Address: request.Address,
+		DateOfBirth: request.DateOfBirth,
+		Gender:      request.Gender,
+		Bio:         request.Bio,
 	}
 
 	err := s.candidatePersonalInfoRepo.UpdatePersonalInfo(info)
@@ -49,6 +52,9 @@ func (s *CandidatePersonalInfoService) AddPersonalInfo(request request.AddPerson
 		Email:       request.Email,
 		Phone:       request.Phone,
 		Address:     request.Address,
+		DateOfBirth: request.DateOfBirth,
+		Gender:      request.Gender,
+		Bio:         request.Bio,
 	}
 
 	err := s.candidatePersonalInfoRepo.CreatePersonalInfo(info)

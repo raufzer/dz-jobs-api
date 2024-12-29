@@ -11,4 +11,7 @@ type CandidatePersonalInfo struct {
 	Email       string    `db:"email"`
 	Phone       string    `db:"phone"`
 	Address     string    `db:"address"`
+	DateOfBirth string    `db:"date_of_birth"` 
+	Gender      string    `db:"gender"`       
+	Bio         string    `db:"bio"`  
 }
