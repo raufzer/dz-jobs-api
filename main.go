@@ -8,7 +8,7 @@ import (
 )
 
 // @title DZ Jobs API
-// @version 1.0
+// @version 1.1.3
 // @description This is the API documentation for the DZ Jobs portal.
 // @host dz-jobs-api-production.up.railway.app
 // @BasePath /v1

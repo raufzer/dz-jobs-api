@@ -138,7 +138,7 @@ func (c *JobController) GetJobListingsByStatus(ctx *gin.Context) {
 // @Failure 403 {object} response.Response "You do not own this Job"
 // @Failure 404 {object} response.Response "Job notfound"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /recruiters/jobs{job_id} [put]
+// @Router /recruiters/jobs/{job_id} [put]
 func (c *JobController) EditJob(ctx *gin.Context) {
 	userID := ctx.MustGet("recruiter_id")
 	recruiterID, _ := uuid.Parse(userID.(string))

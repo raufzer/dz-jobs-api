@@ -527,7 +527,7 @@ info:
   contact: {}
   description: This is the API documentation for the DZ Jobs portal.
   title: DZ Jobs API
-  version: "1.0"
+  version: 1.1.3
 paths:
   /admin/users:
     get:
@@ -2511,6 +2511,57 @@ paths:
       summary: Get job details
       tags:
       - Recruiters - Jobs
+    put:
+      consumes:
+      - application/json
+      description: Update the details of a specific job by job_id
+      parameters:
+      - description: Job ID
+        in: path
+        name: job_id
+        required: true
+        type: integer
+      - description: Updated job details
+        in: body
+        name: job
+        required: true
+        schema:
+          $ref: '#/definitions/request.EditJobRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Job updated successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.JobResponse'
+              type: object
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: You do not own this Job
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Job notfound
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Edit an existing job
+      tags:
+      - Recruiters - Jobs
   /recruiters/jobs/{job_id}/deactivate:
     put:
       description: Disable a specific job by job_id
@@ -2597,58 +2648,6 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
       summary: Repost a job
-      tags:
-      - Recruiters - Jobs
-  /recruiters/jobs{job_id}:
-    put:
-      consumes:
-      - application/json
-      description: Update the details of a specific job by job_id
-      parameters:
-      - description: Job ID
-        in: path
-        name: job_id
-        required: true
-        type: integer
-      - description: Updated job details
-        in: body
-        name: job
-        required: true
-        schema:
-          $ref: '#/definitions/request.EditJobRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Job updated successfully
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                Data:
-                  $ref: '#/definitions/response.JobResponse'
-              type: object
-        "400":
-          description: Invalid input
-          schema:
-            $ref: '#/definitions/response.Response'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/response.Response'
-        "403":
-          description: You do not own this Job
-          schema:
-            $ref: '#/definitions/response.Response'
-        "404":
-          description: Job notfound
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Edit an existing job
       tags:
       - Recruiters - Jobs
 swagger: "2.0"
