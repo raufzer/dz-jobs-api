@@ -103,7 +103,7 @@ func (c *UserController) GetUser(ctx *gin.Context) {
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "User not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /admin/users/{user_id} [put]
+// @Router /admin/users/{user_id} [patch]
 func (c *UserController) UpdateUser(ctx *gin.Context) {
 	var req request.UpdateUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -150,7 +150,7 @@ func (c *UserController) GetAllUsers(ctx *gin.Context) {
 		Code:    http.StatusOK,
 		Status:  "OK",
 		Message: "Users retrieved successfully",
-		Data: response.ToUsersResponse(users),
+		Data:    response.ToUsersResponse(users),
 	})
 }
 

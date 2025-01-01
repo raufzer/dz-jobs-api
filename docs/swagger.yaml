@@ -240,10 +240,6 @@ definitions:
         type: string
       phone:
         type: string
-    required:
-    - email
-    - gender
-    - name
     type: object
   request.UpdateRecruiterRequest:
     properties:
@@ -689,7 +685,7 @@ paths:
       summary: Get user
       tags:
       - Admin - Users
-    put:
+    patch:
       consumes:
       - application/json
       description: Update user details by user ID
@@ -1723,6 +1719,52 @@ paths:
       summary: Get personal information
       tags:
       - Candidates - Personal Info
+    patch:
+      consumes:
+      - application/json
+      description: Update personal information for a candidate by candidate ID
+      parameters:
+      - description: Personal Info request
+        in: body
+        name: personal_info
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdatePersonalInfoRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/response.PersonalInfoResponse'
+              type: object
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Personal Info not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: An unexpected error occurred
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Update personal information
+      tags:
+      - Candidates - Personal Info
     post:
       consumes:
       - application/json
@@ -1767,52 +1809,6 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
       summary: Add personal information
-      tags:
-      - Candidates - Personal Info
-    put:
-      consumes:
-      - application/json
-      description: Update personal information for a candidate by candidate ID
-      parameters:
-      - description: Personal Info request
-        in: body
-        name: personal_info
-        required: true
-        schema:
-          $ref: '#/definitions/request.UpdatePersonalInfoRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                Data:
-                  $ref: '#/definitions/response.PersonalInfoResponse'
-              type: object
-        "400":
-          description: Invalid input
-          schema:
-            $ref: '#/definitions/response.Response'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/response.Response'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/response.Response'
-        "404":
-          description: Personal Info not found
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: An unexpected error occurred
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Update personal information
       tags:
       - Candidates - Personal Info
   /candidates/portfolio:

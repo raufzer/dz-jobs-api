@@ -102,7 +102,7 @@ func (c *CandidatePersonalInfoController) GetPersonalInfo(ctx *gin.Context) {
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 404 {object} response.Response "Personal Info not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/personal-info [put]
+// @Router /candidates/personal-info [patch]
 func (c *CandidatePersonalInfoController) UpdatePersonalInfo(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, _ := uuid.Parse(userID.(string))
