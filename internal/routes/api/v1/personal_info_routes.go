@@ -10,7 +10,7 @@ func PersonalInfoRoutes(rg *gin.RouterGroup, candidatePersonalInfoController *co
 	personalInfoRoute := rg.Group("/personal-info")
 	personalInfoRoute.POST("/", candidatePersonalInfoController.AddPersonalInfo)
 	personalInfoRoute.GET("/", candidatePersonalInfoController.GetPersonalInfo)
-	personalInfoRoute.PUT("/", candidatePersonalInfoController.UpdatePersonalInfo)
+	personalInfoRoute.PATCH("/", candidatePersonalInfoController.UpdatePersonalInfo)
 	personalInfoRoute.DELETE("/", candidatePersonalInfoController.DeletePersonalInfo)
 
 }
