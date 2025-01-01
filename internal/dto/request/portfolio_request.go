@@ -9,9 +9,3 @@ type AddProjectRequest struct {
 	Description string    `json:"description"`
 }
 
-type UpdateProjectRequest struct {
-	ProjectName string    `json:"project_name"`
-	ProjectLink string    `json:"project_link"`
-	Category    string    `json:"category"`
-	Description string    `json:"description"`
-}

@@ -10,10 +10,3 @@ type AddEducationRequest struct {
 	Description string `json:"description"`
 }
 
-type UpdateEducationRequest struct {
-	Degree      string `json:"degree"`
-	Institution string `json:"institution"`
-	StartDate   string `json:"start_date"`
-	EndDate     string `json:"end_date"`
-	Description string `json:"description"`
-}

@@ -10,10 +10,3 @@ type AddExperienceRequest struct {
 	Description string `json:"description"`
 }
 
-type UpdateExperienceRequest struct {
-	JobTitle    string `json:"job_title"`
-	Company     string `json:"company"`
-	StartDate   string `json:"start_date"`
-	EndDate     string `json:"end_date"`
-	Description string `json:"description"`
-}
