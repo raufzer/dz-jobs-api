@@ -17,7 +17,6 @@ func NewCandidatePersonalInfoRepository(db *sql.DB) repositoryInterfaces.Candida
 		db: db,
 	}
 }
-
 func (r *SQLCandidatePersonalInfoRepository) CreatePersonalInfo(info *models.CandidatePersonalInfo) error {
 	query := `
 		INSERT INTO candidate_personal_info (candidate_id, name, email, phone, address, date_of_birth, gender, bio)
@@ -28,7 +27,6 @@ func (r *SQLCandidatePersonalInfoRepository) CreatePersonalInfo(info *models.Can
 	}
 	return nil
 }
-
 func (r *SQLCandidatePersonalInfoRepository) GetPersonalInfo(id uuid.UUID) (*models.CandidatePersonalInfo, error) {
 	var info models.CandidatePersonalInfo
 	query := `
@@ -44,19 +42,61 @@ func (r *SQLCandidatePersonalInfoRepository) GetPersonalInfo(id uuid.UUID) (*mod
 	}
 	return &info, nil
 }
-
 func (r *SQLCandidatePersonalInfoRepository) UpdatePersonalInfo(info *models.CandidatePersonalInfo) error {
-	query := `
-		UPDATE candidate_personal_info
-		SET name = $1, email = $2, phone = $3, address = $4, date_of_birth = $5, gender = $6, bio = $7
-		WHERE candidate_id = $8`
-	_, err := r.db.Exec(query, info.Name, info.Email, info.Phone, info.Address, info.DateOfBirth, info.Gender, info.Bio, info.CandidateID)
+	query := `UPDATE candidate_personal_info SET`
+	args := []interface{}{}
+	argIndex := 1
+	
+	if info.Name != "" {
+		query += fmt.Sprintf(" name = $%d,", argIndex)
+		args = append(args, info.Name)
+		argIndex++
+	}
+	if info.Email != "" {
+		query += fmt.Sprintf(" email = $%d,", argIndex)
+		args = append(args, info.Email)
+		argIndex++
+	}
+	if info.Phone != "" {
+		query += fmt.Sprintf(" phone = $%d,", argIndex)
+		args = append(args, info.Phone)
+		argIndex++
+	}
+	if info.Address != "" {
+		query += fmt.Sprintf(" address = $%d,", argIndex)
+		args = append(args, info.Address)
+		argIndex++
+	}
+	if info.DateOfBirth != "" {
+		query += fmt.Sprintf(" date_of_birth = $%d,", argIndex)
+		args = append(args, info.DateOfBirth)
+		argIndex++
+	}
+	if info.Gender != "" {
+		query += fmt.Sprintf(" gender = $%d,", argIndex)
+		args = append(args, info.Gender)
+		argIndex++
+	}
+	if info.Bio != "" {
+		query += fmt.Sprintf(" bio = $%d,", argIndex)
+		args = append(args, info.Bio)
+		argIndex++
+	}
+	
+	if len(args) == 0 {
+		return fmt.Errorf("no fields to update")
+	}
+	
+	query = query[:len(query)-1]
+	query += fmt.Sprintf(" WHERE candidate_id = $%d", argIndex)
+	args = append(args, info.CandidateID)
+	
+	_, err := r.db.Exec(query, args...)
 	if err != nil {
 		return fmt.Errorf("unable to update personal info: %w", err)
 	}
 	return nil
 }
-
 func (r *SQLCandidatePersonalInfoRepository) DeletePersonalInfo(id uuid.UUID) error {
 	query := `DELETE FROM candidate_personal_info WHERE candidate_id = $1`
 	_, err := r.db.Exec(query, id)

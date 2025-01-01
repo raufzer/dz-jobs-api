@@ -20,6 +20,7 @@ func NewCandidatePersonalInfoService(repo interfaces.CandidatePersonalInfoReposi
 
 func (s *CandidatePersonalInfoService) UpdatePersonalInfo(id uuid.UUID, request request.UpdatePersonalInfoRequest) (*models.CandidatePersonalInfo, error) {
 	info := &models.CandidatePersonalInfo{
+		CandidateID: id,
 		Name:    request.Name,
 		Email:   request.Email,
 		Phone:   request.Phone,
