@@ -3955,6 +3955,9 @@ const docTemplate = `{
                 "job_id": {
                     "type": "integer"
                 },
+                "job_type": {
+                    "type": "string"
+                },
                 "location": {
                     "type": "string"
                 },

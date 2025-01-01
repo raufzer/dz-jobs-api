@@ -18,6 +18,7 @@ type JobResponse struct {
     CreatedAt      time.Time `json:"created_at"`
     UpdatedAt      time.Time `json:"updated_at"`
     Status         string    `json:"status"`
+    JobType        string    `json:"job_type"`
 }
 
 func ToJobResponse(job *models.Job) JobResponse {
@@ -32,6 +33,7 @@ func ToJobResponse(job *models.Job) JobResponse {
         CreatedAt:      job.CreatedAt,
         UpdatedAt:      job.UpdatedAt,
         Status:         job.Status,
+        JobType:        job.JobType,
     }
 }
 
