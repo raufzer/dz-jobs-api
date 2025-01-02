@@ -4,6 +4,7 @@ import (
 	"dz-jobs-api/config"
 	"dz-jobs-api/internal/dto/response"
 	"dz-jobs-api/pkg/utils"
+	"golang.org/x/oauth2"
 	"net/http"
 	"time"
 
@@ -11,22 +12,19 @@ import (
 )
 
 type SystemController struct {
-	config *config.AppConfig
+	config      *config.AppConfig
+	database    *config.DatabaseConfig
+	redisClient *config.RedisConfig
 }
 
-func NewSystemController(config *config.AppConfig) *SystemController {
+func NewSystemController(config *config.AppConfig, db *config.DatabaseConfig, redis *config.RedisConfig) *SystemController {
 	return &SystemController{
-		config: config,
+		config:      config,
+		database:    db,
+		redisClient: redis,
 	}
 }
 
-// DefaultRoute godoc
-// @Summary Get the default route with API info
-// @Description Returns a welcome message and useful API links, including version, health check, documentation, and metrics
-// @Tags System - Default
-// @Produce json
-// @Success 200 {object} response.DefaultResponse
-// @Router / [get]
 func (c *SystemController) DefaultRoute(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response.DefaultResponse{
 		Message:       "Welcome to the DZ Jobs API",
@@ -51,8 +49,59 @@ func (c *SystemController) GetAPIVersion(ctx *gin.Context) {
 }
 
 func (c *SystemController) GetHealth(ctx *gin.Context) {
+
+	healthStatus := map[string]string{}
+
+	if err := utils.CheckDatabaseHealth(c.database.DB); err != nil {
+		healthStatus["database"] = "unhealthy"
+	} else {
+		healthStatus["database"] = "healthy"
+	}
+
+	if err := utils.CheckCacheHealth(c.redisClient.Client); err != nil {
+		healthStatus["cache"] = "unhealthy"
+	} else {
+		healthStatus["cache"] = "healthy"
+	}
+
+	if err := utils.CheckSendGridHealth(c.config.SendGridAPIKey); err != nil {
+		healthStatus["sendgrid"] = "unhealthy"
+	} else {
+		healthStatus["sendgrid"] = "healthy"
+	}
+
+	if err := utils.CheckCloudinaryHealth(c.config.CloudinaryCloudName, c.config.CloudinaryAPIKey, c.config.CloudinaryAPISecret); err != nil {
+		healthStatus["cloudinary"] = "unhealthy"
+	} else {
+		healthStatus["cloudinary"] = "healthy"
+	}
+
+	oauthConfig := &oauth2.Config{
+		ClientID:     c.config.GoogleClientID,
+		ClientSecret: c.config.GoogleClientSecret,
+		RedirectURL:  c.config.GoogleRedirectURL,
+		Scopes:       []string{"https://www.googleapis.com/auth/userinfo.email"},
+		Endpoint: oauth2.Endpoint{
+			AuthURL:  "https://accounts.google.com/o/oauth2/auth",
+			TokenURL: "https://accounts.google.com/o/oauth2/token",
+		},
+	}
+	if err := utils.CheckGoogleOAuthHealth(oauthConfig); err != nil {
+		healthStatus["google_oauth"] = "unhealthy"
+	} else {
+		healthStatus["google_oauth"] = "healthy"
+	}
+
+	healthStatus["status"] = response.AggregateHealthStatus(healthStatus)
+
 	ctx.JSON(http.StatusOK, response.HealthResponse{
-		Status: "healthy"})
+		Status:   healthStatus["status"],
+		Database: healthStatus["database"],
+		Cache:    healthStatus["cache"],
+		ExternalServices: "SendGrid: " + healthStatus["sendgrid"] + ", " +
+			"Cloudinary: " + healthStatus["cloudinary"] + ", " +
+			"Google OAuth: " + healthStatus["google_oauth"],
+	})
 }
 
 func (c *SystemController) GetMetrics(ctx *gin.Context) {

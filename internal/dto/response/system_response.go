@@ -18,7 +18,10 @@ type VersionResponse struct {
 }
 
 type HealthResponse struct {
-	Status string `json:"status"`
+	Status           string `json:"status"`
+	Database         string `json:"database"`
+	Cache            string `json:"cache"`
+	ExternalServices string `json:"external_services"`
 }
 
 type MetricsResponse struct {
@@ -27,3 +30,11 @@ type MetricsResponse struct {
 	ErrorRate    string `json:"error_rate"`
 }
 
+func AggregateHealthStatus(status map[string]string) string {
+	for _, serviceStatus := range status {
+		if serviceStatus == "unhealthy" {
+			return "unhealthy"
+		}
+	}
+	return "healthy"
+}
