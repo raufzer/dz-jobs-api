@@ -35,6 +35,9 @@ type AppConfig struct {
 	Environment              string
 	DocumentationURL         string
 	LastMigration            string
+	HealthURL                string
+	VersionURL               string
+	MetricsURL               string
 }
 
 func LoadConfig() (*AppConfig, error) {
@@ -87,6 +90,9 @@ func LoadConfig() (*AppConfig, error) {
 		Environment:              utils.GetEnv("ENVIRONMENT"),
 		DocumentationURL:         utils.GetEnv("DOC_URL"),
 		LastMigration:            utils.GetEnv("LAST_MIGRATION"),
+		HealthURL:                utils.GetEnv("HEALTH_URL"),
+		VersionURL:               utils.GetEnv("VERSION_URL"),
+		MetricsURL:               utils.GetEnv("METRICS_URL"),
 	}
 	return config, nil
 }
