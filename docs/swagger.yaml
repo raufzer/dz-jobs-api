@@ -320,19 +320,6 @@ definitions:
       total:
         type: integer
     type: object
-  response.DefaultResponse:
-    properties:
-      documentation:
-        type: string
-      health:
-        type: string
-      message:
-        type: string
-      metrics:
-        type: string
-      version:
-        type: string
-    type: object
   response.EducationResponse:
     properties:
       candidate_id:
@@ -385,11 +372,6 @@ definitions:
       total:
         type: integer
     type: object
-  response.HealthResponse:
-    properties:
-      status:
-        type: string
-    type: object
   response.JobResponse:
     properties:
       created_at:
@@ -423,15 +405,6 @@ definitions:
         type: array
       total:
         type: integer
-    type: object
-  response.MetricsResponse:
-    properties:
-      error_rate:
-        type: string
-      request_count:
-        type: string
-      uptime:
-        type: string
     type: object
   response.PersonalInfoResponse:
     properties:
@@ -547,25 +520,6 @@ definitions:
           $ref: '#/definitions/response.UserResponse'
         type: array
     type: object
-  response.VersionResponse:
-    properties:
-      api_version:
-        type: integer
-      build_version:
-        type: string
-      commit_hash:
-        type: string
-      documentation_url:
-        type: string
-      environment:
-        type: string
-      last_migration:
-        type: string
-      release_date:
-        type: string
-      status:
-        type: string
-    type: object
 host: dz-jobs-api-production.up.railway.app
 info:
   contact: {}
@@ -573,20 +527,6 @@ info:
   title: DZ Jobs API
   version: 1.1.3
 paths:
-  /:
-    get:
-      description: Returns a welcome message and useful API links, including version,
-        health check, documentation, and metrics
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.DefaultResponse'
-      summary: Get the default route with API info
-      tags:
-      - System - Default
   /admin/users:
     get:
       description: Get all users
@@ -2117,19 +2057,6 @@ paths:
       summary: Delete skill
       tags:
       - Candidates - Skills
-  /health:
-    get:
-      description: Returns the health status of the API.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: API is healthy
-          schema:
-            $ref: '#/definitions/response.HealthResponse'
-      summary: Get API health status
-      tags:
-      - System - Health
   /jobs:
     get:
       description: Retrieve all jobs in the system
@@ -2245,20 +2172,6 @@ paths:
       summary: Search for jobs
       tags:
       - Jobs
-  /metrics:
-    get:
-      description: Returns the metrics for the API including uptime, request count,
-        and error rate.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: API metrics data
-          schema:
-            $ref: '#/definitions/response.MetricsResponse'
-      summary: Get API metrics including uptime, request count, and error rate
-      tags:
-      - System - Metrics
   /recruiters:
     delete:
       description: Delete recruiter by recruiter_id
@@ -2735,18 +2648,4 @@ paths:
       summary: Repost a job
       tags:
       - Recruiters - Jobs
-  /version:
-    get:
-      description: Returns metadata about the API, including version, environment,
-        build details, and health status.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.VersionResponse'
-      summary: Get API version and metadata
-      tags:
-      - System - Version
 swagger: "2.0"
