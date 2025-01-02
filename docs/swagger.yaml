@@ -586,7 +586,7 @@ paths:
             $ref: '#/definitions/response.DefaultResponse'
       summary: Get the default route with API info
       tags:
-      - System
+      - System - Default
   /admin/users:
     get:
       description: Get all users
@@ -2129,7 +2129,7 @@ paths:
             $ref: '#/definitions/response.HealthResponse'
       summary: Get API health status
       tags:
-      - Health
+      - System - Health
   /jobs:
     get:
       description: Retrieve all jobs in the system
@@ -2258,7 +2258,7 @@ paths:
             $ref: '#/definitions/response.MetricsResponse'
       summary: Get API metrics including uptime, request count, and error rate
       tags:
-      - Metrics
+      - System - Metrics
   /recruiters:
     delete:
       description: Delete recruiter by recruiter_id
@@ -2748,5 +2748,5 @@ paths:
             $ref: '#/definitions/response.VersionResponse'
       summary: Get API version and metadata
       tags:
-      - Version
+      - System - Version
 swagger: "2.0"

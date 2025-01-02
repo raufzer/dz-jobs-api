@@ -22,7 +22,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "System"
+                    "System - Default"
                 ],
                 "summary": "Get the default route with API info",
                 "responses": {
@@ -2468,7 +2468,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Health"
+                    "System - Health"
                 ],
                 "summary": "Get API health status",
                 "responses": {
@@ -2679,7 +2679,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Metrics"
+                    "System - Metrics"
                 ],
                 "summary": "Get API metrics including uptime, request count, and error rate",
                 "responses": {
@@ -3455,7 +3455,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Version"
+                    "System - Version"
                 ],
                 "summary": "Get API version and metadata",
                 "responses": {
