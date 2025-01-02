@@ -11,13 +11,30 @@ import (
 )
 
 type SystemController struct {
-config *config.AppConfig
+	config *config.AppConfig
 }
 
 func NewSystemController(config *config.AppConfig) *SystemController {
 	return &SystemController{
 		config: config,
 	}
+}
+
+// DefaultRoute godoc
+// @Summary Get the default route with API info
+// @Description Returns a welcome message and useful API links, including version, health check, documentation, and metrics
+// @Tags System
+// @Produce json
+// @Success 200 {object} response.DefaultResponse
+// @Router / [get]
+func (c *SystemController) DefaultRoute(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, response.DefaultResponse{
+		Message:       "Welcome to the DZ Jobs API",
+		Version:       c.config.VersionURL,
+		Health:        c.config.HealthURL,
+		Documentation: c.config.DocumentationURL,
+		Metrics:       c.config.MetricsURL,
+	})
 }
 
 // GetVersion provides API version and metadata
@@ -60,7 +77,7 @@ func (c *SystemController) GetHealth(ctx *gin.Context) {
 // @Produce json
 // @Success 200 {object} response.MetricsResponse "API metrics data"
 // @Router /metrics [get]
-func (c *SystemController)  GetMetrics(ctx *gin.Context) {
+func (c *SystemController) GetMetrics(ctx *gin.Context) {
 	uptime, requestCount, errorRate := utils.GetMetrics()
 	ctx.JSON(http.StatusOK, response.MetricsResponse{
 		Uptime:       uptime,
