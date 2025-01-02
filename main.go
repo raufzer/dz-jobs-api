@@ -43,6 +43,7 @@ func main() {
 		deps.PortfolioController,
 		deps.JobController,
 		deps.BookmarksController,
+		deps.SystemController,
 		appConfig,
 	)
 

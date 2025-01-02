@@ -24,6 +24,7 @@ type AppDependencies struct {
 	RecruiterController      *controllers.RecruiterController
 	JobController            *controllers.JobController
 	BookmarksController      *controllers.BookmarksController
+	SystemController         *controllers.SystemController
 }
 
 func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
@@ -67,7 +68,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	skillsService := services.NewCandidateSkillService(skillsRepo)
 	certificationsService := services.NewCandidateCertificationsService(certificationRepo)
 	portfolioService := services.NewCandidatePortfolioService(portfolioRepo)
-	recruiterService := services.NewRecruiterService(recruiterRepo,redisRepo, cfg)
+	recruiterService := services.NewRecruiterService(recruiterRepo, redisRepo, cfg)
 	jobService := services.NewJobService(jobRepo)
 	bookmarksService := services.NewBookmarksService(bookmarksRepo)
 
@@ -84,6 +85,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	recruiterController := controllers.NewRecruiterController(recruiterService)
 	jobController := controllers.NewJobController(jobService)
 	bookmarksController := controllers.NewBookmarksController(bookmarksService)
+	systemController := controllers.NewSystemController(cfg)
 
 	// Return dependencies
 	return &AppDependencies{
@@ -100,5 +102,6 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 		RecruiterController:      recruiterController,
 		JobController:            jobController,
 		BookmarksController:      bookmarksController,
+		SystemController:         systemController,
 	}, nil
 }

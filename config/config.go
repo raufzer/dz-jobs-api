@@ -30,6 +30,11 @@ type AppConfig struct {
 	CloudinaryAPISecret      string
 	DefaultProfilePicture    string
 	DefaultResume            string
+	BuildVersion             string
+	CommitHash               string
+	Environment              string
+	DocumentationURL         string
+	LastMigration            string
 }
 
 func LoadConfig() (*AppConfig, error) {
@@ -77,6 +82,11 @@ func LoadConfig() (*AppConfig, error) {
 		CloudinaryAPISecret:      utils.GetEnv("CLOUDINARY_API_SECRET"),
 		DefaultProfilePicture:    utils.GetEnv("DEFAULT_PROFILE_PICTURE"),
 		DefaultResume:            utils.GetEnv("DEFAULT_RESUME"),
+		BuildVersion:             utils.GetEnv("BUILD_VERSION"),
+		CommitHash:               utils.GetEnv("COMMIT_HASH"),
+		Environment:              utils.GetEnv("ENVIRONMENT"),
+		DocumentationURL:         utils.GetEnv("DOC_URL"),
+		LastMigration:            utils.GetEnv("LAST_MIGRATION"),
 	}
 	return config, nil
 }
