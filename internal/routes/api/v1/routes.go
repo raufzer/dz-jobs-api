@@ -28,13 +28,14 @@ func RegisterRoutes(
 	portfolioController *controllers.CandidatePortfolioController,
 	jobController *controllers.JobController,
 	bookmarksController *controllers.BookmarksController,
+	systemController *controllers.SystemController,
 	appConfig *config.AppConfig,
 ) {
 	// Base path
 	basePath := router.Group("/v1")
 
 	// Public routes (no authentication required)
-	RegisterPublicRoutes(basePath, authController, jobController)
+	RegisterPublicRoutes(basePath, authController, jobController, systemController)
 
 	// Protected routes (authentication required)
 	protected := basePath.Group("/")
@@ -60,9 +61,11 @@ func RegisterPublicRoutes(
 	router *gin.RouterGroup,
 	authController *controllers.AuthController,
 	jobController *controllers.JobController,
+	systemController *controllers.SystemController,
 ) {
 	AuthRoutes(router, authController)
 	JobRoutes(router, jobController)
+	SystemRoutes(router, systemController)
 }
 
 // RegisterProtectedRoutes handles routes that require authentication
