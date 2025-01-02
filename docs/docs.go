@@ -15,6 +15,26 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/": {
+            "get": {
+                "description": "Returns a welcome message and useful API links, including version, health check, documentation, and metrics",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "System"
+                ],
+                "summary": "Get the default route with API info",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.DefaultResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/users": {
             "get": {
                 "description": "Get all users",
@@ -3915,6 +3935,26 @@ const docTemplate = `{
                 },
                 "total": {
                     "type": "integer"
+                }
+            }
+        },
+        "response.DefaultResponse": {
+            "type": "object",
+            "properties": {
+                "documentation": {
+                    "type": "string"
+                },
+                "health": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "metrics": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
                 }
             }
         },
