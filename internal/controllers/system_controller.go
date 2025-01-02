@@ -23,7 +23,7 @@ func NewSystemController(config *config.AppConfig) *SystemController {
 // DefaultRoute godoc
 // @Summary Get the default route with API info
 // @Description Returns a welcome message and useful API links, including version, health check, documentation, and metrics
-// @Tags System
+// @Tags System - Default
 // @Produce json
 // @Success 200 {object} response.DefaultResponse
 // @Router / [get]
@@ -40,7 +40,7 @@ func (c *SystemController) DefaultRoute(ctx *gin.Context) {
 // GetVersion provides API version and metadata
 // @Summary Get API version and metadata
 // @Description Returns metadata about the API, including version, environment, build details, and health status.
-// @Tags Version
+// @Tags System - Version
 // @Produce json
 // @Success 200 {object} response.VersionResponse
 // @Router /version [get]
@@ -61,7 +61,7 @@ func (c *SystemController) GetAPIVersion(ctx *gin.Context) {
 // GetHealth provides API health status
 // @Summary Get API health status
 // @Description Returns the health status of the API.
-// @Tags Health
+// @Tags System - Health
 // @Produce json
 // @Success 200 {object} response.HealthResponse "API is healthy"
 // @Router /health [get]
@@ -73,7 +73,7 @@ func (c *SystemController) GetHealth(ctx *gin.Context) {
 // GetMetrics provides API metrics
 // @Summary Get API metrics including uptime, request count, and error rate
 // @Description Returns the metrics for the API including uptime, request count, and error rate.
-// @Tags Metrics
+// @Tags System - Metrics
 // @Produce json
 // @Success 200 {object} response.MetricsResponse "API metrics data"
 // @Router /metrics [get]
