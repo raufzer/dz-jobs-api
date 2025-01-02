@@ -1,5 +1,12 @@
 package response
 
+type DefaultResponse struct {
+	Message       string `json:"message"`
+	Documentation string `json:"documentation"`
+	Version       string `json:"version"`
+	Health        string `json:"health"`
+	Metrics       string `json:"metrics"`
+}
 type VersionResponse struct {
 	APIVersion       int    `json:"api_version"`
 	BuildVersion     string `json:"build_version"`
