@@ -2461,26 +2461,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/health": {
-            "get": {
-                "description": "Returns the health status of the API.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "System - Health"
-                ],
-                "summary": "Get API health status",
-                "responses": {
-                    "200": {
-                        "description": "API is healthy",
-                        "schema": {
-                            "$ref": "#/definitions/response.HealthResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/jobs": {
             "get": {
                 "description": "Retrieve all jobs in the system",
@@ -2667,26 +2647,6 @@ const docTemplate = `{
                         "description": "Internal server error",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/metrics": {
-            "get": {
-                "description": "Returns the metrics for the API including uptime, request count, and error rate.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "System - Metrics"
-                ],
-                "summary": "Get API metrics including uptime, request count, and error rate",
-                "responses": {
-                    "200": {
-                        "description": "API metrics data",
-                        "schema": {
-                            "$ref": "#/definitions/response.MetricsResponse"
                         }
                     }
                 }
@@ -3447,26 +3407,6 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/version": {
-            "get": {
-                "description": "Returns metadata about the API, including version, environment, build details, and health status.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "System - Version"
-                ],
-                "summary": "Get API version and metadata",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.VersionResponse"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -4038,14 +3978,6 @@ const docTemplate = `{
                 }
             }
         },
-        "response.HealthResponse": {
-            "type": "object",
-            "properties": {
-                "status": {
-                    "type": "string"
-                }
-            }
-        },
         "response.JobResponse": {
             "type": "object",
             "properties": {
@@ -4095,20 +4027,6 @@ const docTemplate = `{
                 },
                 "total": {
                     "type": "integer"
-                }
-            }
-        },
-        "response.MetricsResponse": {
-            "type": "object",
-            "properties": {
-                "error_rate": {
-                    "type": "string"
-                },
-                "request_count": {
-                    "type": "string"
-                },
-                "uptime": {
-                    "type": "string"
                 }
             }
         },
@@ -4284,35 +4202,6 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/response.UserResponse"
                     }
-                }
-            }
-        },
-        "response.VersionResponse": {
-            "type": "object",
-            "properties": {
-                "api_version": {
-                    "type": "integer"
-                },
-                "build_version": {
-                    "type": "string"
-                },
-                "commit_hash": {
-                    "type": "string"
-                },
-                "documentation_url": {
-                    "type": "string"
-                },
-                "environment": {
-                    "type": "string"
-                },
-                "last_migration": {
-                    "type": "string"
-                },
-                "release_date": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
                 }
             }
         }

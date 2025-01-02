@@ -37,13 +37,6 @@ func (c *SystemController) DefaultRoute(ctx *gin.Context) {
 	})
 }
 
-// GetVersion provides API version and metadata
-// @Summary Get API version and metadata
-// @Description Returns metadata about the API, including version, environment, build details, and health status.
-// @Tags System - Version
-// @Produce json
-// @Success 200 {object} response.VersionResponse
-// @Router /version [get]
 func (c *SystemController) GetAPIVersion(ctx *gin.Context) {
 	loc, _ := time.LoadLocation("UTC")
 	ctx.JSON(http.StatusOK, response.VersionResponse{
@@ -58,25 +51,11 @@ func (c *SystemController) GetAPIVersion(ctx *gin.Context) {
 	})
 }
 
-// GetHealth provides API health status
-// @Summary Get API health status
-// @Description Returns the health status of the API.
-// @Tags System - Health
-// @Produce json
-// @Success 200 {object} response.HealthResponse "API is healthy"
-// @Router /health [get]
 func (c *SystemController) GetHealth(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response.HealthResponse{
 		Status: "healthy"})
 }
 
-// GetMetrics provides API metrics
-// @Summary Get API metrics including uptime, request count, and error rate
-// @Description Returns the metrics for the API including uptime, request count, and error rate.
-// @Tags System - Metrics
-// @Produce json
-// @Success 200 {object} response.MetricsResponse "API metrics data"
-// @Router /metrics [get]
 func (c *SystemController) GetMetrics(ctx *gin.Context) {
 	uptime, requestCount, errorRate := utils.GetMetrics()
 	ctx.JSON(http.StatusOK, response.MetricsResponse{
