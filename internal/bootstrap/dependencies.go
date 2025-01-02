@@ -85,7 +85,7 @@ func InitializeDependencies(cfg *config.AppConfig) (*AppDependencies, error) {
 	recruiterController := controllers.NewRecruiterController(recruiterService)
 	jobController := controllers.NewJobController(jobService)
 	bookmarksController := controllers.NewBookmarksController(bookmarksService)
-	systemController := controllers.NewSystemController(cfg)
+	systemController := controllers.NewSystemController(cfg, dbConfig, redisConfig)
 
 	// Return dependencies
 	return &AppDependencies{
