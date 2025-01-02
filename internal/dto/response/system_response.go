@@ -13,7 +13,6 @@ type VersionResponse struct {
 	CommitHash       string `json:"commit_hash"`
 	ReleaseDate      string `json:"release_date"`
 	Environment      string `json:"environment"`
-	Status           string `json:"status"`
 	DocumentationURL string `json:"documentation_url"`
 	LastMigration    string `json:"last_migration"`
 }

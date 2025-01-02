@@ -45,7 +45,6 @@ func (c *SystemController) GetAPIVersion(ctx *gin.Context) {
 		CommitHash:       c.config.CommitHash,
 		ReleaseDate:      time.Now().In(loc).Format("2006-01-02"),
 		Environment:      c.config.Environment,
-		Status:           "healthy",
 		DocumentationURL: c.config.DocumentationURL,
 		LastMigration:    c.config.LastMigration,
 	})
