@@ -9,8 +9,8 @@ import (
 )
 
 type AppConfig struct {
-	Domain                   string
-	FrontDomain              string
+	BackEndDomain            string
+	FrontEndDomain           string
 	ServerPort               string
 	DatabaseURI              string
 	RedisURI                 string
@@ -38,6 +38,7 @@ type AppConfig struct {
 	HealthURL                string
 	VersionURL               string
 	MetricsURL               string
+	ServiceEmail             string
 }
 
 func LoadConfig() (*AppConfig, error) {
@@ -45,54 +46,37 @@ func LoadConfig() (*AppConfig, error) {
 	if err != nil {
 		log.Println("Warning: No .env file found, using default environment variables.")
 	}
-	accessTokenMaxAgeStr := utils.GetEnv("ACCESS_TOKEN_MAX_AGE")
-	accessTokenMaxAge, err := time.ParseDuration(accessTokenMaxAgeStr)
-	if err != nil {
-		log.Println("Failed: getting token failed")
-	}
-
-	refreshTokenMaxAgeStr := utils.GetEnv("REFRESH_TOKEN_MAX_AGE")
-	refreshTokenMaxAge, err := time.ParseDuration(refreshTokenMaxAgeStr)
-	if err != nil {
-		log.Println("Failed: getting token failed")
-	}
-
-	resetPasswordTokenMaxAgeStr := utils.GetEnv("RESET_PASSWORD_TOKEN_MAX_AGE")
-	resetPasswordTokenMaxAge, err := time.ParseDuration(resetPasswordTokenMaxAgeStr)
-	if err != nil {
-		log.Println("Failed: getting token failed")
-	}
-
 	config := &AppConfig{
-		Domain:                   utils.GetEnv("DOMAIN"),
-		FrontDomain:              utils.GetEnv("FRONT_DOMAIN"),
-		ServerPort:               utils.GetEnv("SERVER_PORT"),
-		DatabaseURI:              utils.GetEnv("DATABASE_URI"),
-		RedisURI:                 utils.GetEnv("REDIS_URI"),
-		RedisPassword:            utils.GetEnv("REDIS_PASSWORD"),
-		SendGridAPIKey:           utils.GetEnv("SENDGRID_API_KEY"),
-		AccessTokenSecret:        utils.GetEnv("ACCESS_TOKEN_SECRET"),
-		RefreshTokenSecret:       utils.GetEnv("REFRESH_TOKEN_SECRET"),
-		ResetPasswordTokenSecret: utils.GetEnv("RESET_PASSWORD_TOKEN_SECRET"),
-		AccessTokenMaxAge:        accessTokenMaxAge,
-		RefreshTokenMaxAge:       refreshTokenMaxAge,
-		ResetPasswordTokenMaxAge: resetPasswordTokenMaxAge,
-		GoogleClientID:           utils.GetEnv("GOOGLE_CLIENT_ID"),
-		GoogleClientSecret:       utils.GetEnv("GOOGLE_CLIENT_SECRET"),
-		GoogleRedirectURL:        utils.GetEnv("GOOGLE_REDIRECT_URL"),
-		CloudinaryCloudName:      utils.GetEnv("CLOUDINARY_CLOUD_NAME"),
-		CloudinaryAPIKey:         utils.GetEnv("CLOUDINARY_API_KEY"),
-		CloudinaryAPISecret:      utils.GetEnv("CLOUDINARY_API_SECRET"),
-		DefaultProfilePicture:    utils.GetEnv("DEFAULT_PROFILE_PICTURE"),
-		DefaultResume:            utils.GetEnv("DEFAULT_RESUME"),
-		BuildVersion:             utils.GetEnv("BUILD_VERSION"),
-		CommitHash:               utils.GetEnv("COMMIT_HASH"),
-		Environment:              utils.GetEnv("ENVIRONMENT"),
-		DocumentationURL:         utils.GetEnv("DOC_URL"),
-		LastMigration:            utils.GetEnv("LAST_MIGRATION"),
-		HealthURL:                utils.GetEnv("HEALTH_URL"),
-		VersionURL:               utils.GetEnv("VERSION_URL"),
-		MetricsURL:               utils.GetEnv("METRICS_URL"),
+		BackEndDomain:            utils.GetEnv("BACK_END_DOMAIN", "string").(string),
+		FrontEndDomain:           utils.GetEnv("FRONT_END_DOMAIN", "string").(string),
+		ServerPort:               utils.GetEnv("SERVER_PORT", "string").(string),
+		DatabaseURI:              utils.GetEnv("DATABASE_URI", "string").(string),
+		RedisURI:                 utils.GetEnv("REDIS_URI", "string").(string),
+		RedisPassword:            utils.GetEnv("REDIS_PASSWORD", "string").(string),
+		SendGridAPIKey:           utils.GetEnv("SENDGRID_API_KEY", "string").(string),
+		AccessTokenSecret:        utils.GetEnv("ACCESS_TOKEN_SECRET", "string").(string),
+		RefreshTokenSecret:       utils.GetEnv("REFRESH_TOKEN_SECRET", "string").(string),
+		ResetPasswordTokenSecret: utils.GetEnv("RESET_PASSWORD_TOKEN_SECRET", "string").(string),
+		AccessTokenMaxAge:        utils.GetEnv("ACCESS_TOKEN_MAX_AGE", "duration").(time.Duration),
+		RefreshTokenMaxAge:       utils.GetEnv("REFRESH_TOKEN_MAX_AGE", "duration").(time.Duration),
+		ResetPasswordTokenMaxAge: utils.GetEnv("RESET_PASSWORD_TOKEN_MAX_AGE", "duration").(time.Duration),
+		GoogleClientID:           utils.GetEnv("GOOGLE_CLIENT_ID", "string").(string),
+		GoogleClientSecret:       utils.GetEnv("GOOGLE_CLIENT_SECRET", "string").(string),
+		GoogleRedirectURL:        utils.GetEnv("GOOGLE_REDIRECT_URL", "string").(string),
+		CloudinaryCloudName:      utils.GetEnv("CLOUDINARY_CLOUD_NAME", "string").(string),
+		CloudinaryAPIKey:         utils.GetEnv("CLOUDINARY_API_KEY", "string").(string),
+		CloudinaryAPISecret:      utils.GetEnv("CLOUDINARY_API_SECRET", "string").(string),
+		DefaultProfilePicture:    utils.GetEnv("DEFAULT_PROFILE_PICTURE", "string").(string),
+		DefaultResume:            utils.GetEnv("DEFAULT_RESUME", "string").(string),
+		BuildVersion:             utils.GetEnv("BUILD_VERSION", "string").(string),
+		CommitHash:               utils.GetEnv("COMMIT_HASH", "string").(string),
+		Environment:              utils.GetEnv("ENVIRONMENT", "string").(string),
+		DocumentationURL:         utils.GetEnv("DOC_URL", "string").(string),
+		LastMigration:            utils.GetEnv("LAST_MIGRATION", "string").(string),
+		HealthURL:                utils.GetEnv("HEALTH_URL", "string").(string),
+		VersionURL:               utils.GetEnv("VERSION_URL", "string").(string),
+		MetricsURL:               utils.GetEnv("METRICS_URL", "string").(string),
+		ServiceEmail:             utils.GetEnv("SERVICE_EMAIL", "string").(string),
 	}
 	return config, nil
 }
