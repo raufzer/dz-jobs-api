@@ -1,6 +1,7 @@
 package integrations
 
 import (
+	"dz-jobs-api/config"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -11,6 +12,7 @@ import (
 )
 
 func SendOTPEmail(email, otp, sendGridAPIKey string) error {
+	appConfig, _ := config.LoadConfig()
 	if sendGridAPIKey == "" {
 		return fmt.Errorf("SendGrid API key is missing")
 	}
@@ -18,7 +20,7 @@ func SendOTPEmail(email, otp, sendGridAPIKey string) error {
 	client := sendgrid.NewSendClient(sendGridAPIKey)
 	subject := "Dz Jobs password assistance"
 
-	from := mail.NewEmail("Dz Jobs", "dzjobs.service@gmail.com")
+	from := mail.NewEmail("Dz Jobs", appConfig.ServiceEmail)
 	to := mail.NewEmail(email, email)
 
 	templatePath := filepath.Join("internal", "templates", "otp_email_template.html")
