@@ -33,11 +33,11 @@ func CheckCacheHealth(redisClient *redis.Client) error {
 	return nil
 }
 
-func CheckSendGridHealth(apiKey string) error {
+func CheckSendGridHealth(apiKey string, email string) error {
 	client := sendgrid.NewSendClient(apiKey)
 
-	from := mail.NewEmail("Health Check", "dzjobs.service@gmail.com")
-	to := mail.NewEmail("Health Check", "zerkhefraouf90@gmail.com")
+	from := mail.NewEmail("Health Check", email)
+	to := mail.NewEmail("Health Check", email)
 	message := mail.NewSingleEmail(from, "Health Check", to, "This is a test.", "<p>This is a test.</p>")
 
 	response, err := client.Send(message)
