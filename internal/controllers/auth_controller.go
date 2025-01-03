@@ -52,8 +52,8 @@ func (c *AuthController) Login(ctx *gin.Context) {
 		return
 	}
 	isProduction := c.config.ServerPort != "9090"
-	utils.SetAuthCookie(ctx, "access_token", accessToken, c.config.AccessTokenMaxAge, c.config.Domain, isProduction)
-	utils.SetAuthCookie(ctx, "refresh_token", refreshToken, c.config.RefreshTokenMaxAge, c.config.Domain, isProduction)
+	utils.SetAuthCookie(ctx, "access_token", accessToken, c.config.AccessTokenMaxAge, c.config.BackEndDomain, isProduction)
+	utils.SetAuthCookie(ctx, "refresh_token", refreshToken, c.config.RefreshTokenMaxAge, c.config.BackEndDomain, isProduction)
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",
@@ -92,7 +92,7 @@ func (c *AuthController) RefreshToken(ctx *gin.Context) {
 	}
 
 	isProduction := c.config.ServerPort != "9090"
-	utils.SetAuthCookie(ctx, "access_token", accessToken, c.config.AccessTokenMaxAge, c.config.Domain, isProduction)
+	utils.SetAuthCookie(ctx, "access_token", accessToken, c.config.AccessTokenMaxAge, c.config.BackEndDomain, isProduction)
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",
@@ -118,8 +118,8 @@ func (c *AuthController) Logout(ctx *gin.Context) {
 	userID, _, _ := c.authService.ValidateToken(refreshToken)
 	c.authService.Logout(userID, refreshToken)
 	isProduction := c.config.ServerPort != "9090"
-	utils.SetAuthCookie(ctx, "access_token", "", -1, c.config.Domain, isProduction)
-	utils.SetAuthCookie(ctx, "refresh_token", "", -1, c.config.Domain, isProduction)
+	utils.SetAuthCookie(ctx, "access_token", "", -1, c.config.BackEndDomain, isProduction)
+	utils.SetAuthCookie(ctx, "refresh_token", "", -1, c.config.BackEndDomain, isProduction)
 
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
@@ -216,7 +216,7 @@ func (c *AuthController) VerifyOTP(ctx *gin.Context) {
 		return
 	}
 	isProduction := c.config.ServerPort != "9090"
-	utils.SetAuthCookie(ctx, "reset_token", resetToken, c.config.ResetPasswordTokenMaxAge, c.config.Domain, isProduction)
+	utils.SetAuthCookie(ctx, "reset_token", resetToken, c.config.ResetPasswordTokenMaxAge, c.config.BackEndDomain, isProduction)
 	ctx.JSON(http.StatusOK, response.Response{
 		Code:    http.StatusOK,
 		Status:  "OK",
@@ -274,7 +274,7 @@ func (c *AuthController) ResetPassword(ctx *gin.Context) {
 // @Router /auth/google/connect [get]
 func (c *AuthController) GoogleConnect(ctx *gin.Context) {
 	role := ctx.Query("role")
-	ctx.SetCookie("role", role, 3600, "/", c.config.Domain, false, true)
+	ctx.SetCookie("role", role, 3600, "/", c.config.BackEndDomain, false, true)
 	oauthConfig := integrations.InitializeGoogleOAuthConfig(c.config.GoogleClientID, c.config.GoogleClientSecret, c.config.GoogleRedirectURL)
 
 	authURL := oauthConfig.AuthCodeURL("", oauth2.AccessTypeOffline)
@@ -319,8 +319,8 @@ func (c *AuthController) GoogleCallbackConnect(ctx *gin.Context) {
 		})
 	} else if connect == "login" {
 		isProduction := c.config.ServerPort != "9090"
-		utils.SetAuthCookie(ctx, "access_token", accessToken, c.config.AccessTokenMaxAge, c.config.Domain, isProduction)
-		utils.SetAuthCookie(ctx, "refresh_token", refreshToken, c.config.RefreshTokenMaxAge, c.config.Domain, isProduction)
+		utils.SetAuthCookie(ctx, "access_token", accessToken, c.config.AccessTokenMaxAge, c.config.BackEndDomain, isProduction)
+		utils.SetAuthCookie(ctx, "refresh_token", refreshToken, c.config.RefreshTokenMaxAge, c.config.BackEndDomain, isProduction)
 		ctx.JSON(http.StatusOK, response.Response{
 			Code:    http.StatusOK,
 			Status:  "OK",
