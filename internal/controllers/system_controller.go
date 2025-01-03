@@ -64,7 +64,7 @@ func (c *SystemController) GetHealth(ctx *gin.Context) {
 		healthStatus["cache"] = "healthy"
 	}
 
-	if err := utils.CheckSendGridHealth(c.config.SendGridAPIKey); err != nil {
+	if err := utils.CheckSendGridHealth(c.config.SendGridAPIKey, c.config.ServiceEmail); err != nil {
 		healthStatus["sendgrid"] = "unhealthy"
 	} else {
 		healthStatus["sendgrid"] = "healthy"
