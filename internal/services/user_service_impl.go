@@ -22,8 +22,11 @@ func NewUserService(userRepo interfaces.UserRepository) *UserService {
 
 func (s *UserService) CreateUser(req request.CreateUsersRequest) (*models.User, error) {
 	existingUser, err := s.userRepository.GetUserByEmail(req.Email)
-	if err != nil && err != sql.ErrNoRows {
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Database error occurred")
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, utils.NewCustomError(http.StatusNotFound, "User not found")
+		}
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Error fetching User")
 	}
 	if existingUser != nil {
 		return nil, utils.NewCustomError(http.StatusBadRequest, "User already exists")
