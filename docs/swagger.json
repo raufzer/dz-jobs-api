@@ -4,31 +4,11 @@
         "description": "This is the API documentation for the DZ Jobs portal.",
         "title": "DZ Jobs API",
         "contact": {},
-        "version": "1.1.3"
+        "version": "1.1.4"
     },
     "host": "dz-jobs-api-production.up.railway.app",
     "basePath": "/v1",
     "paths": {
-        "/": {
-            "get": {
-                "description": "Returns a welcome message and useful API links, including version, health check, documentation, and metrics",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "System - Default"
-                ],
-                "summary": "Get the default route with API info",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.DefaultResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/admin/users": {
             "get": {
                 "description": "Get all users",
@@ -1573,7 +1553,9 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/candidates/education/{education_id}": {
             "delete": {
                 "description": "Delete an education record by candidate ID",
                 "produces": [
@@ -1583,6 +1565,15 @@
                     "Candidates - Education"
                 ],
                 "summary": "Delete education record",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Education ID",
+                        "name": "education_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Education deleted successfully",
@@ -1757,7 +1748,9 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/candidates/experience/{experience_id}": {
             "delete": {
                 "description": "Delete an experience record by candidate ID",
                 "produces": [
@@ -3869,26 +3862,6 @@
                 },
                 "total": {
                     "type": "integer"
-                }
-            }
-        },
-        "response.DefaultResponse": {
-            "type": "object",
-            "properties": {
-                "documentation": {
-                    "type": "string"
-                },
-                "health": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "metrics": {
-                    "type": "string"
-                },
-                "version": {
-                    "type": "string"
                 }
             }
         },

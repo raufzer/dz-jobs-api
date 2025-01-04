@@ -15,26 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/": {
-            "get": {
-                "description": "Returns a welcome message and useful API links, including version, health check, documentation, and metrics",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "System - Default"
-                ],
-                "summary": "Get the default route with API info",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.DefaultResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/admin/users": {
             "get": {
                 "description": "Get all users",
@@ -1579,7 +1559,9 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
+            }
+        },
+        "/candidates/education/{education_id}": {
             "delete": {
                 "description": "Delete an education record by candidate ID",
                 "produces": [
@@ -1589,6 +1571,15 @@ const docTemplate = `{
                     "Candidates - Education"
                 ],
                 "summary": "Delete education record",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Education ID",
+                        "name": "education_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Education deleted successfully",
@@ -1763,7 +1754,9 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
+            }
+        },
+        "/candidates/experience/{experience_id}": {
             "delete": {
                 "description": "Delete an experience record by candidate ID",
                 "produces": [
@@ -3878,26 +3871,6 @@ const docTemplate = `{
                 }
             }
         },
-        "response.DefaultResponse": {
-            "type": "object",
-            "properties": {
-                "documentation": {
-                    "type": "string"
-                },
-                "health": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "metrics": {
-                    "type": "string"
-                },
-                "version": {
-                    "type": "string"
-                }
-            }
-        },
         "response.EducationResponse": {
             "type": "object",
             "properties": {
@@ -4210,7 +4183,7 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.1.3",
+	Version:          "1.1.4",
 	Host:             "dz-jobs-api-production.up.railway.app",
 	BasePath:         "/v1",
 	Schemes:          []string{},
