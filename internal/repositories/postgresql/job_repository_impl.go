@@ -8,10 +8,11 @@ import (
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/lib/pq"
+
 )
 
 type SQLJobRepository struct {
@@ -273,10 +274,14 @@ func (r *SQLJobRepository) GetJobListings(filters request.JobFilters) ([]*models
 		paramCount += len(salaryRangeArgs)
 	}
 
-	if len(filters.Skills) > 0 {
-		query += fmt.Sprintf(" AND required_skills && $%d", paramCount)
-		args = append(args, pq.Array(filters.Skills))
-		paramCount++
+	if len(filters.RequiredSkills) > 0 {
+		skillConditions := []string{}
+		for _, skill := range filters.RequiredSkills {
+			skillConditions = append(skillConditions, fmt.Sprintf("required_skills ILIKE $%d", paramCount))
+			args = append(args, "%"+skill+"%")
+			paramCount++
+		}
+		query += " AND (" + strings.Join(skillConditions, " OR ") + ")"
 	}
 
 	if filters.Keyword != "" {
