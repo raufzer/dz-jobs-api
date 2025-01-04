@@ -6,7 +6,6 @@ import (
 	"dz-jobs-api/internal/models"
 	"dz-jobs-api/internal/repositories/interfaces"
 	"dz-jobs-api/pkg/utils"
-	"log"
 	"net/http"
 	"time"
 
@@ -36,7 +35,6 @@ func (s *JobService) PostNewJob(recruiterID uuid.UUID, req request.PostNewJobReq
 	}
 
 	if err := s.jobRepository.CreateJob(job); err != nil {
-		log.Println(err)
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Job posting failed")
 	}
 
