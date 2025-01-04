@@ -1627,6 +1627,12 @@ paths:
   /candidates/experience/{experience_id}:
     delete:
       description: Delete an experience record by candidate ID and experience ID
+      parameters:
+      - description: Experience ID
+        in: path
+        name: experience_id
+        required: true
+        type: string
       produces:
       - application/json
       responses:

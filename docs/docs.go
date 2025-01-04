@@ -1766,6 +1766,15 @@ const docTemplate = `{
                     "Candidates - Experience"
                 ],
                 "summary": "Delete experience record",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Experience ID",
+                        "name": "experience_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Experience deleted successfully",
