@@ -49,9 +49,9 @@ func (r *SQLCandidateExperienceRepository) GetExperience(id uuid.UUID) ([]models
 	return experiences, nil
 }
 
-func (r *SQLCandidateExperienceRepository) DeleteExperience(id uuid.UUID) error {
-	query := `DELETE FROM candidate_experience WHERE experience_id = $1`
-	_, err := r.db.Exec(query, id)
+func (r *SQLCandidateExperienceRepository) DeleteExperience(candidateID uuid.UUID, experienceID uuid.UUID) error {
+	query := `DELETE FROM candidate_experience WHERE experience_id = $1 AND candidate_id = $2`
+	_, err := r.db.Exec(query, experienceID, candidateID)
 	if err != nil {
 		return fmt.Errorf("unable to delete experience: %w", err)
 	}

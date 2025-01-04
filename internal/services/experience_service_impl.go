@@ -1,10 +1,10 @@
 package services
 
 import (
-    "dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/models"
+	"dz-jobs-api/internal/repositories/interfaces"
 	"dz-jobs-api/pkg/utils"
-    "dz-jobs-api/internal/models"
-    "dz-jobs-api/internal/repositories/interfaces"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -46,8 +46,8 @@ func (s *CandidateExperienceService) GetExperience(candidateID uuid.UUID) ([]mod
 	return experiences, nil
 }
 
-func (s *CandidateExperienceService) DeleteExperience(experienceID uuid.UUID) error {
-	err := s.candidateExperienceRepo.DeleteExperience(experienceID)
+func (s *CandidateExperienceService) DeleteExperience(candidateID uuid.UUID, experienceID uuid.UUID) error {
+	err := s.candidateExperienceRepo.DeleteExperience(candidateID, experienceID)
 	if err != nil {
 		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete experience")
 	}

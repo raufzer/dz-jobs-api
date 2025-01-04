@@ -10,5 +10,5 @@ import (
 type CandidateExperienceService interface {
 	AddExperience(candidateID uuid.UUID, request request.AddExperienceRequest) (*models.CandidateExperience, error)
 	GetExperience(candidateID uuid.UUID) ([]models.CandidateExperience, error)
-	DeleteExperience(experienceID uuid.UUID) error
+	DeleteExperience(candidateID uuid.UUID, experienceID uuid.UUID) error
 }

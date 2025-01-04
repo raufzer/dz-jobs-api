@@ -1,9 +1,9 @@
 package controllers
 
 import (
-    "dz-jobs-api/internal/dto/request"
-    "dz-jobs-api/internal/dto/response"
-    serviceInterfaces "dz-jobs-api/internal/services/interfaces"
+	"dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/dto/response"
+	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -82,7 +82,7 @@ func (c *CandidateExperienceController) GetExperience(ctx *gin.Context) {
 		Code:    http.StatusOK,
 		Status:  "OK",
 		Message: "Experience retrieved successfully",
-		Data: response.ToExperiencesResponse(experiences),
+		Data:    response.ToExperiencesResponse(experiences),
 	})
 }
 
@@ -90,6 +90,7 @@ func (c *CandidateExperienceController) GetExperience(ctx *gin.Context) {
 // @Summary Delete experience record
 // @Description Delete an experience record by candidate ID
 // @Tags Candidates - Experience
+// @Parm experience_id path string true "Experience ID"
 // @Produce json
 // @Success 200 {object} response.Response "Experience deleted successfully"
 // @Failure 400 {object} response.Response "Invalid input"
@@ -98,12 +99,13 @@ func (c *CandidateExperienceController) GetExperience(ctx *gin.Context) {
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 404 {object} response.Response "Experience not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/experience [delete]
+// @Router /candidates/experience/{experience_id} [delete]
 func (c *CandidateExperienceController) DeleteExperience(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, _ := uuid.Parse(userID.(string))
-
-	err := c.service.DeleteExperience(candidateID)
+	experienceIDstr := ctx.Param("experience_id")
+	experienceID, _ := uuid.Parse(experienceIDstr)
+	err := c.service.DeleteExperience(candidateID, experienceID)
 	if err != nil {
 		ctx.Error(err)
 		return
