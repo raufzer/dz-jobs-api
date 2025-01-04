@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"time"
 )
@@ -9,20 +9,20 @@ import (
 func GetEnv(key string, valueType string) interface{} {
 	value := os.Getenv(key)
 	if value == "" {
-		log.Fatalf("Environment variable %s is not set.", key)
+		fmt.Errorf("Environment variable %s not set", key)
 	}
 
 	switch valueType {
 	case "duration":
 		duration, err := time.ParseDuration(value)
 		if err != nil {
-			log.Fatalf("Error parsing duration from environment variable %s: %v", key, err)
+			fmt.Errorf("Failed to parse duration for environment variable %s: %w", key, err)
 		}
 		return duration
 	case "string":
 		return value
 	default:
-		log.Fatalf("Unsupported value type %s for environment variable %s", valueType, key)
+		fmt.Errorf("Unsupported value type %s", valueType)
 		return nil
 	}
 }
