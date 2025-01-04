@@ -25,7 +25,7 @@ type JobFilters struct {
    Location       string   `form:"location"`
    SalaryRangeMin float64  `form:"min_salary"`
    SalaryRangeMax float64  `form:"max_salary"`
-   Skills         []string `form:"skills"`
+   RequiredSkills         []string `form:"required_skills"`
    Keyword        string   `form:"keyword"`
    JobType        string   `form:"job_type"`
 }
