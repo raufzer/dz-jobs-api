@@ -8,7 +8,6 @@ import (
 	"dz-jobs-api/internal/models"
 	"dz-jobs-api/internal/repositories/interfaces"
 	"dz-jobs-api/pkg/utils"
-	"log"
 	"mime/multipart"
 	"net/http"
 	"time"
@@ -74,7 +73,6 @@ func (s *RecruiterService) GetRecruiter(recruiter_id uuid.UUID) (*models.Recruit
 	}
 	return recruiter, nil
 }
-
 
 func (s *RecruiterService) UpdateRecruiter(recruiter_id uuid.UUID, req request.UpdateRecruiterRequest, companyLogo *multipart.FileHeader) (*models.Recruiter, error) {
 	existingRecruiter, err := s.recruiterRepository.GetRecruiter(recruiter_id)
@@ -150,8 +148,8 @@ func (s *RecruiterService) uploadAndCacheFile(file *multipart.FileHeader, fileTy
 
 	err = s.redisRepository.StoreAssetCache(uploadURL, fileType, assetCache, 24*time.Hour)
 	if err != nil {
-		log.Printf("Failed to store file in cache: %v", err)
-	}
+		return "", utils.NewCustomError(http.StatusInternalServerError, "Failed to cache asset")
+	}	
 
 	return uploadURL, nil
 }
