@@ -2154,7 +2154,7 @@ paths:
         in: query
         items:
           type: string
-        name: skills
+        name: required_skills
         type: array
       - in: query
         name: status

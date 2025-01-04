@@ -2546,7 +2546,7 @@ const docTemplate = `{
                             "type": "string"
                         },
                         "collectionFormat": "csv",
-                        "name": "skills",
+                        "name": "required_skills",
                         "in": "query"
                     },
                     {
