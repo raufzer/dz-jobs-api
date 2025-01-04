@@ -8,7 +8,6 @@ import (
 	"dz-jobs-api/internal/repositories/interfaces"
 	"dz-jobs-api/pkg/utils"
 	"io"
-	"log"
 	"mime/multipart"
 	"net/http"
 	"time"
@@ -94,9 +93,9 @@ func (s *CandidateService) GetCandidate(candidateID uuid.UUID) (*models.Candidat
 	candidate, err := s.candidateRepo.GetCandidate(candidateID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, utils.NewCustomError(http.StatusNotFound, "User not found")
+			return nil, utils.NewCustomError(http.StatusNotFound, "Candidate not found")
 		}
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Error fetching user")
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Error fetching Candidate")
 	}
 
 	return candidate, nil
@@ -137,7 +136,7 @@ func (s *CandidateService) uploadAndCacheFile(file *multipart.FileHeader, fileTy
 
 	err = s.redisRepository.StoreAssetCache(uploadURL, fileType, assetCache, 24*time.Hour)
 	if err != nil {
-		log.Printf("Failed to store file in cache: %v", err)
+		return "", utils.NewCustomError(http.StatusInternalServerError, "Failed to cache asset")
 	}
 
 	return uploadURL, nil
