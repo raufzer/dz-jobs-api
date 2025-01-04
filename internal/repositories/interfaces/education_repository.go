@@ -7,6 +7,6 @@ import (
 
 type CandidateEducationRepository interface {
 	CreateEducation(education *models.CandidateEducation) error
-	GetEducation(id uuid.UUID) ([]models.CandidateEducation, error)
-	DeleteEducation(id uuid.UUID) error
+	GetEducation(educationID uuid.UUID) ([]models.CandidateEducation, error)
+	DeleteEducation(candidateID uuid.UUID, educationID uuid.UUID) error
 }

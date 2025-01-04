@@ -2,24 +2,23 @@ package services
 
 import (
 	"dz-jobs-api/config"
-    "dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/models"
+	"dz-jobs-api/internal/repositories/interfaces"
 	"dz-jobs-api/pkg/utils"
-    "dz-jobs-api/internal/models"
-    "dz-jobs-api/internal/repositories/interfaces"
 	"net/http"
-
 
 	"github.com/google/uuid"
 )
 
 type CandidateEducationService struct {
 	candidateEducationRepo interfaces.CandidateEducationRepository
-	config        *config.AppConfig
+	config                 *config.AppConfig
 }
 
 func NewCandidateEducationService(repo interfaces.CandidateEducationRepository, config *config.AppConfig) *CandidateEducationService {
 	return &CandidateEducationService{candidateEducationRepo: repo,
-		config: config}	
+		config: config}
 }
 
 func (s *CandidateEducationService) AddEducation(candidateID uuid.UUID, request request.AddEducationRequest) (*models.CandidateEducation, error) {
@@ -51,12 +50,11 @@ func (s *CandidateEducationService) GetEducation(candidateID uuid.UUID) ([]model
 	return educations, nil
 }
 
-func (s *CandidateEducationService) DeleteEducation(educationID uuid.UUID) error {
-	err := s.candidateEducationRepo.DeleteEducation(educationID)
+func (s *CandidateEducationService) DeleteEducation(candidateID uuid.UUID, educationID uuid.UUID) error {
+	err := s.candidateEducationRepo.DeleteEducation(candidateID, educationID)
 	if err != nil {
 		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete education")
 	}
 
 	return nil
 }
-

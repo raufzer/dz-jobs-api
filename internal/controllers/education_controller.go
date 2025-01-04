@@ -1,21 +1,21 @@
 package controllers
 
 import (
-    "dz-jobs-api/internal/dto/request"
-    "dz-jobs-api/internal/dto/response"
-    serviceInterfaces "dz-jobs-api/internal/services/interfaces"
-   "net/http"
+	"dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/dto/response"
+	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
+	"net/http"
 
-   "github.com/gin-gonic/gin"
-   "github.com/google/uuid"
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type CandidateEducationController struct {
-   service serviceInterfaces.CandidateEducationService
+	service serviceInterfaces.CandidateEducationService
 }
 
 func NewCandidateEducationController(service serviceInterfaces.CandidateEducationService) *CandidateEducationController {
-   return &CandidateEducationController{service: service}
+	return &CandidateEducationController{service: service}
 }
 
 // AddEducation godoc
@@ -36,24 +36,24 @@ func (c *CandidateEducationController) AddEducation(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, _ := uuid.Parse(userID.(string))
 
-   var req request.AddEducationRequest
-   if err := ctx.ShouldBindJSON(&req); err != nil {
-       ctx.Error(err)
-       ctx.Abort()
-       return
-   }
+	var req request.AddEducationRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
 
-   education, err := c.service.AddEducation(candidateID, req)
-   if err != nil {
-       ctx.Error(err)
-       return
-   }
-   ctx.JSON(http.StatusCreated, response.Response{
-       Code:    http.StatusCreated,
-       Status:  "Created",
-       Message: "Education created successfully",
-       Data:    response.ToEducationResponse(education),
-   })
+	education, err := c.service.AddEducation(candidateID, req)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+	ctx.JSON(http.StatusCreated, response.Response{
+		Code:    http.StatusCreated,
+		Status:  "Created",
+		Message: "Education created successfully",
+		Data:    response.ToEducationResponse(education),
+	})
 }
 
 // GetEducation godoc
@@ -73,23 +73,24 @@ func (c *CandidateEducationController) GetEducation(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, _ := uuid.Parse(userID.(string))
 
-   educations, err := c.service.GetEducation(candidateID)
-   if err != nil {
-       ctx.Error(err)
-       return
-   }
-   ctx.JSON(http.StatusOK, response.Response{
-       Code:    http.StatusOK,
-       Status:  "OK",
-       Message: "Education information retrieved successfully",
-       Data:    response.ToEducationsResponse(educations),
-   })
+	educations, err := c.service.GetEducation(candidateID)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+	ctx.JSON(http.StatusOK, response.Response{
+		Code:    http.StatusOK,
+		Status:  "OK",
+		Message: "Education information retrieved successfully",
+		Data:    response.ToEducationsResponse(educations),
+	})
 }
 
 // DeleteEducation godoc
 // @Summary Delete education record
 // @Description Delete an education record by candidate ID
 // @Tags Candidates - Education
+// @Param education_id path string true "Education ID"
 // @Produce json
 // @Success 200 {object} response.Response "Education deleted successfully"
 // @Failure 400 {object} response.Response "Invalid input"
@@ -98,18 +99,20 @@ func (c *CandidateEducationController) GetEducation(ctx *gin.Context) {
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 404 {object} response.Response "Education not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/education [delete]
+// @Router /candidates/education/{education_id} [delete]
 func (c *CandidateEducationController) DeleteEducation(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, _ := uuid.Parse(userID.(string))
-   err := c.service.DeleteEducation(candidateID)
-   if err != nil {
-       ctx.Error(err)
-       return
-   }
-   ctx.JSON(http.StatusOK, response.Response{
-       Code:    http.StatusOK,
-       Status:  "OK",
-       Message: "Education deleted successfully",
-   })
+	educationIDstr := ctx.Param("education_id")
+    educationID, _ := uuid.Parse(educationIDstr)
+	err := c.service.DeleteEducation(candidateID, educationID)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+	ctx.JSON(http.StatusOK, response.Response{
+		Code:    http.StatusOK,
+		Status:  "OK",
+		Message: "Education deleted successfully",
+	})
 }

@@ -28,8 +28,8 @@ func (r *SQLCandidateEducationRepository) CreateEducation(education *models.Cand
 	return nil
 }
 
-func (r *SQLCandidateEducationRepository) GetEducation(id uuid.UUID) ([]models.CandidateEducation, error) {
-	rows, err := r.db.Query(`SELECT education_id, candidate_id, degree, institution, start_date, end_date, description FROM candidate_education WHERE candidate_id = $1`, id)
+func (r *SQLCandidateEducationRepository) GetEducation(educationID uuid.UUID) ([]models.CandidateEducation, error) {
+	rows, err := r.db.Query(`SELECT education_id, candidate_id, degree, institution, start_date, end_date, description FROM candidate_education WHERE candidate_id = $1`, educationID)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch education: %w", err)
 	}
@@ -49,11 +49,12 @@ func (r *SQLCandidateEducationRepository) GetEducation(id uuid.UUID) ([]models.C
 	return educations, nil
 }
 
-func (r *SQLCandidateEducationRepository) DeleteEducation(id uuid.UUID) error {
-	query := `DELETE FROM candidate_education WHERE education_id = $1`
-	_, err := r.db.Exec(query, id)
-	if err != nil {
-		return fmt.Errorf("unable to delete education: %w", err)
-	}
-	return nil
+
+func (r *SQLCandidateEducationRepository) DeleteEducation(candidateID, educationID uuid.UUID) error {
+    query := `DELETE FROM candidate_education WHERE education_id = $1 AND candidate_id = $2`
+    _, err := r.db.Exec(query, educationID, candidateID)
+    if err != nil {
+        return fmt.Errorf("unable to delete education: %w", err)
+    }
+    return nil
 }
