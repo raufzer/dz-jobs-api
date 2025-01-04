@@ -49,7 +49,7 @@ func ValidateToken(tokenString string, secretKey string, expectedPurpose string)
 	})
 
 	if err != nil || !token.Valid {
-		return nil, fmt.Errorf("invalid token")
+		return nil, fmt.Errorf("invalid token: %w", err)
 	}
 
 	if claims, ok := token.Claims.(*TokenClaims); ok {
@@ -78,6 +78,7 @@ func generateRandomBytes(size int) []byte {
 	randomBytes := make([]byte, size)
 	_, err := rand.Read(randomBytes)
 	if err != nil {
+		fmt.Errorf("error generating random bytes: ", err)
 		return nil
 	}
 	return randomBytes
