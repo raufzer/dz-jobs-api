@@ -1563,7 +1563,7 @@ const docTemplate = `{
         },
         "/candidates/education/{education_id}": {
             "delete": {
-                "description": "Delete an education record by candidate ID",
+                "description": "Delete an education record by candidate ID and education ID",
                 "produces": [
                     "application/json"
                 ],
@@ -1758,7 +1758,7 @@ const docTemplate = `{
         },
         "/candidates/experience/{experience_id}": {
             "delete": {
-                "description": "Delete an experience record by candidate ID",
+                "description": "Delete an experience record by candidate ID and experience ID",
                 "produces": [
                     "application/json"
                 ],

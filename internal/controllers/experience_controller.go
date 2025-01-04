@@ -88,10 +88,10 @@ func (c *CandidateExperienceController) GetExperience(ctx *gin.Context) {
 
 // DeleteExperience godoc
 // @Summary Delete experience record
-// @Description Delete an experience record by candidate ID
+// @Description Delete an experience record by candidate ID and experience ID
 // @Tags Candidates - Experience
-// @Parm experience_id path string true "Experience ID"
 // @Produce json
+// @Parm experience_id path string true "Experience ID"
 // @Success 200 {object} response.Response "Experience deleted successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"

@@ -1503,7 +1503,7 @@ paths:
       - Candidates - Education
   /candidates/education/{education_id}:
     delete:
-      description: Delete an education record by candidate ID
+      description: Delete an education record by candidate ID and education ID
       parameters:
       - description: Education ID
         in: path
@@ -1626,7 +1626,7 @@ paths:
       - Candidates - Experience
   /candidates/experience/{experience_id}:
     delete:
-      description: Delete an experience record by candidate ID
+      description: Delete an experience record by candidate ID and experience ID
       produces:
       - application/json
       responses:

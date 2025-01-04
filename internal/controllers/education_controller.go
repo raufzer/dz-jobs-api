@@ -88,10 +88,10 @@ func (c *CandidateEducationController) GetEducation(ctx *gin.Context) {
 
 // DeleteEducation godoc
 // @Summary Delete education record
-// @Description Delete an education record by candidate ID
+// @Description Delete an education record by candidate ID and education ID
 // @Tags Candidates - Education
-// @Param education_id path string true "Education ID"
 // @Produce json
+// @Param education_id path string true "Education ID"
 // @Success 200 {object} response.Response "Education deleted successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
