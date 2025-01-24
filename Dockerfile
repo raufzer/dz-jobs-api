@@ -5,48 +5,43 @@ FROM golang:1.23.2-alpine AS builder
 RUN apk add --no-cache git \
     && go install github.com/swaggo/swag/cmd/swag@latest
 
-# 2. Create dedicated user with permissions
+# 2. Create app user and set up directories
 RUN addgroup -S app && adduser -S -G app app \
     && mkdir -p /app \
     && chown -R app:app /app \
-    && chmod -R 755 /go
+    && mkdir -p /go-mod-cache \
+    && chown -R app:app /go-mod-cache
 
-# 3. Switch to app user
+# 3. Set Go module environment variables
+ENV GOMODCACHE=/go-mod-cache \
+    GOPATH=/go
+
+# 4. Switch to app user
 USER app
 WORKDIR /app
 
-# 4. Copy dependency files first (better caching)
+# 5. Copy dependency files
 COPY --chown=app:app go.mod go.sum ./
 
-# 5. Download dependencies
+# 6. Download dependencies
 RUN go mod download
 
-# 6. Copy source code (including docs)
+# 7. Copy source code
 COPY --chown=app:app . .
 
-# 7. Generate Swagger docs
+# 8. Generate Swagger docs
 RUN swag init -g cmd/server/main.go -o docs
 
-# 8. Build binary
+# 9. Build binary
 RUN CGO_ENABLED=0 GOOS=linux \
     go build -ldflags="-s -w" -trimpath -o ./main ./cmd/server
 
 # ---- Final Stage ----
 FROM alpine:3.21
-
-# 1. Install runtime dependencies
 RUN apk --no-cache add ca-certificates
-
-# 2. Create non-root user/group
 RUN addgroup -S app && adduser -S -G app app
-
-# 3. Set up final workspace
 USER app
 WORKDIR /app
-
-# 4. Copy binary from builder
 COPY --from=builder --chown=app:app /app/main .
-
-# 5. Expose and run
 EXPOSE 9090
 CMD ["./main"]
