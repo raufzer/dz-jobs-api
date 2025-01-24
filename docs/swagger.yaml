@@ -525,7 +525,7 @@ info:
   contact: {}
   description: This is the API documentation for the DZ Jobs portal.
   title: DZ Jobs API
-  version: 1.1.4
+  version: 1.1.5
 paths:
   /admin/users:
     get:
