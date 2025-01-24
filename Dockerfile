@@ -5,22 +5,24 @@ FROM golang:1.23.2-alpine AS builder
 RUN apk add --no-cache git \
     && go install github.com/swaggo/swag/cmd/swag@latest
 
-# 2. Create workspace and set permissions
-RUN mkdir -p /app \
-    && chown -R nobody:nobody /app  # Use nobody for safer build
+# 2. Create dedicated user with permissions
+RUN addgroup -S app && adduser -S -G app app \
+    && mkdir -p /app \
+    && chown -R app:app /app \
+    && chmod -R 755 /go  # Add execute permissions to Go directory
 
-# 3. Switch to nobody user early
-USER nobody
+# 3. Switch to app user
+USER app
 WORKDIR /app
 
 # 4. Copy dependency files first (better caching)
-COPY --chown=nobody:nobody go.mod go.sum ./
+COPY --chown=app:app go.mod go.sum ./
 
 # 5. Download dependencies
 RUN go mod download
 
 # 6. Copy source code (including docs)
-COPY --chown=nobody:nobody . .
+COPY --chown=app:app . .
 
 # 7. Generate Swagger docs
 RUN swag init -g cmd/server/main.go -o docs
