@@ -60,7 +60,7 @@ func (c *UserController) CreateUser(ctx *gin.Context) {
 // @Description Get user details by user ID
 // @Tags Admin - Users
 // @Produce json
-// @Param id path string true "User ID"
+// @Param userId path string true "User ID"
 // @Success 200 {object} response.Response{Data=response.UserResponse} "User found"
 // @Failure 400 {object} response.Response "Invalid user ID"
 // @Failure 401 {object} response.Response "Unauthorized"
@@ -94,7 +94,7 @@ func (c *UserController) GetUser(ctx *gin.Context) {
 // @Tags Admin - Users
 // @Accept json
 // @Produce json
-// @Param id path string true "User ID"
+// @Param userId path string true "User ID"
 // @Param user body request.UpdateUserRequest true "User request"
 // @Success 200 {object} response.Response{Data=response.UserResponse} "User updated successfully"
 // @Failure 400 {object} response.Response "Invalid input"
@@ -159,7 +159,7 @@ func (c *UserController) GetAllUsers(ctx *gin.Context) {
 // @Description Delete user by user ID
 // @Tags Admin - Users
 // @Produce json
-// @Param id path string true "User ID"
+// @Param userId path string true "User ID"
 // @Success 200 {object} response.Response"User deleted successfully"
 // @Failure 400 {object} response.Response "Invalid user ID"
 // @Failure 401 {object} response.Response "Unauthorized"

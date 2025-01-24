@@ -24,7 +24,7 @@ func NewBookmarksController(service serviceInterfaces.BookmarksService) *Bookmar
 // @Tags Candidates - Bookmarks
 // @Accept json
 // @Produce json
-// @Param job_id path int true "Job ID"
+// @Param JobId path int true "Job ID"
 // @Success 201 {object} response.Response "Job added successfully to bookmarks"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
@@ -32,11 +32,11 @@ func NewBookmarksController(service serviceInterfaces.BookmarksService) *Bookmar
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 404 {object} response.Response "Job not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/bookmarks/{job_id} [post]
+// @Router /candidates/bookmarks/{JobId} [post]
 func (c *BookmarksController) AddBookmark(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, _ := uuid.Parse(userID.(string))
-	jobIDStr := ctx.Param("job_id")
+	jobIDStr := ctx.Param("JobId")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
 	if err != nil {
 		ctx.Error(err)
@@ -91,7 +91,7 @@ func (c *BookmarksController) GetBookmarks(ctx *gin.Context) {
 // @Tags Candidates - Bookmarks
 // @Accept json
 // @Produce json
-// @Param job_id path int true "Job ID"
+// @Param JobId path int true "Job ID"
 // @Success 201 {object} response.Response "Job removed successfully from bookmarks"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
@@ -99,11 +99,11 @@ func (c *BookmarksController) GetBookmarks(ctx *gin.Context) {
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 404 {object} response.Response "Job not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/bookmarks/{job_id} [delete]
+// @Router /candidates/bookmarks/{JobId} [delete]
 func (c *BookmarksController) RemoveBookmark(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, _ := uuid.Parse(userID.(string))
-	jobIDStr := ctx.Param("job_id")
+	jobIDStr := ctx.Param("JobId")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
 	if err != nil {
 		ctx.Error(err)
