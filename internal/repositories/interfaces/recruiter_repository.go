@@ -8,7 +8,7 @@ import (
 
 type RecruiterRepository interface {
 	CreateRecruiter(recruiter *models.Recruiter) error
-	GetRecruiter(recruiter_id uuid.UUID) (*models.Recruiter, error)
-	UpdateRecruiter(recruiter_id uuid.UUID, recruiter *models.Recruiter) error
-	DeleteRecruiter(recruiter_id uuid.UUID) error
+	GetRecruiter(recruiterID uuid.UUID) (*models.Recruiter, error)
+	UpdateRecruiter(recruiterID uuid.UUID, recruiter *models.Recruiter) error
+	DeleteRecruiter(recruiterID uuid.UUID) error
 }

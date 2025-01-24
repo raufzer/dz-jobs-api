@@ -38,7 +38,7 @@ func (r *SQLJobRepository) CreateJob(job *models.Job) error {
 		query,
 		job.Title, job.Description, job.Location, job.SalaryRange, job.RequiredSkills, job.RecruiterID,
 		job.CreatedAt, job.UpdatedAt, job.Status, job.JobType,
-	).Scan(&job.JobID)
+	).Scan(&job.ID)
 
 	if err != nil {
 		return fmt.Errorf("repository: failed to create job: %w", err)
@@ -56,7 +56,7 @@ func (r *SQLJobRepository) GetJobDetails(jobID int64, recruiterID uuid.UUID) (*m
 
 	job := &models.Job{}
 	err := r.db.QueryRow(query, jobID).Scan(
-		&job.JobID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
+		&job.ID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
 		&job.RecruiterID, &job.CreatedAt, &job.UpdatedAt, &job.Status, &job.JobType,
 	)
 
@@ -84,14 +84,14 @@ func (r *SQLJobRepository) GetJobListingsByStatus(status string, recruiterID uui
 	for rows.Next() {
 		job := &models.Job{}
 		err := rows.Scan(
-			&job.JobID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
+			&job.ID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
 			&job.RecruiterID, &job.CreatedAt, &job.UpdatedAt, &job.Status,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("repository: failed to scan job: %w", err)
 		}
 		if job.RecruiterID != recruiterID {
-			return nil, fmt.Errorf("repository: unauthorized access, recruiter does not own job with ID %d", job.JobID)
+			return nil, fmt.Errorf("repository: unauthorized access, recruiter does not own job with ID %d", job.ID)
 		}
 		jobs = append(jobs, job)
 	}
@@ -226,7 +226,7 @@ func (r *SQLJobRepository) GetAllJobs() ([]*models.Job, error) {
 	for rows.Next() {
 		job := &models.Job{}
 		err := rows.Scan(
-			&job.JobID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
+			&job.ID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
 			&job.RecruiterID, &job.CreatedAt, &job.UpdatedAt, &job.Status, &job.JobType,
 		)
 		if err != nil {
@@ -302,7 +302,7 @@ func (r *SQLJobRepository) GetJobListings(filters request.JobFilters) ([]*models
 	for rows.Next() {
 		job := &models.Job{}
 		err := rows.Scan(
-			&job.JobID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
+			&job.ID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
 			&job.RecruiterID, &job.CreatedAt, &job.UpdatedAt, &job.Status, &job.JobType,
 		)
 		if err != nil {
@@ -325,7 +325,7 @@ func (r *SQLJobRepository) GetJobDetailsPublic(jobID int64) (*models.Job, error)
 	row := r.db.QueryRow(query, jobID)
 	job := &models.Job{}
 	err := row.Scan(
-		&job.JobID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
+		&job.ID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
 		&job.RecruiterID, &job.CreatedAt, &job.UpdatedAt, &job.Status, &job.JobType,
 	)
 

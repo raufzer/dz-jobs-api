@@ -21,19 +21,19 @@ func (r *SQLCandidatePersonalInfoRepository) CreatePersonalInfo(info *models.Can
 	query := `
 		INSERT INTO candidate_personal_info (candidate_id, name, email, phone, address, date_of_birth, gender, bio)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
-	_, err := r.db.Exec(query, info.CandidateID, info.Name, info.Email, info.Phone, info.Address, info.DateOfBirth, info.Gender, info.Bio)
+	_, err := r.db.Exec(query, info.ID, info.Name, info.Email, info.Phone, info.Address, info.DateOfBirth, info.Gender, info.Bio)
 	if err != nil {
 		return fmt.Errorf("unable to create personal info: %w", err)
 	}
 	return nil
 }
-func (r *SQLCandidatePersonalInfoRepository) GetPersonalInfo(id uuid.UUID) (*models.CandidatePersonalInfo, error) {
+func (r *SQLCandidatePersonalInfoRepository) GetPersonalInfo(candidateID uuid.UUID) (*models.CandidatePersonalInfo, error) {
 	var info models.CandidatePersonalInfo
 	query := `
 		SELECT candidate_id, name, email, phone, address, date_of_birth, gender, bio
 		FROM candidate_personal_info
 		WHERE candidate_id = $1`
-	err := r.db.QueryRow(query, id).Scan(&info.CandidateID, &info.Name, &info.Email, &info.Phone, &info.Address, &info.DateOfBirth, &info.Gender, &info.Bio)
+	err := r.db.QueryRow(query, candidateID).Scan(&info.ID, &info.Name, &info.Email, &info.Phone, &info.Address, &info.DateOfBirth, &info.Gender, &info.Bio)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return &models.CandidatePersonalInfo{}, fmt.Errorf("personal info not found: %w", err)
@@ -89,7 +89,7 @@ func (r *SQLCandidatePersonalInfoRepository) UpdatePersonalInfo(info *models.Can
 	
 	query = query[:len(query)-1]
 	query += fmt.Sprintf(" WHERE candidate_id = $%d", argIndex)
-	args = append(args, info.CandidateID)
+	args = append(args, info.ID)
 	
 	_, err := r.db.Exec(query, args...)
 	if err != nil {
@@ -97,9 +97,9 @@ func (r *SQLCandidatePersonalInfoRepository) UpdatePersonalInfo(info *models.Can
 	}
 	return nil
 }
-func (r *SQLCandidatePersonalInfoRepository) DeletePersonalInfo(id uuid.UUID) error {
+func (r *SQLCandidatePersonalInfoRepository) DeletePersonalInfo(candidateID uuid.UUID) error {
 	query := `DELETE FROM candidate_personal_info WHERE candidate_id = $1`
-	_, err := r.db.Exec(query, id)
+	_, err := r.db.Exec(query, candidateID)
 	if err != nil {
 		return fmt.Errorf("unable to delete personal info: %w", err)
 	}

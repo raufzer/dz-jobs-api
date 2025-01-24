@@ -7,7 +7,7 @@ import (
 
 type CandidateCertificationsRepository interface {
 	CreateCertification(certification *models.CandidateCertification) error
-	GetCertifications(id uuid.UUID) ([]models.CandidateCertification, error)
-	DeleteCertification(id uuid.UUID, certificationName string) error
-	ValidateCertificationOwnership(id uuid.UUID, certificationName string) error
+	GetCertifications(certificationID uuid.UUID) ([]models.CandidateCertification, error)
+	DeleteCertification(certificationID uuid.UUID, certificationName string) error
+	ValidateCertificationOwnership(certificationID uuid.UUID, certificationName string) error
 }

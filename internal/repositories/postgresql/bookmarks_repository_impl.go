@@ -56,7 +56,7 @@ func (r *SQLBookmarksRepository) GetBookmarks(candidateID uuid.UUID) ([]*models.
 	for rows.Next() {
 		job := &models.Job{}
 		err := rows.Scan(
-			&job.JobID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
+			&job.ID, &job.Title, &job.Description, &job.Location, &job.SalaryRange, &job.RequiredSkills,
 			&job.RecruiterID, &job.CreatedAt, &job.UpdatedAt, &job.Status,
 		)
 		if err != nil {

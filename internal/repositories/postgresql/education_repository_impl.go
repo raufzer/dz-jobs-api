@@ -21,7 +21,7 @@ func NewCandidateEducationRepository(db *sql.DB) repositoryInterfaces.CandidateE
 func (r *SQLCandidateEducationRepository) CreateEducation(education *models.CandidateEducation) error {
 	query := "INSERT INTO candidate_education (education_id, candidate_id, degree, institution, start_date, end_date, description) " +
 		"VALUES ($1, $2, $3, $4, $5, $6, $7)"
-	_, err := r.db.Exec(query, education.EducationID, education.CandidateID, education.Degree, education.Institution, education.StartDate, education.EndDate, education.Description)
+	_, err := r.db.Exec(query, education.ID, education.CandidateID, education.Degree, education.Institution, education.StartDate, education.EndDate, education.Description)
 	if err != nil {
 		return fmt.Errorf("repository: failed to create education: %w", err)
 	}
@@ -38,7 +38,7 @@ func (r *SQLCandidateEducationRepository) GetEducation(educationID uuid.UUID) ([
 	var educations []models.CandidateEducation
 	for rows.Next() {
 		var education models.CandidateEducation
-		if err := rows.Scan(&education.EducationID, &education.CandidateID, &education.Degree, &education.Institution, &education.StartDate, &education.EndDate, &education.Description); err != nil {
+		if err := rows.Scan(&education.ID, &education.CandidateID, &education.Degree, &education.Institution, &education.StartDate, &education.EndDate, &education.Description); err != nil {
 			return nil, fmt.Errorf("unable to scan education data: %w", err)
 		}
 		educations = append(educations, education)

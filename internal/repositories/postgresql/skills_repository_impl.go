@@ -20,15 +20,15 @@ func NewCandidateSkillsRepository(db *sql.DB) repositoryInterfaces.CandidateSkil
 
 func (r *SQLCandidateSkillsRepository) CreateSkill(skill *models.CandidateSkills) error {
 	query := `INSERT INTO candidate_skills (candidate_id, skill) VALUES ($1, $2)`
-	_, err := r.db.Exec(query, skill.CandidateID, skill.Skill)
+	_, err := r.db.Exec(query, skill.ID, skill.Skill)
 	if err != nil {
 		return fmt.Errorf("unable to create skill: %w", err)
 	}
 	return nil
 }
 
-func (r *SQLCandidateSkillsRepository) GetSkills(id uuid.UUID) ([]models.CandidateSkills, error) {
-	rows, err := r.db.Query(`SELECT candidate_id, skill FROM candidate_skills WHERE candidate_id = $1`, id)
+func (r *SQLCandidateSkillsRepository) GetSkills(candidateID uuid.UUID) ([]models.CandidateSkills, error) {
+	rows, err := r.db.Query(`SELECT candidate_id, skill FROM candidate_skills WHERE candidate_id = $1`, candidateID)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch skills: %w", err)
 	}
@@ -37,7 +37,7 @@ func (r *SQLCandidateSkillsRepository) GetSkills(id uuid.UUID) ([]models.Candida
 	var skills []models.CandidateSkills
 	for rows.Next() {
 		var skill models.CandidateSkills
-		if err := rows.Scan(&skill.CandidateID, &skill.Skill); err != nil {
+		if err := rows.Scan(&skill.ID, &skill.Skill); err != nil {
 			return nil, fmt.Errorf("unable to scan skill data: %w", err)
 		}
 		skills = append(skills, skill)
@@ -48,9 +48,9 @@ func (r *SQLCandidateSkillsRepository) GetSkills(id uuid.UUID) ([]models.Candida
 	return skills, nil
 }
 
-func (r *SQLCandidateSkillsRepository) DeleteSkill(id uuid.UUID, skillName string) error {
+func (r *SQLCandidateSkillsRepository) DeleteSkill(candidateID uuid.UUID, skillName string) error {
 	query := `DELETE FROM candidate_skills WHERE candidate_id = $1 AND skill = $2`
-	_, err := r.db.Exec(query, id, skillName)
+	_, err := r.db.Exec(query, candidateID, skillName)
 	if err != nil {
 		return fmt.Errorf("unable to delete skill: %w", err)
 	}

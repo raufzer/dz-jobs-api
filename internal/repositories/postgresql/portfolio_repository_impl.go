@@ -22,15 +22,15 @@ func NewCandidatePortfolioRepository(db *sql.DB) repositoryInterfaces.CandidateP
 func (r *SQLCandidatePortfolioRepository) CreateProject(portfolio *models.CandidatePortfolio) error {
 	query := `INSERT INTO candidate_portfolio (project_id, candidate_id, project_name, project_link, category, description) 
 			VALUES ($1, $2, $3, $4, $5, $6)`
-	_, err := r.db.Exec(query, portfolio.ProjectID, portfolio.CandidateID, portfolio.ProjectName, portfolio.ProjectLink, portfolio.Category, portfolio.Description)
+	_, err := r.db.Exec(query, portfolio.ID, portfolio.CandidateID, portfolio.ProjectName, portfolio.ProjectLink, portfolio.Category, portfolio.Description)
 	if err != nil {
 		return fmt.Errorf("unable to create portfolio: %w", err)
 	}
 	return nil
 }
 
-func (r *SQLCandidatePortfolioRepository) GetPortfolio(id uuid.UUID) ([]models.CandidatePortfolio, error) {
-	rows, err := r.db.Query(`SELECT project_id, candidate_id, project_name, project_link, category, description FROM candidate_portfolio WHERE candidate_id = $1`, id)
+func (r *SQLCandidatePortfolioRepository) GetPortfolio(candidateID uuid.UUID) ([]models.CandidatePortfolio, error) {
+	rows, err := r.db.Query(`SELECT project_id, candidate_id, project_name, project_link, category, description FROM candidate_portfolio WHERE candidate_id = $1`, candidateID)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch portfolio: %w", err)
 	}
@@ -39,7 +39,7 @@ func (r *SQLCandidatePortfolioRepository) GetPortfolio(id uuid.UUID) ([]models.C
 	var portfolios []models.CandidatePortfolio
 	for rows.Next() {
 		var portfolio models.CandidatePortfolio
-		if err := rows.Scan(&portfolio.ProjectID, &portfolio.CandidateID, &portfolio.ProjectName, &portfolio.ProjectLink, &portfolio.Category, &portfolio.Description); err != nil {
+		if err := rows.Scan(&portfolio.ID, &portfolio.CandidateID, &portfolio.ProjectName, &portfolio.ProjectLink, &portfolio.Category, &portfolio.Description); err != nil {
 			return nil, fmt.Errorf("unable to scan portfolio data: %w", err)
 		}
 		portfolios = append(portfolios, portfolio)
@@ -50,9 +50,9 @@ func (r *SQLCandidatePortfolioRepository) GetPortfolio(id uuid.UUID) ([]models.C
 	return portfolios, nil
 }
 
-func (r *SQLCandidatePortfolioRepository) DeleteProject(id uuid.UUID, projectName string) error {
+func (r *SQLCandidatePortfolioRepository) DeleteProject(projectID uuid.UUID, projectName string) error {
 	query := `DELETE FROM candidate_portfolio WHERE candidate_id = $1 AND project_name = $2`
-	_, err := r.db.Exec(query, id, projectName)
+	_, err := r.db.Exec(query, projectID, projectName)
 	if err != nil {
 		return fmt.Errorf("unable to delete portfolio: %w", err)
 	}
