@@ -147,13 +147,7 @@ func RegisterSwaggerRoutes(server *gin.Engine) {
 	))
 
 	server.GET("/v1/docs/swagger.json", func(ctx *gin.Context) {
-		swaggerContent, err := os.ReadFile("docs/swagger.json")
-		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-				"error": "Failed to load API documentation",
-			})
-			return
-		}
+		swaggerContent, _ := os.ReadFile("docs/swagger.json")
 		ctx.Data(http.StatusOK, "application/json", swaggerContent)
 	})
 }
