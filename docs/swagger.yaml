@@ -609,7 +609,7 @@ paths:
       parameters:
       - description: User ID
         in: path
-        name: id
+        name: userId
         required: true
         type: string
       produces:
@@ -647,7 +647,7 @@ paths:
       parameters:
       - description: User ID
         in: path
-        name: id
+        name: userId
         required: true
         type: string
       produces:
@@ -692,7 +692,7 @@ paths:
       parameters:
       - description: User ID
         in: path
-        name: id
+        name: userId
         required: true
         type: string
       - description: User request
@@ -1180,7 +1180,7 @@ paths:
       summary: Get jobs bookmarked
       tags:
       - Candidates - Bookmarks
-  /candidates/bookmarks/{job_id}:
+  /candidates/bookmarks/{JobId}:
     delete:
       consumes:
       - application/json
@@ -1188,7 +1188,7 @@ paths:
       parameters:
       - description: Job ID
         in: path
-        name: job_id
+        name: JobId
         required: true
         type: integer
       produces:
@@ -1228,7 +1228,7 @@ paths:
       parameters:
       - description: Job ID
         in: path
-        name: job_id
+        name: JobId
         required: true
         type: integer
       produces:

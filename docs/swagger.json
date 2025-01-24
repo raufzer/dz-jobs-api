@@ -147,7 +147,7 @@
                     {
                         "type": "string",
                         "description": "User ID",
-                        "name": "id",
+                        "name": "userId",
                         "in": "path",
                         "required": true
                     }
@@ -216,7 +216,7 @@
                     {
                         "type": "string",
                         "description": "User ID",
-                        "name": "id",
+                        "name": "userId",
                         "in": "path",
                         "required": true
                     }
@@ -276,7 +276,7 @@
                     {
                         "type": "string",
                         "description": "User ID",
-                        "name": "id",
+                        "name": "userId",
                         "in": "path",
                         "required": true
                     },
@@ -1049,7 +1049,7 @@
                 }
             }
         },
-        "/candidates/bookmarks/{job_id}": {
+        "/candidates/bookmarks/{JobId}": {
             "post": {
                 "description": "Add a job to bookmarks for a candidate by candidate ID",
                 "consumes": [
@@ -1066,7 +1066,7 @@
                     {
                         "type": "integer",
                         "description": "Job ID",
-                        "name": "job_id",
+                        "name": "JobId",
                         "in": "path",
                         "required": true
                     }
@@ -1126,7 +1126,7 @@
                     {
                         "type": "integer",
                         "description": "Job ID",
-                        "name": "job_id",
+                        "name": "JobId",
                         "in": "path",
                         "required": true
                     }

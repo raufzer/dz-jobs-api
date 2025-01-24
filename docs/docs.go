@@ -153,7 +153,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "User ID",
-                        "name": "id",
+                        "name": "userId",
                         "in": "path",
                         "required": true
                     }
@@ -222,7 +222,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "User ID",
-                        "name": "id",
+                        "name": "userId",
                         "in": "path",
                         "required": true
                     }
@@ -282,7 +282,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "User ID",
-                        "name": "id",
+                        "name": "userId",
                         "in": "path",
                         "required": true
                     },
@@ -1055,7 +1055,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/bookmarks/{job_id}": {
+        "/candidates/bookmarks/{JobId}": {
             "post": {
                 "description": "Add a job to bookmarks for a candidate by candidate ID",
                 "consumes": [
@@ -1072,7 +1072,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Job ID",
-                        "name": "job_id",
+                        "name": "JobId",
                         "in": "path",
                         "required": true
                     }
@@ -1132,7 +1132,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Job ID",
-                        "name": "job_id",
+                        "name": "JobId",
                         "in": "path",
                         "required": true
                     }
