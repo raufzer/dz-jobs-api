@@ -9,7 +9,7 @@ import (
 )
 
 type TokenClaims struct {
-	UserID  string `json:"sub"`
+	ID  string `json:"sub"`
 	Role    string `json:"role"`
 	Purpose string `json:"purpose"`
 	jwt.StandardClaims

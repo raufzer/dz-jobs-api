@@ -5,7 +5,7 @@ import (
 )
 
 type CandidateCertification struct {
-	CertificationID   uuid.UUID `db:"certification_id"`
+	ID                uuid.UUID `db:"certification_id"`
 	CandidateID       uuid.UUID `db:"candidate_id"`
 	CertificationName string    `db:"certification_name"`
 	IssuedBy          string    `db:"issued_by"`

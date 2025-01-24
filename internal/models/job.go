@@ -7,7 +7,7 @@ import (
 )
 
 type Job struct {
-	JobID          int64     `db:"job_id"`
+	ID             int64     `db:"job_id"`
 	Title          string    `db:"title"`
 	Description    string    `db:"description"`
 	Location       string    `db:"location,omitempty"`
@@ -16,6 +16,6 @@ type Job struct {
 	RecruiterID    uuid.UUID `db:"recruiter_id"`
 	CreatedAt      time.Time `db:"created_at" default:"CURRENT_TIMESTAMP"`
 	UpdatedAt      time.Time `db:"updated_at" default:"CURRENT_TIMESTAMP"`
-    Status         string    `db:"status"`
-    JobType        string    `db:"job_type"`
+	Status         string    `db:"status"`
+	JobType        string    `db:"job_type"`
 }

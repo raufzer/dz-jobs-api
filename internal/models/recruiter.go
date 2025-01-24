@@ -5,7 +5,7 @@ import (
 )
 
 type Recruiter struct {
-	RecruiterID        uuid.UUID `db:"recruiter_id"`
+	ID                 uuid.UUID `db:"recruiter_id"`
 	CompanyName        string    `db:"company_name"`
 	CompanyLogo        string    `db:"company_logo"`
 	CompanyDescription string    `db:"company_description"`

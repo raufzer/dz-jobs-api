@@ -7,7 +7,7 @@ import (
 )
 
 type CertificationResponse struct {
-	CertificationID   uuid.UUID `json:"certification_id"`
+	ID                uuid.UUID `json:"certification_id"`
 	CandidateID       uuid.UUID `json:"candidate_id"`
 	CertificationName string    `json:"certification_name"`
 	IssuedBy          string    `json:"issued_by"`
@@ -17,7 +17,7 @@ type CertificationResponse struct {
 
 func ToCertificationResponse(certification *models.CandidateCertification) CertificationResponse {
 	return CertificationResponse{
-		CertificationID:   certification.CertificationID,
+		ID:                certification.ID,
 		CandidateID:       certification.CandidateID,
 		CertificationName: certification.CertificationName,
 		IssuedBy:          certification.IssuedBy,

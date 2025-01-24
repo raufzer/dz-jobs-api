@@ -7,7 +7,7 @@ import (
 )
 
 type PortfolioResponse struct {
-	ProjectID   uuid.UUID `json:"project_id"`
+	ID          uuid.UUID `json:"project_id"`
 	CandidateID uuid.UUID `json:"candidate_id"`
 	ProjectName string    `json:"project_name"`
 	ProjectLink string    `json:"project_link"`
@@ -17,7 +17,7 @@ type PortfolioResponse struct {
 
 func ToPortfolioResponse(portfolio *models.CandidatePortfolio) PortfolioResponse {
 	return PortfolioResponse{
-		ProjectID:   portfolio.ProjectID,
+		ID:          portfolio.ID,
 		CandidateID: portfolio.CandidateID,
 		ProjectName: portfolio.ProjectName,
 		ProjectLink: portfolio.ProjectLink,
@@ -27,7 +27,7 @@ func ToPortfolioResponse(portfolio *models.CandidatePortfolio) PortfolioResponse
 }
 
 type PortfoliosResponseData struct {
-	Total      int                `json:"total"`
+	Total    int                 `json:"total"`
 	Projects []PortfolioResponse `json:"projects"`
 }
 
@@ -37,7 +37,7 @@ func ToPortfoliosResponse(projects []models.CandidatePortfolio) PortfoliosRespon
 		portfolioResponses = append(portfolioResponses, ToPortfolioResponse(&project))
 	}
 	return PortfoliosResponseData{
-		Total:      len(projects),
+		Total:    len(projects),
 		Projects: portfolioResponses,
 	}
 }

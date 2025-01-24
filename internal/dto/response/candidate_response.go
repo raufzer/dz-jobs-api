@@ -7,14 +7,14 @@ import (
 )
 
 type CandidateResponse struct {
-	CandidateID    uuid.UUID `json:"candidate_id"`
+	ID             uuid.UUID `json:"candidate_id"`
 	Resume         string    `json:"resume"`
 	ProfilePicture string    `json:"profile_picture"`
 }
 
 func ToCandidateResponse(candidate *models.Candidate) CandidateResponse {
 	return CandidateResponse{
-		CandidateID:    candidate.CandidateID,
+		ID:             candidate.ID,
 		Resume:         candidate.Resume,
 		ProfilePicture: candidate.ProfilePicture,
 	}

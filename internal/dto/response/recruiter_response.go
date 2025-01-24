@@ -7,7 +7,7 @@ import (
 )
 
 type RecruiterResponse struct {
-	RecruiterID        uuid.UUID `json:"recruiter_id"`
+	ID                 uuid.UUID `json:"recruiter_id"`
 	CompanyName        string    `json:"company_name"`
 	CompanyLogo        string    `json:"company_logo"`
 	CompanyDescription string    `json:"company_description"`
@@ -20,7 +20,7 @@ type RecruiterResponse struct {
 
 func ToRecruiterResponse(recruiter *models.Recruiter) RecruiterResponse {
 	return RecruiterResponse{
-		RecruiterID:        recruiter.RecruiterID,
+		ID:                 recruiter.ID,
 		CompanyName:        recruiter.CompanyName,
 		CompanyLogo:        recruiter.CompanyLogo,
 		CompanyDescription: recruiter.CompanyDescription,

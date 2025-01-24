@@ -7,19 +7,19 @@ import (
 )
 
 type SkillResponse struct {
-	CandidateID uuid.UUID `json:"candidate_id"`
-	Skill       string    `json:"skill"`
+	ID    uuid.UUID `json:"candidate_id"`
+	Skill string    `json:"skill"`
 }
 
 func ToSkillResponse(skill *models.CandidateSkills) SkillResponse {
 	return SkillResponse{
-		CandidateID: skill.CandidateID,
-		Skill:       skill.Skill,
+		ID:    skill.ID,
+		Skill: skill.Skill,
 	}
 }
 
 type SkillsResponseData struct {
-	Total int            `json:"total"`
+	Total  int             `json:"total"`
 	Skills []SkillResponse `json:"skills"`
 }
 

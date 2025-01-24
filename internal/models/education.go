@@ -5,7 +5,7 @@ import (
 )
 
 type CandidateEducation struct {
-	EducationID uuid.UUID `db:"education_id"`
+	ID          uuid.UUID `db:"education_id"`
 	CandidateID uuid.UUID `db:"candidate_id"`
 	Degree      string    `db:"degree"`
 	Institution string    `db:"institution"`

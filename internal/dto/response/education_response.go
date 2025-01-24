@@ -7,7 +7,7 @@ import (
 )
 
 type EducationResponse struct {
-	EducationID uuid.UUID `json:"education_id"`
+	ID          uuid.UUID `json:"education_id"`
 	CandidateID uuid.UUID `json:"candidate_id"`
 	Degree      string    `json:"degree"`
 	Institution string    `json:"institution"`
@@ -18,7 +18,7 @@ type EducationResponse struct {
 
 func ToEducationResponse(education *models.CandidateEducation) EducationResponse {
 	return EducationResponse{
-		EducationID: education.EducationID,
+		ID:          education.ID,
 		CandidateID: education.CandidateID,
 		Degree:      education.Degree,
 		Institution: education.Institution,
@@ -29,7 +29,7 @@ func ToEducationResponse(education *models.CandidateEducation) EducationResponse
 }
 
 type EducationsResponseData struct {
-	Total     int                `json:"total"`
+	Total      int                 `json:"total"`
 	Educations []EducationResponse `json:"educations"`
 }
 
