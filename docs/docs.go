@@ -139,7 +139,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/users/{user_id}": {
+        "/admin/users/{userId}": {
             "get": {
                 "description": "Get user details by user ID",
                 "produces": [
@@ -1307,7 +1307,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/certifications/{certification_name}": {
+        "/candidates/certifications/{certificationName}": {
             "delete": {
                 "description": "Delete a certification by candidate ID and certification ID",
                 "produces": [
@@ -1321,7 +1321,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Certification Name",
-                        "name": "certification_name",
+                        "name": "certificationName",
                         "in": "path",
                         "required": true
                     }
@@ -1561,7 +1561,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/education/{education_id}": {
+        "/candidates/education/{educationId}": {
             "delete": {
                 "description": "Delete an education record by candidate ID and education ID",
                 "produces": [
@@ -1575,7 +1575,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Education ID",
-                        "name": "education_id",
+                        "name": "educationId",
                         "in": "path",
                         "required": true
                     }
@@ -1756,7 +1756,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/experience/{experience_id}": {
+        "/candidates/experience/{experienceId}": {
             "delete": {
                 "description": "Delete an experience record by candidate ID and experience ID",
                 "produces": [
@@ -1770,7 +1770,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Experience ID",
-                        "name": "experience_id",
+                        "name": "experienceId",
                         "in": "path",
                         "required": true
                     }
@@ -2209,7 +2209,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/portfolio/{project_id}": {
+        "/candidates/portfolio/{projectId}": {
             "delete": {
                 "description": "Delete a project by candidate ID and project ID",
                 "produces": [
@@ -2223,7 +2223,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Project ID",
-                        "name": "project_id",
+                        "name": "projectId",
                         "in": "path",
                         "required": true
                     }
@@ -2404,7 +2404,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/skills/{skill_name}": {
+        "/candidates/skills/{skillName}": {
             "delete": {
                 "description": "Delete a skill by candidate ID and skill name",
                 "produces": [
@@ -2418,7 +2418,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Skill name",
-                        "name": "skill_name",
+                        "name": "skillName",
                         "in": "path",
                         "required": true
                     }
@@ -2595,9 +2595,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/jobs/{job_id}": {
+        "/jobs/{jobId}": {
             "get": {
-                "description": "Retrieve the details of a specific job by job_id",
+                "description": "Retrieve the details of a specific job by jobId",
                 "produces": [
                     "application/json"
                 ],
@@ -2609,7 +2609,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Job ID",
-                        "name": "job_id",
+                        "name": "jobId",
                         "in": "path",
                         "required": true
                     }
@@ -3059,9 +3059,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/recruiters/jobs/{job_id}": {
+        "/recruiters/jobs/{jobId}": {
             "get": {
-                "description": "Retrieve the details of a specific job by job_id",
+                "description": "Retrieve the details of a specific job by jobId",
                 "produces": [
                     "application/json"
                 ],
@@ -3073,7 +3073,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Job ID",
-                        "name": "job_id",
+                        "name": "jobId",
                         "in": "path",
                         "required": true
                     }
@@ -3130,7 +3130,7 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Update the details of a specific job by job_id",
+                "description": "Update the details of a specific job by jobId",
                 "consumes": [
                     "application/json"
                 ],
@@ -3145,7 +3145,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Job ID",
-                        "name": "job_id",
+                        "name": "jobId",
                         "in": "path",
                         "required": true
                     },
@@ -3223,7 +3223,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Job ID",
-                        "name": "job_id",
+                        "name": "jobId",
                         "in": "path",
                         "required": true
                     }
@@ -3268,9 +3268,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/recruiters/jobs/{job_id}/deactivate": {
+        "/recruiters/jobs/{jobId}/deactivate": {
             "put": {
-                "description": "Disable a specific job by job_id",
+                "description": "Disable a specific job by jobId",
                 "produces": [
                     "application/json"
                 ],
@@ -3282,7 +3282,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Job ID",
-                        "name": "job_id",
+                        "name": "jobId",
                         "in": "path",
                         "required": true
                     }
@@ -3339,9 +3339,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/recruiters/jobs/{job_id}/repost": {
+        "/recruiters/jobs/{jobId}/repost": {
             "put": {
-                "description": "Repost a deactivated job by job_id",
+                "description": "Repost a deactivated job by jobId",
                 "produces": [
                     "application/json"
                 ],
@@ -3353,7 +3353,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Job ID",
-                        "name": "job_id",
+                        "name": "jobId",
                         "in": "path",
                         "required": true
                     }

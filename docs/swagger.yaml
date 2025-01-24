@@ -603,7 +603,7 @@ paths:
       summary: Create a new user
       tags:
       - Admin - Users
-  /admin/users/{user_id}:
+  /admin/users/{userId}:
     delete:
       description: Delete user by user ID
       parameters:
@@ -1341,13 +1341,13 @@ paths:
       summary: Add a new certification
       tags:
       - Candidates - Certifications
-  /candidates/certifications/{certification_name}:
+  /candidates/certifications/{certificationName}:
     delete:
       description: Delete a certification by candidate ID and certification ID
       parameters:
       - description: Certification Name
         in: path
-        name: certification_name
+        name: certificationName
         required: true
         type: string
       produces:
@@ -1501,13 +1501,13 @@ paths:
       summary: Add a new education record
       tags:
       - Candidates - Education
-  /candidates/education/{education_id}:
+  /candidates/education/{educationId}:
     delete:
       description: Delete an education record by candidate ID and education ID
       parameters:
       - description: Education ID
         in: path
-        name: education_id
+        name: educationId
         required: true
         type: string
       produces:
@@ -1624,13 +1624,13 @@ paths:
       summary: Add a new experience record
       tags:
       - Candidates - Experience
-  /candidates/experience/{experience_id}:
+  /candidates/experience/{experienceId}:
     delete:
       description: Delete an experience record by candidate ID and experience ID
       parameters:
       - description: Experience ID
         in: path
-        name: experience_id
+        name: experienceId
         required: true
         type: string
       produces:
@@ -1909,13 +1909,13 @@ paths:
       summary: Add a new project
       tags:
       - Candidates - Portfolio
-  /candidates/portfolio/{project_id}:
+  /candidates/portfolio/{projectId}:
     delete:
       description: Delete a project by candidate ID and project ID
       parameters:
       - description: Project ID
         in: path
-        name: project_id
+        name: projectId
         required: true
         type: string
       produces:
@@ -2032,13 +2032,13 @@ paths:
       summary: Add a new skill
       tags:
       - Candidates - Skills
-  /candidates/skills/{skill_name}:
+  /candidates/skills/{skillName}:
     delete:
       description: Delete a skill by candidate ID and skill name
       parameters:
       - description: Skill name
         in: path
-        name: skill_name
+        name: skillName
         required: true
         type: string
       produces:
@@ -2093,13 +2093,13 @@ paths:
       summary: Get all jobs
       tags:
       - Jobs
-  /jobs/{job_id}:
+  /jobs/{jobId}:
     get:
-      description: Retrieve the details of a specific job by job_id
+      description: Retrieve the details of a specific job by jobId
       parameters:
       - description: Job ID
         in: path
-        name: job_id
+        name: jobId
         required: true
         type: integer
       produces:
@@ -2441,13 +2441,13 @@ paths:
       summary: Post a new job
       tags:
       - Recruiters - Jobs
-  /recruiters/jobs/{job_id}:
+  /recruiters/jobs/{jobId}:
     delete:
       description: Remove a specific job from the system by its ID
       parameters:
       - description: Job ID
         in: path
-        name: job_id
+        name: jobId
         required: true
         type: integer
       produces:
@@ -2481,11 +2481,11 @@ paths:
       tags:
       - Recruiters - Jobs
     get:
-      description: Retrieve the details of a specific job by job_id
+      description: Retrieve the details of a specific job by jobId
       parameters:
       - description: Job ID
         in: path
-        name: job_id
+        name: jobId
         required: true
         type: integer
       produces:
@@ -2526,11 +2526,11 @@ paths:
     put:
       consumes:
       - application/json
-      description: Update the details of a specific job by job_id
+      description: Update the details of a specific job by jobId
       parameters:
       - description: Job ID
         in: path
-        name: job_id
+        name: jobId
         required: true
         type: integer
       - description: Updated job details
@@ -2574,13 +2574,13 @@ paths:
       summary: Edit an existing job
       tags:
       - Recruiters - Jobs
-  /recruiters/jobs/{job_id}/deactivate:
+  /recruiters/jobs/{jobId}/deactivate:
     put:
-      description: Disable a specific job by job_id
+      description: Disable a specific job by jobId
       parameters:
       - description: Job ID
         in: path
-        name: job_id
+        name: jobId
         required: true
         type: integer
       produces:
@@ -2618,13 +2618,13 @@ paths:
       summary: Deactivate a job
       tags:
       - Recruiters - Jobs
-  /recruiters/jobs/{job_id}/repost:
+  /recruiters/jobs/{jobId}/repost:
     put:
-      description: Repost a deactivated job by job_id
+      description: Repost a deactivated job by jobId
       parameters:
       - description: Job ID
         in: path
-        name: job_id
+        name: jobId
         required: true
         type: integer
       produces:
