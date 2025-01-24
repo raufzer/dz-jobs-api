@@ -5,10 +5,10 @@ import (
 	"database/sql"
 	"dz-jobs-api/config"
 	"dz-jobs-api/internal/dto/request"
-	"dz-jobs-api/pkg/utils"
 	"dz-jobs-api/internal/integrations"
 	"dz-jobs-api/internal/models"
 	"dz-jobs-api/internal/repositories/interfaces"
+	"dz-jobs-api/pkg/utils"
 	"net/http"
 	"time"
 
@@ -172,7 +172,7 @@ func (s *AuthService) ValidateToken(token string) (string, string, error) {
 	if err != nil {
 		return "", "", utils.NewCustomError(http.StatusUnauthorized, "Invalid or expired token")
 	}
-	return claims.UserID, claims.Role, nil
+	return claims.ID, claims.Role, nil
 }
 
 func (s *AuthService) GoogleConnect(code string, role string) (*models.User, string, string, string, error) {

@@ -20,7 +20,7 @@ func NewCandidateCertificationsService(repo interfaces.CandidateCertificationsRe
 
 func (s *CandidateCertificationsService) AddCertification(candidateID uuid.UUID, request request.AddCertificationRequest) (*models.CandidateCertification, error) {
 	certification := &models.CandidateCertification{
-		CertificationID:   uuid.New(),
+		ID:   uuid.New(),
 		CandidateID:       candidateID,
 		CertificationName: request.CertificationName,
 		IssuedBy:          request.IssuedBy,

@@ -1,10 +1,10 @@
 package services
 
 import (
-    "dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/models"
+	"dz-jobs-api/internal/repositories/interfaces"
 	"dz-jobs-api/pkg/utils"
-    "dz-jobs-api/internal/models"
-    "dz-jobs-api/internal/repositories/interfaces"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -20,8 +20,8 @@ func NewCandidateSkillService(repo interfaces.CandidateSkillsRepository) *Candid
 
 func (s *CandidateSkillsService) AddSkill(candidateID uuid.UUID, request request.AddSkillRequest) (*models.CandidateSkills, error) {
 	skill := &models.CandidateSkills{
-		CandidateID: candidateID,
-		Skill:       request.Skill,
+		ID:    candidateID,
+		Skill: request.Skill,
 	}
 
 	err := s.candidateSkillsRepo.CreateSkill(skill)
@@ -31,7 +31,6 @@ func (s *CandidateSkillsService) AddSkill(candidateID uuid.UUID, request request
 
 	return skill, nil
 }
-
 
 func (s *CandidateSkillsService) GetSkills(candidateID uuid.UUID) ([]models.CandidateSkills, error) {
 	skills, err := s.candidateSkillsRepo.GetSkills(candidateID)

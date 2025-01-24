@@ -20,7 +20,7 @@ func NewCandidateExperienceService(repo interfaces.CandidateExperienceRepository
 
 func (s *CandidateExperienceService) AddExperience(candidateID uuid.UUID, request request.AddExperienceRequest) (*models.CandidateExperience, error) {
 	experience := &models.CandidateExperience{
-		ExperienceID: uuid.New(),
+		ID: uuid.New(),
 		CandidateID:  candidateID,
 		JobTitle:     request.JobTitle,
 		Company:      request.Company,

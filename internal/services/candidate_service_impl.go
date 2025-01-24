@@ -55,7 +55,7 @@ func (s *CandidateService) CreateCandidate(userID string, profilePictureFile, re
 	}
 
 	newCandidate := &models.Candidate{
-		CandidateID:    uuid.MustParse(userID),
+		ID:    uuid.MustParse(userID),
 		Resume:         resumeURL,
 		ProfilePicture: profilePictureURL,
 	}
@@ -78,7 +78,7 @@ func (s *CandidateService) CreateDefaultCandidate(userID, resumeURL, profilePict
 	}
 
 	newCandidate := &models.Candidate{
-		CandidateID:    uuid.MustParse(userID),
+		ID:    uuid.MustParse(userID),
 		Resume:         resumeURL,
 		ProfilePicture: profilePictureURL,
 	}

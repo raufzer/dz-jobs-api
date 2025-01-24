@@ -53,11 +53,11 @@ func (s *UserService) CreateUser(req request.CreateUsersRequest) (*models.User, 
 	return user, nil
 }
 
-func (s *UserService) GetUser(id uuid.UUID) (*models.User, error) {
-	if id == uuid.Nil {
+func (s *UserService) GetUser(userID uuid.UUID) (*models.User, error) {
+	if userID == uuid.Nil {
 		return nil, utils.NewCustomError(http.StatusBadRequest, "Invalid user ID")
 	}
-	user, err := s.userRepository.GetUserByID(id)
+	user, err := s.userRepository.GetUserByID(userID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, utils.NewCustomError(http.StatusNotFound, "User not found")
@@ -67,7 +67,7 @@ func (s *UserService) GetUser(id uuid.UUID) (*models.User, error) {
 	return user, nil
 }
 
-func (s *UserService) UpdateUser(id uuid.UUID, req request.UpdateUserRequest) (*models.User, error) {
+func (s *UserService) UpdateUser(userID uuid.UUID, req request.UpdateUserRequest) (*models.User, error) {
 	updatedUser := &models.User{
 		Name:      req.Name,
 		Email:     req.Email,
@@ -76,14 +76,14 @@ func (s *UserService) UpdateUser(id uuid.UUID, req request.UpdateUserRequest) (*
 		UpdatedAt: time.Now(),
 	}
 
-	if err := s.userRepository.UpdateUser(id, updatedUser); err != nil {
+	if err := s.userRepository.UpdateUser(userID, updatedUser); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, utils.NewCustomError(http.StatusNotFound, "User not found")
 		}
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to update user")
 	}
 
-	return s.userRepository.GetUserByID(id)
+	return s.userRepository.GetUserByID(userID)
 }
 
 func (s *UserService) GetAllUsers() ([]*models.User, error) {
@@ -94,8 +94,8 @@ func (s *UserService) GetAllUsers() ([]*models.User, error) {
 	return users, nil
 }
 
-func (s *UserService) DeleteUser(id uuid.UUID) error {
-	err := s.userRepository.DeleteUser(id)
+func (s *UserService) DeleteUser(userID uuid.UUID) error {
+	err := s.userRepository.DeleteUser(userID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return utils.NewCustomError(http.StatusNotFound, "User not found")

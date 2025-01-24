@@ -44,7 +44,7 @@ func (s *RecruiterService) CreateRecruiter(userID string, req request.CreateRecr
 	}
 
 	recruiter := &models.Recruiter{
-		RecruiterID:        uuid.MustParse(userID),
+		ID:        uuid.MustParse(userID),
 		CompanyName:        req.CompanyName,
 		CompanyLogo:        companyLogoURL,
 		CompanyDescription: req.CompanyDescription,
@@ -63,8 +63,8 @@ func (s *RecruiterService) CreateRecruiter(userID string, req request.CreateRecr
 	return recruiter, nil
 }
 
-func (s *RecruiterService) GetRecruiter(recruiter_id uuid.UUID) (*models.Recruiter, error) {
-	recruiter, err := s.recruiterRepository.GetRecruiter(recruiter_id)
+func (s *RecruiterService) GetRecruiter(recruiterID uuid.UUID) (*models.Recruiter, error) {
+	recruiter, err := s.recruiterRepository.GetRecruiter(recruiterID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, utils.NewCustomError(http.StatusNotFound, "REcruiter not found")
@@ -74,8 +74,8 @@ func (s *RecruiterService) GetRecruiter(recruiter_id uuid.UUID) (*models.Recruit
 	return recruiter, nil
 }
 
-func (s *RecruiterService) UpdateRecruiter(recruiter_id uuid.UUID, req request.UpdateRecruiterRequest, companyLogo *multipart.FileHeader) (*models.Recruiter, error) {
-	existingRecruiter, err := s.recruiterRepository.GetRecruiter(recruiter_id)
+func (s *RecruiterService) UpdateRecruiter(recruiterID uuid.UUID, req request.UpdateRecruiterRequest, companyLogo *multipart.FileHeader) (*models.Recruiter, error) {
+	existingRecruiter, err := s.recruiterRepository.GetRecruiter(recruiterID)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusNotFound, "Recruiter not found")
 	}
@@ -100,22 +100,22 @@ func (s *RecruiterService) UpdateRecruiter(recruiter_id uuid.UUID, req request.U
 		VerifiedStatus:     req.VerifiedStatus,
 	}
 
-	if err := s.recruiterRepository.UpdateRecruiter(recruiter_id, updatedRecruiter); err != nil {
+	if err := s.recruiterRepository.UpdateRecruiter(recruiterID, updatedRecruiter); err != nil {
 		s.redisRepository.InvalidateAssetCache(companyLogoURL, "image")
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to update Recruiter")
 	}
 
 	s.redisRepository.InvalidateAssetCache(existingRecruiter.CompanyLogo, "image")
-	return s.recruiterRepository.GetRecruiter(recruiter_id)
+	return s.recruiterRepository.GetRecruiter(recruiterID)
 }
 
-func (s *RecruiterService) DeleteRecruiter(recruiter_id uuid.UUID) error {
-	recruiter, err := s.recruiterRepository.GetRecruiter(recruiter_id)
+func (s *RecruiterService) DeleteRecruiter(recruiterID uuid.UUID) error {
+	recruiter, err := s.recruiterRepository.GetRecruiter(recruiterID)
 	if err != nil {
 		return utils.NewCustomError(http.StatusNotFound, "Recruiter not found")
 	}
 
-	if err := s.recruiterRepository.DeleteRecruiter(recruiter_id); err != nil {
+	if err := s.recruiterRepository.DeleteRecruiter(recruiterID); err != nil {
 		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete Recruiter")
 	}
 

@@ -1,10 +1,10 @@
 package services
 
 import (
-    "dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/models"
+	"dz-jobs-api/internal/repositories/interfaces"
 	"dz-jobs-api/pkg/utils"
-    "dz-jobs-api/internal/models"
-    "dz-jobs-api/internal/repositories/interfaces"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -18,13 +18,13 @@ func NewCandidatePersonalInfoService(repo interfaces.CandidatePersonalInfoReposi
 	return &CandidatePersonalInfoService{candidatePersonalInfoRepo: repo}
 }
 
-func (s *CandidatePersonalInfoService) UpdatePersonalInfo(id uuid.UUID, request request.UpdatePersonalInfoRequest) (*models.CandidatePersonalInfo, error) {
+func (s *CandidatePersonalInfoService) UpdatePersonalInfo(candidateID uuid.UUID, request request.UpdatePersonalInfoRequest) (*models.CandidatePersonalInfo, error) {
 	info := &models.CandidatePersonalInfo{
-		CandidateID: id,
-		Name:    request.Name,
-		Email:   request.Email,
-		Phone:   request.Phone,
-		Address: request.Address,
+		ID:          candidateID,
+		Name:        request.Name,
+		Email:       request.Email,
+		Phone:       request.Phone,
+		Address:     request.Address,
 		DateOfBirth: request.DateOfBirth,
 		Gender:      request.Gender,
 		Bio:         request.Bio,
@@ -34,7 +34,7 @@ func (s *CandidatePersonalInfoService) UpdatePersonalInfo(id uuid.UUID, request 
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to update personal info")
 	}
-	return s.GetPersonalInfo(id)
+	return s.GetPersonalInfo(candidateID)
 }
 
 func (s *CandidatePersonalInfoService) GetPersonalInfo(candidateID uuid.UUID) (*models.CandidatePersonalInfo, error) {
@@ -48,7 +48,7 @@ func (s *CandidatePersonalInfoService) GetPersonalInfo(candidateID uuid.UUID) (*
 
 func (s *CandidatePersonalInfoService) AddPersonalInfo(request request.AddPersonalInfoRequest, candidateID uuid.UUID) (*models.CandidatePersonalInfo, error) {
 	info := &models.CandidatePersonalInfo{
-		CandidateID: candidateID,
+		ID:          candidateID,
 		Name:        request.Name,
 		Email:       request.Email,
 		Phone:       request.Phone,
