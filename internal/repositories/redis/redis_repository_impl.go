@@ -77,30 +77,30 @@ func (r *RedisRepository) InvalidateResetToken(email string) error {
 	return nil
 }
 
-func (r *RedisRepository) StoreRefreshToken(user_id, refreshToken string, expiry time.Duration) error {
-	key := fmt.Sprintf("refresh_token:%s", user_id)
+func (r *RedisRepository) StoreRefreshToken(UserID, refreshToken string, expiry time.Duration) error {
+	key := fmt.Sprintf("refresh_token:%s", UserID)
 	if err := r.redisClient.Set(context.Background(), key, refreshToken, expiry).Err(); err != nil {
-		return fmt.Errorf("redis: failed to store refresh token for user_id %s: %w", user_id, err)
+		return fmt.Errorf("redis: failed to store refresh token for UserID %s: %w", UserID, err)
 	}
 	return nil
 }
 
-func (r *RedisRepository) GetRefreshToken(user_id string) (string, error) {
-	key := fmt.Sprintf("refresh_token:%s", user_id)
+func (r *RedisRepository) GetRefreshToken(UserID string) (string, error) {
+	key := fmt.Sprintf("refresh_token:%s", UserID)
 	result, err := r.redisClient.Get(context.Background(), key).Result()
 	if err != nil {
 		if err == redis.Nil {
 			return "", redis.Nil
 		}
-		return "", fmt.Errorf("redis: failed to get refresh token for user_id %s: %w", user_id, err)
+		return "", fmt.Errorf("redis: failed to get refresh token for UserID %s: %w", UserID, err)
 	}
 	return result, nil
 }
 
-func (r *RedisRepository) InvalidateRefreshToken(user_id string) error {
-	key := fmt.Sprintf("refresh_token:%s", user_id)
+func (r *RedisRepository) InvalidateRefreshToken(UserID string) error {
+	key := fmt.Sprintf("refresh_token:%s", UserID)
 	if err := r.redisClient.Del(context.Background(), key).Err(); err != nil {
-		return fmt.Errorf("redis: failed to delete refresh token for user_id %s: %w", user_id, err)
+		return fmt.Errorf("redis: failed to delete refresh token for user_id %s: %w", UserID, err)
 	}
 	return nil
 }
