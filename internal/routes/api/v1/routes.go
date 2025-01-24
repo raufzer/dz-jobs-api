@@ -3,18 +3,15 @@ package v1
 import (
 	"dz-jobs-api/config"
 	"dz-jobs-api/internal/controllers"
+	"os"
 
 	"dz-jobs-api/internal/middlewares"
 	"net/http"
-
-	"embed"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
-
-var swaggerFS embed.FS
 
 func RegisterRoutes(
 	router *gin.Engine,
@@ -146,12 +143,15 @@ func RegisterSwaggerRoutes(server *gin.Engine) {
 
 	server.GET("/docs/*any", ginSwagger.WrapHandler(
 		swaggerFiles.Handler,
+		ginSwagger.URL("/v1/docs/swagger.json"),
 	))
 
 	server.GET("/v1/docs/swagger.json", func(ctx *gin.Context) {
-		swaggerContent, err := swaggerFS.ReadFile("docs/swagger.json")
+		swaggerContent, err := os.ReadFile("docs/swagger.json")
 		if err != nil {
-			ctx.AbortWithStatus(http.StatusInternalServerError)
+			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+				"error": "Failed to load API documentation",
+			})
 			return
 		}
 		ctx.Data(http.StatusOK, "application/json", swaggerContent)
