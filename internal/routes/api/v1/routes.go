@@ -2,8 +2,8 @@ package v1
 
 import (
 	"dz-jobs-api/config"
+	"dz-jobs-api/docs"
 	"dz-jobs-api/internal/controllers"
-	"os"
 
 	"dz-jobs-api/internal/middlewares"
 	"net/http"
@@ -139,15 +139,22 @@ func RegisterRecruiterRoutes(
 	RecruiterRoutes(router, recruiterController)
 	RecruiterJobRoutes(router, jobController)
 }
-func RegisterSwaggerRoutes(server *gin.Engine) {
 
+func RegisterSwaggerRoutes(server *gin.Engine) {
 	server.GET("/docs/*any", ginSwagger.WrapHandler(
 		swaggerFiles.Handler,
 		ginSwagger.URL("/v1/docs/swagger.json"),
 	))
 
 	server.GET("/v1/docs/swagger.json", func(ctx *gin.Context) {
-		swaggerContent, _ := os.ReadFile("docs/swagger.json")
+		// Access the embedded FS from docs package
+		swaggerContent, err := docs.SwaggerFS.ReadFile("swagger.json")
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+				"error": "API documentation not found",
+			})
+			return
+		}
 		ctx.Data(http.StatusOK, "application/json", swaggerContent)
 	})
 }
