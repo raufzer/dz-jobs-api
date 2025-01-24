@@ -9,6 +9,6 @@ func ExperienceRoutes(rg *gin.RouterGroup, candidateExperienceController *contro
 	experienceRoute := rg.Group("/experience")
 	experienceRoute.POST("/", candidateExperienceController.AddExperience)
 	experienceRoute.GET("/", candidateExperienceController.GetExperience)
-	experienceRoute.DELETE("/:experience_id", candidateExperienceController.DeleteExperience)
+	experienceRoute.DELETE("/:experienceId", candidateExperienceController.DeleteExperience)
 
 }

@@ -92,7 +92,7 @@ func (c *CandidateSkillsController) GetSkills(ctx *gin.Context) {
 // @Description Delete a skill by candidate ID and skill name
 // @Tags Candidates - Skills
 // @Produce json
-// @Param skill_name path string true "Skill name"
+// @Param skillName path string true "Skill name"
 // @Success 200 {object} response.Response "Skill deleted successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
@@ -100,12 +100,12 @@ func (c *CandidateSkillsController) GetSkills(ctx *gin.Context) {
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 404 {object} response.Response "Skill Info not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/skills/{skill_name} [delete]
+// @Router /candidates/skills/{skillName} [delete]
 func (c *CandidateSkillsController) DeleteSkill(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, _ := uuid.Parse(userID.(string))
 
-	err := c.service.DeleteSkill(candidateID, ctx.Param("skill_name"))
+	err := c.service.DeleteSkill(candidateID, ctx.Param("skillName"))
 	if err != nil {
 		ctx.Error(err)
 		return

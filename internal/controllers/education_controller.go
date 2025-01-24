@@ -91,7 +91,7 @@ func (c *CandidateEducationController) GetEducation(ctx *gin.Context) {
 // @Description Delete an education record by candidate ID and education ID
 // @Tags Candidates - Education
 // @Produce json
-// @Param education_id path string true "Education ID"
+// @Param educationId path string true "Education ID"
 // @Success 200 {object} response.Response "Education deleted successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
@@ -99,11 +99,11 @@ func (c *CandidateEducationController) GetEducation(ctx *gin.Context) {
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 404 {object} response.Response "Education not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/education/{education_id} [delete]
+// @Router /candidates/education/{educationId} [delete]
 func (c *CandidateEducationController) DeleteEducation(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, _ := uuid.Parse(userID.(string))
-	educationIDstr := ctx.Param("education_id")
+	educationIDstr := ctx.Param("educationId")
     educationID, _ := uuid.Parse(educationIDstr)
 	err := c.service.DeleteEducation(candidateID, educationID)
 	if err != nil {

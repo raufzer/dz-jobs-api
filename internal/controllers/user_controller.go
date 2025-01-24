@@ -67,9 +67,9 @@ func (c *UserController) CreateUser(ctx *gin.Context) {
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "User not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /admin/users/{user_id} [get]
+// @Router /admin/users/{userId} [get]
 func (c *UserController) GetUser(ctx *gin.Context) {
-	id, err := uuid.Parse(ctx.Param("user_id"))
+	id, err := uuid.Parse(ctx.Param("userId"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
@@ -103,7 +103,7 @@ func (c *UserController) GetUser(ctx *gin.Context) {
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "User not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /admin/users/{user_id} [patch]
+// @Router /admin/users/{userId} [patch]
 func (c *UserController) UpdateUser(ctx *gin.Context) {
 	var req request.UpdateUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -111,7 +111,7 @@ func (c *UserController) UpdateUser(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	id, err := uuid.Parse(ctx.Param("user_id"))
+	id, err := uuid.Parse(ctx.Param("userId"))
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -166,9 +166,9 @@ func (c *UserController) GetAllUsers(ctx *gin.Context) {
 // @Failure 403 {object} response.Response "Forbidden"
 // @Failure 404 {object} response.Response "User not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /admin/users/{user_id} [delete]
+// @Router /admin/users/{userId} [delete]
 func (c *UserController) DeleteUser(ctx *gin.Context) {
-	id, err := uuid.Parse(ctx.Param("user_id"))
+	id, err := uuid.Parse(ctx.Param("userId"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()

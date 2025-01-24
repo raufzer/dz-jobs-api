@@ -10,6 +10,6 @@ func PortfolioRoutes(rg *gin.RouterGroup, candidatePortfolioController *controll
 	portfolioRoute := rg.Group("/portfolio")
 	portfolioRoute.POST("/", candidatePortfolioController.AddProject)
 	portfolioRoute.GET("/", candidatePortfolioController.GetPortfolio)
-	portfolioRoute.DELETE("/:project_id", candidatePortfolioController.DeleteProject)
+	portfolioRoute.DELETE("/:projectId", candidatePortfolioController.DeleteProject)
 
 }

@@ -90,7 +90,7 @@ func (c *CandidatePortfolioController) GetPortfolio(ctx *gin.Context) {
 // @Description Delete a project by candidate ID and project ID
 // @Tags Candidates - Portfolio
 // @Produce json
-// @Param project_id path string true "Project ID"
+// @Param projectId path string true "Project ID"
 // @Success 200 {object} response.Response "Project deleted successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
@@ -98,12 +98,12 @@ func (c *CandidatePortfolioController) GetPortfolio(ctx *gin.Context) {
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 404 {object} response.Response "Project Info not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/portfolio/{project_id} [delete]
+// @Router /candidates/portfolio/{projectId} [delete]
 func (c *CandidatePortfolioController) DeleteProject(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, _ := uuid.Parse(userID.(string))
 
-	err := c.service.DeleteProject(candidateID, ctx.Param("project_id"))
+	err := c.service.DeleteProject(candidateID, ctx.Param("projectId"))
 	if err != nil {
 		ctx.Error(err)
 		return

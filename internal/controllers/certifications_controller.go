@@ -89,7 +89,7 @@ func (c *CandidateCertificationsController) GetCertifications(ctx *gin.Context) 
 // @Description Delete a certification by candidate ID and certification ID
 // @Tags Candidates - Certifications
 // @Produce json
-// @Param certification_name path string true "Certification Name"
+// @Param certificationName path string true "Certification Name"
 // @Success 200 {object} response.Response "Certification deleted successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
@@ -97,12 +97,12 @@ func (c *CandidateCertificationsController) GetCertifications(ctx *gin.Context) 
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 404 {object} response.Response "Certification not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/certifications/{certification_name} [delete]
+// @Router /candidates/certifications/{certificationName} [delete]
 func (c *CandidateCertificationsController) DeleteCertification(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, _ := uuid.Parse(userID.(string))
 
-	err := c.service.DeleteCertification(candidateID, ctx.Param("certification_name"))
+	err := c.service.DeleteCertification(candidateID, ctx.Param("certificationName"))
 	if err != nil {
 		ctx.Error(err)
 		return

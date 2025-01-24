@@ -91,7 +91,7 @@ func (c *CandidateExperienceController) GetExperience(ctx *gin.Context) {
 // @Description Delete an experience record by candidate ID and experience ID
 // @Tags Candidates - Experience
 // @Produce json
-// @Param experience_id path string true "Experience ID"
+// @Param experienceId path string true "Experience ID"
 // @Success 200 {object} response.Response "Experience deleted successfully"
 // @Failure 400 {object} response.Response "Invalid input"
 // @Failure 401 {object} response.Response "Unauthorized"
@@ -99,11 +99,11 @@ func (c *CandidateExperienceController) GetExperience(ctx *gin.Context) {
 // @Failure 404 {object} response.Response "Candidate not found"
 // @Failure 404 {object} response.Response "Experience not found"
 // @Failure 500 {object} response.Response "An unexpected error occurred"
-// @Router /candidates/experience/{experience_id} [delete]
+// @Router /candidates/experience/{experienceId} [delete]
 func (c *CandidateExperienceController) DeleteExperience(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, _ := uuid.Parse(userID.(string))
-	experienceIDstr := ctx.Param("experience_id")
+	experienceIDstr := ctx.Param("experienceId")
 	experienceID, _ := uuid.Parse(experienceIDstr)
 	err := c.service.DeleteExperience(candidateID, experienceID)
 	if err != nil {

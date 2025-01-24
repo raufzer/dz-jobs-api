@@ -10,6 +10,6 @@ func SkillsRoutes(rg *gin.RouterGroup, candidateSkillsController *controllers.Ca
 	skillsRoute := rg.Group("/skills")
 	skillsRoute.POST("/", candidateSkillsController.AddSkill)
 	skillsRoute.GET("/", candidateSkillsController.GetSkills)
-	skillsRoute.DELETE("/:skill_name", candidateSkillsController.DeleteSkill)
+	skillsRoute.DELETE("/:skillName", candidateSkillsController.DeleteSkill)
 
 }
