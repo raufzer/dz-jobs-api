@@ -9,7 +9,7 @@ RUN apk add --no-cache git \
 RUN addgroup -S app && adduser -S -G app app \
     && mkdir -p /app \
     && chown -R app:app /app \
-    && chmod -R 755 /go  # Add execute permissions to Go directory
+    && chmod -R 755 /go
 
 # 3. Switch to app user
 USER app
