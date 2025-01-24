@@ -3,17 +3,19 @@ package v1
 import (
 	"dz-jobs-api/config"
 	"dz-jobs-api/internal/controllers"
-	"dz-jobs-api/internal/dto/response"
+
 	"dz-jobs-api/internal/middlewares"
 	"net/http"
-	"os"
+
+	"embed"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// RegisterRoutes sets up all public and protected routes
+var swaggerFS embed.FS
+
 func RegisterRoutes(
 	router *gin.Engine,
 	authController *controllers.AuthController,
@@ -31,13 +33,11 @@ func RegisterRoutes(
 	systemController *controllers.SystemController,
 	appConfig *config.AppConfig,
 ) {
-	// Base path
+
 	basePath := router.Group("/v1")
 
-	// Public routes (no authentication required)
 	RegisterPublicRoutes(basePath, authController, jobController, systemController)
 
-	// Protected routes (authentication required)
 	protected := basePath.Group("/")
 	protected.Use(middlewares.AuthMiddleware(appConfig))
 	RegisterProtectedRoutes(
@@ -56,7 +56,6 @@ func RegisterRoutes(
 	)
 }
 
-// RegisterPublicRoutes handles routes that don't require authentication
 func RegisterPublicRoutes(
 	router *gin.RouterGroup,
 	authController *controllers.AuthController,
@@ -68,7 +67,6 @@ func RegisterPublicRoutes(
 	SystemRoutes(router, systemController)
 }
 
-// RegisterProtectedRoutes handles routes that require authentication
 func RegisterProtectedRoutes(
 	router *gin.RouterGroup,
 	userController *controllers.UserController,
@@ -83,12 +81,11 @@ func RegisterProtectedRoutes(
 	jobController *controllers.JobController,
 	bookmarksController *controllers.BookmarksController,
 ) {
-	// Admin-specific routes
+
 	adminGroup := router.Group("/admin")
 	adminGroup.Use(middlewares.RoleMiddleware("admin"))
 	RegisterAdminRoutes(adminGroup, userController)
 
-	// Candidate-specific routes
 	candidateGroup := router.Group("/candidates")
 	candidateGroup.Use(middlewares.RoleMiddleware("candidate", "admin"))
 	RegisterCandidateRoutes(
@@ -103,13 +100,11 @@ func RegisterProtectedRoutes(
 		bookmarksController,
 	)
 
-	// Recruiter-specific routes
 	recruiterGroup := router.Group("/recruiters")
 	recruiterGroup.Use(middlewares.RoleMiddleware("recruiter", "admin"))
 	RegisterRecruiterRoutes(recruiterGroup, recruiterController, jobController)
 }
 
-// RegisterAdminRoutes handles routes accessible only to admins
 func RegisterAdminRoutes(
 	router *gin.RouterGroup,
 	userController *controllers.UserController,
@@ -117,7 +112,6 @@ func RegisterAdminRoutes(
 	UserRoutes(router, userController)
 }
 
-// RegisterCandidateRoutes handles routes accessible only to candidates
 func RegisterCandidateRoutes(
 	router *gin.RouterGroup,
 	candidateController *controllers.CandidateController,
@@ -148,22 +142,16 @@ func RegisterRecruiterRoutes(
 	RecruiterRoutes(router, recruiterController)
 	RecruiterJobRoutes(router, jobController)
 }
-
-// RegisterSwaggerRoutes handles the Swagger documentation routes
 func RegisterSwaggerRoutes(server *gin.Engine) {
+
 	server.GET("/docs/*any", ginSwagger.WrapHandler(
 		swaggerFiles.Handler,
-		ginSwagger.URL("/v1/docs/swagger.json"),
 	))
 
 	server.GET("/v1/docs/swagger.json", func(ctx *gin.Context) {
-		swaggerContent, err := os.ReadFile("./docs/swagger.json")
+		swaggerContent, err := swaggerFS.ReadFile("docs/swagger.json")
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, response.Response{
-				Code:    http.StatusNotFound,
-				Status:  "Not Found",
-				Message: "Swagger documentation not found",
-			})
+			ctx.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
 		ctx.Data(http.StatusOK, "application/json", swaggerContent)
