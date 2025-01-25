@@ -9,7 +9,7 @@ import (
 )
 
 type TokenClaims struct {
-	ID  string `json:"sub"`
+	ID      string `json:"sub"`
 	Role    string `json:"role"`
 	Purpose string `json:"purpose"`
 	jwt.StandardClaims
@@ -20,7 +20,10 @@ func GenerateToken(userID string, ttl time.Duration, purpose string, role string
 	token := jwt.New(jwt.SigningMethodHS256)
 	now := time.Now().UTC()
 
-	claims := token.Claims.(jwt.MapClaims)
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return "", fmt.Errorf("invalid token claims format")
+	}
 	claims["sub"] = userID // email for reset_token
 	claims["exp"] = now.Add(ttl).Unix()
 	claims["iat"] = now.Unix()
@@ -78,7 +81,7 @@ func generateRandomBytes(size int) []byte {
 	randomBytes := make([]byte, size)
 	_, err := rand.Read(randomBytes)
 	if err != nil {
-		fmt.Errorf("error generating random bytes: %w", err)
+		fmt.Printf("error generating random bytes: %v", err)
 		return nil
 	}
 	return randomBytes

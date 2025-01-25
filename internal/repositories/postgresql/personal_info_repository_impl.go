@@ -46,7 +46,7 @@ func (r *SQLCandidatePersonalInfoRepository) UpdatePersonalInfo(info *models.Can
 	query := `UPDATE candidate_personal_info SET`
 	args := []interface{}{}
 	argIndex := 1
-	
+
 	if info.Name != "" {
 		query += fmt.Sprintf(" name = $%d,", argIndex)
 		args = append(args, info.Name)
@@ -82,15 +82,15 @@ func (r *SQLCandidatePersonalInfoRepository) UpdatePersonalInfo(info *models.Can
 		args = append(args, info.Bio)
 		argIndex++
 	}
-	
+
 	if len(args) == 0 {
 		return fmt.Errorf("no fields to update")
 	}
-	
+
 	query = query[:len(query)-1]
 	query += fmt.Sprintf(" WHERE candidate_id = $%d", argIndex)
 	args = append(args, info.ID)
-	
+
 	_, err := r.db.Exec(query, args...)
 	if err != nil {
 		return fmt.Errorf("unable to update personal info: %w", err)

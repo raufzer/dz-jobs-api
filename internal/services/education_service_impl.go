@@ -24,7 +24,7 @@ func NewCandidateEducationService(repo interfaces.CandidateEducationRepository, 
 func (s *CandidateEducationService) AddEducation(candidateID uuid.UUID, request request.AddEducationRequest) (*models.CandidateEducation, error) {
 
 	education := &models.CandidateEducation{
-		ID: uuid.New(),
+		ID:          uuid.New(),
 		CandidateID: candidateID,
 		Degree:      request.Degree,
 		Institution: request.Institution,

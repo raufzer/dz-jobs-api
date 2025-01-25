@@ -49,12 +49,11 @@ func (r *SQLCandidateEducationRepository) GetEducation(educationID uuid.UUID) ([
 	return educations, nil
 }
 
-
 func (r *SQLCandidateEducationRepository) DeleteEducation(candidateID, educationID uuid.UUID) error {
-    query := `DELETE FROM candidate_education WHERE education_id = $1 AND candidate_id = $2`
-    _, err := r.db.Exec(query, educationID, candidateID)
-    if err != nil {
-        return fmt.Errorf("unable to delete education: %w", err)
-    }
-    return nil
+	query := `DELETE FROM candidate_education WHERE education_id = $1 AND candidate_id = $2`
+	_, err := r.db.Exec(query, educationID, candidateID)
+	if err != nil {
+		return fmt.Errorf("unable to delete education: %w", err)
+	}
+	return nil
 }

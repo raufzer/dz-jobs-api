@@ -69,13 +69,13 @@ func (c *UserController) CreateUser(ctx *gin.Context) {
 // @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /admin/users/{userId} [get]
 func (c *UserController) GetUser(ctx *gin.Context) {
-	id, err := uuid.Parse(ctx.Param("userId"))
+	userID, err := uuid.Parse(ctx.Param("userId"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
-	user, err := c.userService.GetUser(id)
+	user, err := c.userService.GetUser(userID)
 	if err != nil {
 		ctx.Error(err)
 		return
@@ -168,13 +168,13 @@ func (c *UserController) GetAllUsers(ctx *gin.Context) {
 // @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /admin/users/{userId} [delete]
 func (c *UserController) DeleteUser(ctx *gin.Context) {
-	id, err := uuid.Parse(ctx.Param("userId"))
+	userID, err := uuid.Parse(ctx.Param("userId"))
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()
 		return
 	}
-	err = c.userService.DeleteUser(id)
+	err = c.userService.DeleteUser(userID)
 	if err != nil {
 		ctx.Error(err)
 		return

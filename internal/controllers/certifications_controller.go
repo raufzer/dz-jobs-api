@@ -1,9 +1,9 @@
 package controllers
 
 import (
-    "dz-jobs-api/internal/dto/request"
-    "dz-jobs-api/internal/dto/response"
-    serviceInterfaces "dz-jobs-api/internal/services/interfaces"
+	"dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/dto/response"
+	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -33,7 +33,11 @@ func NewCandidateCertificationsController(service serviceInterfaces.CandidateCer
 // @Router /candidates/certifications [post]
 func (c *CandidateCertificationsController) AddCertification(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 	var req request.AddCertificationRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
@@ -69,7 +73,11 @@ func (c *CandidateCertificationsController) AddCertification(ctx *gin.Context) {
 // @Router /candidates/certifications [get]
 func (c *CandidateCertificationsController) GetCertifications(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 
 	certifications, err := c.service.GetCertifications(candidateID)
 	if err != nil {
@@ -80,7 +88,7 @@ func (c *CandidateCertificationsController) GetCertifications(ctx *gin.Context) 
 		Code:    http.StatusOK,
 		Status:  "OK",
 		Message: "Certifications retrieved successfully",
-        Data:     response.ToCertificationsResponse(certifications),
+		Data:    response.ToCertificationsResponse(certifications),
 	})
 }
 
@@ -100,9 +108,13 @@ func (c *CandidateCertificationsController) GetCertifications(ctx *gin.Context) 
 // @Router /candidates/certifications/{certificationName} [delete]
 func (c *CandidateCertificationsController) DeleteCertification(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 
-	err := c.service.DeleteCertification(candidateID, ctx.Param("certificationName"))
+	err = c.service.DeleteCertification(candidateID, ctx.Param("certificationName"))
 	if err != nil {
 		ctx.Error(err)
 		return

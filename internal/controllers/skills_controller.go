@@ -1,9 +1,9 @@
 package controllers
 
 import (
-    "dz-jobs-api/internal/dto/request"
-    "dz-jobs-api/internal/dto/response"
-    serviceInterfaces "dz-jobs-api/internal/services/interfaces"
+	"dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/dto/response"
+	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -34,7 +34,11 @@ func NewCandidateSkillsController(service serviceInterfaces.CandidateSkillsServi
 // @Router /candidates/skills [post]
 func (c *CandidateSkillsController) AddSkill(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 
 	var req request.AddSkillRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -71,7 +75,11 @@ func (c *CandidateSkillsController) AddSkill(ctx *gin.Context) {
 // @Router /candidates/skills [get]
 func (c *CandidateSkillsController) GetSkills(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 
 	skills, err := c.service.GetSkills(candidateID)
 	if err != nil {
@@ -83,7 +91,7 @@ func (c *CandidateSkillsController) GetSkills(ctx *gin.Context) {
 		Code:    http.StatusOK,
 		Status:  "OK",
 		Message: "Skills information retrieved successfully",
-		Data:   response.ToSkillsResponse(skills),
+		Data:    response.ToSkillsResponse(skills),
 	})
 }
 
@@ -103,9 +111,13 @@ func (c *CandidateSkillsController) GetSkills(ctx *gin.Context) {
 // @Router /candidates/skills/{skillName} [delete]
 func (c *CandidateSkillsController) DeleteSkill(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 
-	err := c.service.DeleteSkill(candidateID, ctx.Param("skillName"))
+	err = c.service.DeleteSkill(candidateID, ctx.Param("skillName"))
 	if err != nil {
 		ctx.Error(err)
 		return

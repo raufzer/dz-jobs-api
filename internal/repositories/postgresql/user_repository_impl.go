@@ -8,7 +8,6 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-
 )
 
 type SQLUserRepository struct {

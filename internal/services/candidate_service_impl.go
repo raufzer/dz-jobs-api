@@ -30,7 +30,10 @@ func NewCandidateService(repo interfaces.CandidateRepository, redisRepo interfac
 }
 
 func (s *CandidateService) CreateCandidate(userID string, profilePictureFile, resumeFile *multipart.FileHeader) (*models.Candidate, error) {
-	existingCandidate, _ := s.candidateRepo.GetCandidate(uuid.MustParse(userID))
+	existingCandidate, err := s.candidateRepo.GetCandidate(uuid.MustParse(userID))
+	if err != nil {
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch candidate")
+	}
 	if existingCandidate != nil {
 		return nil, utils.NewCustomError(http.StatusBadRequest, "Candidate already exists")
 	}
@@ -50,12 +53,14 @@ func (s *CandidateService) CreateCandidate(userID string, profilePictureFile, re
 	resumeURL, err := s.uploadAndCacheFile(resumeFile, "pdf")
 	if err != nil {
 
-		s.redisRepository.InvalidateAssetCache(profilePictureURL, "image")
+		if err := s.redisRepository.InvalidateAssetCache(profilePictureURL, "image"); err != nil {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+		}
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to upload resume")
 	}
 
 	newCandidate := &models.Candidate{
-		ID:    uuid.MustParse(userID),
+		ID:             uuid.MustParse(userID),
 		Resume:         resumeURL,
 		ProfilePicture: profilePictureURL,
 	}
@@ -63,8 +68,12 @@ func (s *CandidateService) CreateCandidate(userID string, profilePictureFile, re
 	_, err = s.candidateRepo.CreateCandidate(newCandidate)
 	if err != nil {
 
-		s.redisRepository.InvalidateAssetCache(profilePictureURL, "image")
-		s.redisRepository.InvalidateAssetCache(resumeURL, "pdf")
+		if err := s.redisRepository.InvalidateAssetCache(profilePictureURL, "image"); err != nil {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+		}
+		if err := s.redisRepository.InvalidateAssetCache(resumeURL, "pdf"); err != nil {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+		}
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to create candidate")
 	}
 
@@ -72,18 +81,21 @@ func (s *CandidateService) CreateCandidate(userID string, profilePictureFile, re
 }
 
 func (s *CandidateService) CreateDefaultCandidate(userID, resumeURL, profilePictureURL string) (*models.Candidate, error) {
-	existingCandidate, _ := s.candidateRepo.GetCandidate(uuid.MustParse(userID))
+	existingCandidate, err := s.candidateRepo.GetCandidate(uuid.MustParse(userID))
+	if err != nil {
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch candidate")
+	}
 	if existingCandidate != nil {
 		return nil, utils.NewCustomError(http.StatusBadRequest, "Candidate already exists")
 	}
 
 	newCandidate := &models.Candidate{
-		ID:    uuid.MustParse(userID),
+		ID:             uuid.MustParse(userID),
 		Resume:         resumeURL,
 		ProfilePicture: profilePictureURL,
 	}
 
-	_, err := s.candidateRepo.CreateCandidate(newCandidate)
+	_, err = s.candidateRepo.CreateCandidate(newCandidate)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to create candidate")
 	}
@@ -164,7 +176,9 @@ func (s *CandidateService) UpdateCandidate(candidateID uuid.UUID, profilePicture
 	resumeURL, err := s.uploadAndCacheFile(resumeFile, "pdf")
 	if err != nil {
 
-		s.redisRepository.InvalidateAssetCache(profilePictureURL, "image")
+		if err := s.redisRepository.InvalidateAssetCache(profilePictureURL, "image"); err != nil {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+		}
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to upload resume")
 	}
 
@@ -175,13 +189,21 @@ func (s *CandidateService) UpdateCandidate(candidateID uuid.UUID, profilePicture
 
 	if err := s.candidateRepo.UpdateCandidate(candidateID, updatedCandidate); err != nil {
 
-		s.redisRepository.InvalidateAssetCache(profilePictureURL, "image")
-		s.redisRepository.InvalidateAssetCache(resumeURL, "pdf")
+		if err := s.redisRepository.InvalidateAssetCache(profilePictureURL, "image"); err != nil {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+		}
+		if err := s.redisRepository.InvalidateAssetCache(resumeURL, "pdf"); err != nil {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+		}
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to update candidate")
 	}
 
-	s.redisRepository.InvalidateAssetCache(existingCandidate.ProfilePicture, "image")
-	s.redisRepository.InvalidateAssetCache(existingCandidate.Resume, "pdf")
+	if err := s.redisRepository.InvalidateAssetCache(existingCandidate.ProfilePicture, "image"); err != nil {
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+	}
+	if err := s.redisRepository.InvalidateAssetCache(existingCandidate.Resume, "pdf"); err != nil {
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+	}
 
 	return s.candidateRepo.GetCandidate(candidateID)
 }
@@ -197,8 +219,12 @@ func (s *CandidateService) DeleteCandidate(candidateID uuid.UUID) error {
 		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete candidate")
 	}
 
-	s.redisRepository.InvalidateAssetCache(candidate.ProfilePicture, "image")
-	s.redisRepository.InvalidateAssetCache(candidate.Resume, "pdf")
+	if err := s.redisRepository.InvalidateAssetCache(candidate.ProfilePicture, "image"); err != nil {
+		return utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+	}
+	if err := s.redisRepository.InvalidateAssetCache(candidate.Resume, "pdf"); err != nil {
+		return utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+	}
 
 	return nil
 }

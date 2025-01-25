@@ -34,7 +34,11 @@ func NewCandidateEducationController(service serviceInterfaces.CandidateEducatio
 // @Router /candidates/education [post]
 func (c *CandidateEducationController) AddEducation(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 
 	var req request.AddEducationRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -71,7 +75,11 @@ func (c *CandidateEducationController) AddEducation(ctx *gin.Context) {
 // @Router /candidates/education [get]
 func (c *CandidateEducationController) GetEducation(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 
 	educations, err := c.service.GetEducation(candidateID)
 	if err != nil {
@@ -102,10 +110,14 @@ func (c *CandidateEducationController) GetEducation(ctx *gin.Context) {
 // @Router /candidates/education/{educationId} [delete]
 func (c *CandidateEducationController) DeleteEducation(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 	educationIDstr := ctx.Param("educationId")
-    educationID, _ := uuid.Parse(educationIDstr)
-	err := c.service.DeleteEducation(candidateID, educationID)
+	educationID, _ := uuid.Parse(educationIDstr)
+	err = c.service.DeleteEducation(candidateID, educationID)
 	if err != nil {
 		ctx.Error(err)
 		return

@@ -77,7 +77,11 @@ func (c *RecruiterController) CreateRecruiter(ctx *gin.Context) {
 // @Router /recruiters [get]
 func (c *RecruiterController) GetRecruiter(ctx *gin.Context) {
 	userID := ctx.MustGet("recruiter_id")
-	recruiterID, _ := uuid.Parse(userID.(string))
+	recruiterID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 	recruiter, err := c.recruiterService.GetRecruiter(recruiterID)
 	if err != nil {
 		ctx.Error(err)
@@ -114,7 +118,11 @@ func (c *RecruiterController) UpdateRecruiter(ctx *gin.Context) {
 		return
 	}
 	userID := ctx.MustGet("recruiter_id")
-	recruiterID, _ := uuid.Parse(userID.(string))
+	recruiterID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 	companyLogoFile, err := ctx.FormFile("company_logo")
 	if err != nil {
 		ctx.Error(err)
@@ -148,8 +156,12 @@ func (c *RecruiterController) UpdateRecruiter(ctx *gin.Context) {
 // @Router /recruiters [delete]
 func (c *RecruiterController) DeleteRecruiter(ctx *gin.Context) {
 	userID := ctx.MustGet("recruiter_id")
-	recruiterID, _ := uuid.Parse(userID.(string))
-	err := c.recruiterService.DeleteRecruiter(recruiterID)
+	recruiterID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+	err = c.recruiterService.DeleteRecruiter(recruiterID)
 	if err != nil {
 		ctx.Error(err)
 		return

@@ -1,10 +1,10 @@
 package services
 
 import (
-    "dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/models"
+	"dz-jobs-api/internal/repositories/interfaces"
 	"dz-jobs-api/pkg/utils"
-    "dz-jobs-api/internal/models"
-    "dz-jobs-api/internal/repositories/interfaces"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -20,7 +20,7 @@ func NewCandidatePortfolioService(repo interfaces.CandidatePortfolioRepository) 
 
 func (s *CandidatePortfolioService) AddProject(candidateID uuid.UUID, request request.AddProjectRequest) (*models.CandidatePortfolio, error) {
 	portfolio := &models.CandidatePortfolio{
-		ID:   uuid.New(),
+		ID:          uuid.New(),
 		CandidateID: candidateID,
 		ProjectName: request.ProjectName,
 		ProjectLink: request.ProjectLink,

@@ -1,0 +1,15 @@
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+  unused:
+    check-exported: false
+
+linters:
+  disable-all: true
+  enable:
+    - errcheck
+    - ineffassign
+    - unused
+    - govet
+    - gofmt

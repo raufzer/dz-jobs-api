@@ -14,14 +14,14 @@ func AuthMiddleware(config *config.AppConfig) gin.HandlerFunc {
 
 		accessToken, err := ctx.Cookie("access_token")
 		if err != nil {
-			ctx.Error(utils.NewCustomError(http.StatusUnauthorized, "No access token found"))
+			_ = ctx.Error(utils.NewCustomError(http.StatusUnauthorized, "No access token found"))
 			ctx.Abort()
 			return
 		}
 
 		claims, err := utils.ValidateToken(accessToken, config.AccessTokenSecret, "access")
 		if err != nil {
-			ctx.Error(utils.NewCustomError(http.StatusUnauthorized, "Invalid or expired access token"))
+			_ = ctx.Error(utils.NewCustomError(http.StatusUnauthorized, "Invalid or expired access token"))
 			ctx.Abort()
 			return
 		}

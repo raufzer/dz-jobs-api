@@ -12,7 +12,10 @@ import (
 )
 
 func SendOTPEmail(email, otp, sendGridAPIKey string) error {
-	appConfig, _ := config.LoadConfig()
+	appConfig, err := config.LoadConfig()
+	if err != nil {
+		return fmt.Errorf("failed to load app config: %w", err)
+	}
 	if sendGridAPIKey == "" {
 		return fmt.Errorf("SendGrid API key is missing")
 	}

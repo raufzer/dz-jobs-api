@@ -12,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
+
 func ErrorHandlingMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		defer func() {

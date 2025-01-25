@@ -35,7 +35,11 @@ func NewBookmarksController(service serviceInterfaces.BookmarksService) *Bookmar
 // @Router /candidates/bookmarks/{JobId} [post]
 func (c *BookmarksController) AddBookmark(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 	jobIDStr := ctx.Param("JobId")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
 	if err != nil {

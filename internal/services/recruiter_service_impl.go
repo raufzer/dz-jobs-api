@@ -44,7 +44,7 @@ func (s *RecruiterService) CreateRecruiter(userID string, req request.CreateRecr
 	}
 
 	recruiter := &models.Recruiter{
-		ID:        uuid.MustParse(userID),
+		ID:                 uuid.MustParse(userID),
 		CompanyName:        req.CompanyName,
 		CompanyLogo:        companyLogoURL,
 		CompanyDescription: req.CompanyDescription,
@@ -56,7 +56,9 @@ func (s *RecruiterService) CreateRecruiter(userID string, req request.CreateRecr
 	}
 
 	if err := s.recruiterRepository.CreateRecruiter(recruiter); err != nil {
-		s.redisRepository.InvalidateAssetCache(companyLogoURL, "image")
+		if err := s.redisRepository.InvalidateAssetCache(companyLogoURL, "image"); err != nil {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+		}
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Recruiter creation failed")
 	}
 
@@ -101,11 +103,15 @@ func (s *RecruiterService) UpdateRecruiter(recruiterID uuid.UUID, req request.Up
 	}
 
 	if err := s.recruiterRepository.UpdateRecruiter(recruiterID, updatedRecruiter); err != nil {
-		s.redisRepository.InvalidateAssetCache(companyLogoURL, "image")
+		if err := s.redisRepository.InvalidateAssetCache(companyLogoURL, "image"); err != nil {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+		}
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to update Recruiter")
 	}
 
-	s.redisRepository.InvalidateAssetCache(existingRecruiter.CompanyLogo, "image")
+	if err = s.redisRepository.InvalidateAssetCache(existingRecruiter.CompanyLogo, "image"); err != nil {
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+	}
 	return s.recruiterRepository.GetRecruiter(recruiterID)
 }
 
@@ -119,7 +125,9 @@ func (s *RecruiterService) DeleteRecruiter(recruiterID uuid.UUID) error {
 		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete Recruiter")
 	}
 
-	s.redisRepository.InvalidateAssetCache(recruiter.CompanyLogo, "image")
+	if err = s.redisRepository.InvalidateAssetCache(recruiter.CompanyLogo, "image"); err != nil {
+		return utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+	}
 	return nil
 }
 
@@ -149,7 +157,7 @@ func (s *RecruiterService) uploadAndCacheFile(file *multipart.FileHeader, fileTy
 	err = s.redisRepository.StoreAssetCache(uploadURL, fileType, assetCache, 24*time.Hour)
 	if err != nil {
 		return "", utils.NewCustomError(http.StatusInternalServerError, "Failed to cache asset")
-	}	
+	}
 
 	return uploadURL, nil
 }

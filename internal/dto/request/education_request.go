@@ -1,7 +1,5 @@
 package request
 
-
-
 type AddEducationRequest struct {
 	Degree      string `json:"degree" binding:"required"`
 	Institution string `json:"institution" binding:"required"`
@@ -9,4 +7,3 @@ type AddEducationRequest struct {
 	EndDate     string `json:"end_date"`
 	Description string `json:"description"`
 }
-

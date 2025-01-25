@@ -13,14 +13,14 @@ func RoleMiddleware(allowedRoles ...string) gin.HandlerFunc {
 
 		userRole, exists := ctx.Get("role")
 		if !exists {
-			ctx.Error(utils.NewCustomError(http.StatusUnauthorized, "Unauthorized: No role found"))
+			_ = ctx.Error(utils.NewCustomError(http.StatusUnauthorized, "Unauthorized: No role found"))
 			ctx.Abort()
 			return
 		}
 
 		roleStr, ok := userRole.(string)
 		if !ok {
-			ctx.Error(utils.NewCustomError(http.StatusInternalServerError, "Invalid role format"))
+			_ = ctx.Error(utils.NewCustomError(http.StatusInternalServerError, "Invalid role format"))
 			ctx.Abort()
 			return
 		}
@@ -33,8 +33,7 @@ func RoleMiddleware(allowedRoles ...string) gin.HandlerFunc {
 			}
 		}
 
-		ctx.Error(utils.NewCustomError(http.StatusForbidden, "Forbidden: Access denied"))
+		_ = ctx.Error(utils.NewCustomError(http.StatusForbidden, "Forbidden: Access denied"))
 		ctx.Abort()
 	}
 }
-

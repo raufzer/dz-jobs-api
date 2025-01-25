@@ -106,7 +106,11 @@ func (c *CandidateController) CreateDefaultCandidate(ctx *gin.Context) {
 // @Router /candidates [get]
 func (c *CandidateController) GetCandidate(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 	candidate, err := c.service.GetCandidate(candidateID)
 	if err != nil {
 		ctx.Error(err)
@@ -138,7 +142,11 @@ func (c *CandidateController) GetCandidate(ctx *gin.Context) {
 // @Router /candidates [put]
 func (c *CandidateController) UpdateCandidate(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 	profilePictureFile, err := ctx.FormFile("profile_picture")
 	if err != nil {
 		ctx.Error(err)
@@ -180,9 +188,13 @@ func (c *CandidateController) UpdateCandidate(ctx *gin.Context) {
 // @Router /candidates [delete]
 func (c *CandidateController) DeleteCandidate(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 
-	err := c.service.DeleteCandidate(candidateID)
+	err = c.service.DeleteCandidate(candidateID)
 	if err != nil {
 		ctx.Error(err)
 		return

@@ -23,7 +23,7 @@ func CheckDatabaseHealth(db *sql.DB) error {
 func CheckCacheHealth(redisClient *redis.Client) error {
 	ctx := context.Background()
 	if err := redisClient.Ping(ctx).Err(); err != nil {
-		fmt.Errorf("cache health check failed: %v", err)
+		return fmt.Errorf("cache health check failed: %w", err)
 	}
 	return nil
 }

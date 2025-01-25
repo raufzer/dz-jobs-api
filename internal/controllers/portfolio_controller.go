@@ -34,7 +34,11 @@ func NewCandidatePortfolioController(service serviceInterfaces.CandidatePortfoli
 // @Router /candidates/portfolio [post]
 func (c *CandidatePortfolioController) AddProject(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 	var req request.AddProjectRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
@@ -70,7 +74,11 @@ func (c *CandidatePortfolioController) AddProject(ctx *gin.Context) {
 // @Router /candidates/portfolio [get]
 func (c *CandidatePortfolioController) GetPortfolio(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 
 	projects, err := c.service.GetPortfolio(candidateID)
 	if err != nil {
@@ -101,9 +109,13 @@ func (c *CandidatePortfolioController) GetPortfolio(ctx *gin.Context) {
 // @Router /candidates/portfolio/{projectId} [delete]
 func (c *CandidatePortfolioController) DeleteProject(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 
-	err := c.service.DeleteProject(candidateID, ctx.Param("projectId"))
+	err = c.service.DeleteProject(candidateID, ctx.Param("projectId"))
 	if err != nil {
 		ctx.Error(err)
 		return

@@ -13,7 +13,7 @@ type JobRepository interface {
 	GetJobListingsByStatus(status string, recruiterID uuid.UUID) ([]*models.Job, error)
 	UpdateJob(jobID int64, recruiterID uuid.UUID, job *models.Job) error
 	DeactivateJob(jobID int64, recruiterID uuid.UUID) error
-    RepostJob(jobID int64, recruiterID uuid.UUID) error
+	RepostJob(jobID int64, recruiterID uuid.UUID) error
 	DeleteJob(jobID int64, recruiterID uuid.UUID) error
 	ValidateJobOwnership(jobID int64, recruiterID uuid.UUID) error
 	GetAllJobs() ([]*models.Job, error)

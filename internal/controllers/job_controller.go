@@ -38,7 +38,11 @@ func NewJobController(service serviceInterfaces.JobService) *JobController {
 // @Router /recruiters/jobs [post]
 func (c *JobController) PostNewJob(ctx *gin.Context) {
 	userID := ctx.MustGet("recruiter_id")
-	recruiterID, _ := uuid.Parse(userID.(string))
+	recruiterID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 	var req request.PostNewJobRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
@@ -80,7 +84,11 @@ func (c *JobController) GetJobDetails(ctx *gin.Context) {
 		return
 	}
 	userID := ctx.MustGet("recruiter_id")
-	recruiterID, _ := uuid.Parse(userID.(string))
+	recruiterID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 	job, err := c.jobService.GetJobDetails(jobID, recruiterID)
 	if err != nil {
 		ctx.Error(err)
@@ -109,7 +117,11 @@ func (c *JobController) GetJobDetails(ctx *gin.Context) {
 // @Router /recruiters/jobs [get]
 func (c *JobController) GetJobListingsByStatus(ctx *gin.Context) {
 	userID := ctx.MustGet("recruiter_id")
-	recruiterID, _ := uuid.Parse(userID.(string))
+	recruiterID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 	jobs, err := c.jobService.GetJobListingsByStatus(ctx.Query("status"), recruiterID)
 	if err != nil {
 		ctx.Error(err)
@@ -141,7 +153,11 @@ func (c *JobController) GetJobListingsByStatus(ctx *gin.Context) {
 // @Router /recruiters/jobs/{jobId} [put]
 func (c *JobController) EditJob(ctx *gin.Context) {
 	userID := ctx.MustGet("recruiter_id")
-	recruiterID, _ := uuid.Parse(userID.(string))
+	recruiterID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 	var req request.EditJobRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
@@ -191,7 +207,11 @@ func (c *JobController) DeactivateJob(ctx *gin.Context) {
 		return
 	}
 	userID := ctx.MustGet("recruiter_id")
-	recruiterID, _ := uuid.Parse(userID.(string))
+	recruiterID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 	updatedJob, err := c.jobService.DeactivateJob(jobID, recruiterID)
 	if err != nil {
 		ctx.Error(err)
@@ -228,7 +248,11 @@ func (c *JobController) RepostJob(ctx *gin.Context) {
 		return
 	}
 	userID := ctx.MustGet("recruiter_id")
-	recruiterID, _ := uuid.Parse(userID.(string))
+	recruiterID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 	updatedJob, err := c.jobService.RepostJob(jobID, recruiterID)
 	if err != nil {
 		ctx.Error(err)
@@ -265,7 +289,11 @@ func (c *JobController) DeleteJob(ctx *gin.Context) {
 		return
 	}
 	userID := ctx.MustGet("recruiter_id")
-	recruiterID, _ := uuid.Parse(userID.(string))
+	recruiterID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 	err = c.jobService.DeleteJob(jobID, recruiterID)
 	if err != nil {
 		ctx.Error(err)

@@ -47,36 +47,44 @@ func LoadConfig() (*AppConfig, error) {
 		log.Println("Warning: No .env file found, using default environment variables.")
 	}
 	config := &AppConfig{
-		BackEndDomain:            utils.GetEnv("BACK_END_DOMAIN", "string").(string),
-		FrontEndDomain:           utils.GetEnv("FRONT_END_DOMAIN", "string").(string),
-		ServerPort:               utils.GetEnv("SERVER_PORT", "string").(string),
-		DatabaseURI:              utils.GetEnv("DATABASE_URI", "string").(string),
-		RedisURI:                 utils.GetEnv("REDIS_URI", "string").(string),
-		RedisPassword:            utils.GetEnv("REDIS_PASSWORD", "string").(string),
-		SendGridAPIKey:           utils.GetEnv("SENDGRID_API_KEY", "string").(string),
-		AccessTokenSecret:        utils.GetEnv("ACCESS_TOKEN_SECRET", "string").(string),
-		RefreshTokenSecret:       utils.GetEnv("REFRESH_TOKEN_SECRET", "string").(string),
-		ResetPasswordTokenSecret: utils.GetEnv("RESET_PASSWORD_TOKEN_SECRET", "string").(string),
-		AccessTokenMaxAge:        utils.GetEnv("ACCESS_TOKEN_MAX_AGE", "duration").(time.Duration),
-		RefreshTokenMaxAge:       utils.GetEnv("REFRESH_TOKEN_MAX_AGE", "duration").(time.Duration),
-		ResetPasswordTokenMaxAge: utils.GetEnv("RESET_PASSWORD_TOKEN_MAX_AGE", "duration").(time.Duration),
-		GoogleClientID:           utils.GetEnv("GOOGLE_CLIENT_ID", "string").(string),
-		GoogleClientSecret:       utils.GetEnv("GOOGLE_CLIENT_SECRET", "string").(string),
-		GoogleRedirectURL:        utils.GetEnv("GOOGLE_REDIRECT_URL", "string").(string),
-		CloudinaryCloudName:      utils.GetEnv("CLOUDINARY_CLOUD_NAME", "string").(string),
-		CloudinaryAPIKey:         utils.GetEnv("CLOUDINARY_API_KEY", "string").(string),
-		CloudinaryAPISecret:      utils.GetEnv("CLOUDINARY_API_SECRET", "string").(string),
-		DefaultProfilePicture:    utils.GetEnv("DEFAULT_PROFILE_PICTURE", "string").(string),
-		DefaultResume:            utils.GetEnv("DEFAULT_RESUME", "string").(string),
-		BuildVersion:             utils.GetEnv("BUILD_VERSION", "string").(string),
-		CommitHash:               utils.GetEnv("COMMIT_HASH", "string").(string),
-		Environment:              utils.GetEnv("ENVIRONMENT", "string").(string),
-		DocumentationURL:         utils.GetEnv("DOC_URL", "string").(string),
-		LastMigration:            utils.GetEnv("LAST_MIGRATION", "string").(string),
-		HealthURL:                utils.GetEnv("HEALTH_URL", "string").(string),
-		VersionURL:               utils.GetEnv("VERSION_URL", "string").(string),
-		MetricsURL:               utils.GetEnv("METRICS_URL", "string").(string),
-		ServiceEmail:             utils.GetEnv("SERVICE_EMAIL", "string").(string),
+		BackEndDomain:            getEnvOrFatal("BACK_END_DOMAIN", "string").(string),
+		FrontEndDomain:           getEnvOrFatal("FRONT_END_DOMAIN", "string").(string),
+		ServerPort:               getEnvOrFatal("SERVER_PORT", "string").(string),
+		DatabaseURI:              getEnvOrFatal("DATABASE_URI", "string").(string),
+		RedisURI:                 getEnvOrFatal("REDIS_URI", "string").(string),
+		RedisPassword:            getEnvOrFatal("REDIS_PASSWORD", "string").(string),
+		SendGridAPIKey:           getEnvOrFatal("SENDGRID_API_KEY", "string").(string),
+		AccessTokenSecret:        getEnvOrFatal("ACCESS_TOKEN_SECRET", "string").(string),
+		RefreshTokenSecret:       getEnvOrFatal("REFRESH_TOKEN_SECRET", "string").(string),
+		ResetPasswordTokenSecret: getEnvOrFatal("RESET_PASSWORD_TOKEN_SECRET", "string").(string),
+		AccessTokenMaxAge:        getEnvOrFatal("ACCESS_TOKEN_MAX_AGE", "duration").(time.Duration),
+		RefreshTokenMaxAge:       getEnvOrFatal("REFRESH_TOKEN_MAX_AGE", "duration").(time.Duration),
+		ResetPasswordTokenMaxAge: getEnvOrFatal("RESET_PASSWORD_TOKEN_MAX_AGE", "duration").(time.Duration),
+		GoogleClientID:           getEnvOrFatal("GOOGLE_CLIENT_ID", "string").(string),
+		GoogleClientSecret:       getEnvOrFatal("GOOGLE_CLIENT_SECRET", "string").(string),
+		GoogleRedirectURL:        getEnvOrFatal("GOOGLE_REDIRECT_URL", "string").(string),
+		CloudinaryCloudName:      getEnvOrFatal("CLOUDINARY_CLOUD_NAME", "string").(string),
+		CloudinaryAPIKey:         getEnvOrFatal("CLOUDINARY_API_KEY", "string").(string),
+		CloudinaryAPISecret:      getEnvOrFatal("CLOUDINARY_API_SECRET", "string").(string),
+		DefaultProfilePicture:    getEnvOrFatal("DEFAULT_PROFILE_PICTURE", "string").(string),
+		DefaultResume:            getEnvOrFatal("DEFAULT_RESUME", "string").(string),
+		BuildVersion:             getEnvOrFatal("BUILD_VERSION", "string").(string),
+		CommitHash:               getEnvOrFatal("COMMIT_HASH", "string").(string),
+		Environment:              getEnvOrFatal("ENVIRONMENT", "string").(string),
+		DocumentationURL:         getEnvOrFatal("DOC_URL", "string").(string),
+		LastMigration:            getEnvOrFatal("LAST_MIGRATION", "string").(string),
+		HealthURL:                getEnvOrFatal("HEALTH_URL", "string").(string),
+		VersionURL:               getEnvOrFatal("VERSION_URL", "string").(string),
+		MetricsURL:               getEnvOrFatal("METRICS_URL", "string").(string),
+		ServiceEmail:             getEnvOrFatal("SERVICE_EMAIL", "string").(string),
 	}
 	return config, nil
+}
+
+func getEnvOrFatal(key, expectedType string) interface{} {
+	val := utils.GetEnv(key, expectedType)
+	if err, ok := val.(error); ok {
+		log.Fatalf("Error loading environment variable %s: %v", key, err)
+	}
+	return val
 }

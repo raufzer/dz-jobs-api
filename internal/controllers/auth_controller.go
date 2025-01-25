@@ -116,7 +116,11 @@ func (c *AuthController) Logout(ctx *gin.Context) {
 		return
 	}
 	userID, _, _ := c.authService.ValidateToken(refreshToken)
-	c.authService.Logout(userID, refreshToken)
+	if err := c.authService.Logout(userID, refreshToken); err != nil {
+		ctx.Error(err)
+		ctx.Abort()
+		return
+	}
 	isProduction := c.config.ServerPort != "9090"
 	utils.SetAuthCookie(ctx, "access_token", "", -1, c.config.BackEndDomain, isProduction)
 	utils.SetAuthCookie(ctx, "refresh_token", "", -1, c.config.BackEndDomain, isProduction)

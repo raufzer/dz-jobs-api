@@ -1,9 +1,9 @@
 package controllers
 
 import (
-    "dz-jobs-api/internal/dto/request"
-    "dz-jobs-api/internal/dto/response"
-    serviceInterfaces "dz-jobs-api/internal/services/interfaces"
+	"dz-jobs-api/internal/dto/request"
+	"dz-jobs-api/internal/dto/response"
+	serviceInterfaces "dz-jobs-api/internal/services/interfaces"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -34,7 +34,11 @@ func NewCandidatePersonalInfoController(service serviceInterfaces.CandidatePerso
 // @Router /candidates/personal-info [post]
 func (c *CandidatePersonalInfoController) AddPersonalInfo(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 	var req request.AddPersonalInfoRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
@@ -72,7 +76,11 @@ func (c *CandidatePersonalInfoController) AddPersonalInfo(ctx *gin.Context) {
 // @Router /candidates/personal-info [get]
 func (c *CandidatePersonalInfoController) GetPersonalInfo(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 
 	info, err := c.service.GetPersonalInfo(candidateID)
 	if err != nil {
@@ -105,7 +113,11 @@ func (c *CandidatePersonalInfoController) GetPersonalInfo(ctx *gin.Context) {
 // @Router /candidates/personal-info [patch]
 func (c *CandidatePersonalInfoController) UpdatePersonalInfo(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 	var req request.UpdatePersonalInfoRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(err)
@@ -143,9 +155,13 @@ func (c *CandidatePersonalInfoController) UpdatePersonalInfo(ctx *gin.Context) {
 // @Router /candidates/personal-info [delete]
 func (c *CandidatePersonalInfoController) DeletePersonalInfo(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
-	candidateID, _ := uuid.Parse(userID.(string))
+	candidateID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 
-	err :=  c.service.DeletePersonalInfo(candidateID)
+	err = c.service.DeletePersonalInfo(candidateID)
 	if err != nil {
 		ctx.Error(err)
 		ctx.Abort()

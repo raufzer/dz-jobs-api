@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-
 )
 
 type SQLJobRepository struct {
@@ -289,7 +288,6 @@ func (r *SQLJobRepository) GetJobListings(filters request.JobFilters) ([]*models
 			paramCount, paramCount+1)
 		searchTerm := "%" + filters.Keyword + "%"
 		args = append(args, searchTerm, searchTerm)
-		paramCount += 2
 	}
 
 	rows, err := r.db.Query(query, args...)
