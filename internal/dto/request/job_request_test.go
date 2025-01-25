@@ -1,0 +1,85 @@
+package request
+
+import (
+	"dz-jobs-api/internal/helpers"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+func TestPostNewJobRequestValidation(t *testing.T) {
+
+	helpers.Init()
+
+	t.Run("Valid request", func(t *testing.T) {
+		req := PostNewJobRequest{
+			Title:          "Valid Job",
+			Description:    "Description",
+			Location:       "Remote",
+			SalaryRange:    "50000-80000",
+			RequiredSkills: "Go, React",
+			Status:         "open",
+			JobType:        "full-time",
+		}
+		err := helpers.Validate.Struct(req)
+		assert.NoError(t, err)
+	})
+
+	t.Run("Missing required fields", func(t *testing.T) {
+		req := PostNewJobRequest{
+			Description:    "Description without title",
+			SalaryRange:    "50000-80000",
+			RequiredSkills: "Go, React",
+			Status:         "open",
+			JobType:        "full-time",
+		}
+		err := helpers.Validate.Struct(req)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "Key: 'PostNewJobRequest.Title' Error:Field validation for 'Title' failed on the 'required' tag")
+	})
+
+	t.Run("Invalid Status", func(t *testing.T) {
+		req := PostNewJobRequest{
+			Title:          "Valid Job",
+			Description:    "Description",
+			Location:       "Remote",
+			SalaryRange:    "50000-80000",
+			RequiredSkills: "Go, React",
+			Status:         "invalid_status",
+			JobType:        "full-time",
+		}
+		err := helpers.Validate.Struct(req)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "Key: 'PostNewJobRequest.Status' Error:Field validation for 'Status' failed on the 'oneof' tag")
+	})
+
+	t.Run("Invalid Job Type", func(t *testing.T) {
+		req := PostNewJobRequest{
+			Title:          "Valid Job",
+			Description:    "Description",
+			Location:       "Remote",
+			SalaryRange:    "50000-80000",
+			RequiredSkills: "Go, React",
+			Status:         "open",
+			JobType:        "invalid_job_type",
+		}
+		err := helpers.Validate.Struct(req)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "Key: 'PostNewJobRequest.JobType' Error:Field validation for 'JobType' failed on the 'oneof' tag")
+	})
+
+	t.Run("Salary Range Validation", func(t *testing.T) {
+		req := PostNewJobRequest{
+			Title:          "Job with Invalid Salary Range",
+			Description:    "Description",
+			Location:       "Remote",
+			SalaryRange:    "80000-50000",
+			RequiredSkills: "Go, React",
+			Status:         "open",
+			JobType:        "full-time",
+		}
+		err := helpers.Validate.Struct(req)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "Key: 'PostNewJobRequest.SalaryRange' Error:Field validation for 'SalaryRange' failed on the 'jobSalaryRange' tag")
+	})
+}
