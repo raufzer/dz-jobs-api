@@ -41,7 +41,7 @@ func CheckSendGridHealth(apiKey string, email string) error {
 	}
 
 	if response.StatusCode >= 400 {
-		return fmt.Errorf("SendGrid returned error with status code %d: %s", response.StatusCode, response.Body)
+		return fmt.Errorf("sendGrid returned error with status code %d: %s", response.StatusCode, response.Body)
 	}
 
 	return nil
