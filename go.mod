@@ -25,6 +25,7 @@ require (
 	cloud.google.com/go/compute/metadata v0.3.0 // indirect
 	github.com/creasty/defaults v1.7.0 // indirect
 	github.com/gorilla/schema v1.4.1 // indirect
+	github.com/stretchr/testify v1.10.0 // indirect
 )
 
 require (

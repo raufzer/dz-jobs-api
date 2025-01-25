@@ -34,25 +34,25 @@ func (s *AuthService) Register(req request.CreateUsersRequest) (*models.User, er
 		if err == sql.ErrNoRows {
 			existingUser = nil
 		}
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to retrieve user")
 	}
 	if existingUser != nil {
 		return nil, utils.NewCustomError(http.StatusBadRequest, "User already exists")
+	} else {
+		hashedPassword, err := utils.HashPassword(req.Password)
+		if err != nil {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to hash password")
+		}
+		user := &models.User{
+			Name:     req.Name,
+			Email:    req.Email,
+			Password: hashedPassword,
+			Role:     req.Role,
+		}
+		if err := s.userRepository.CreateUser(user); err != nil {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to create user")
+		}
+		return user, nil
 	}
-	hashedPassword, err := utils.HashPassword(req.Password)
-	if err != nil {
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to hash password")
-	}
-	user := &models.User{
-		Name:     req.Name,
-		Email:    req.Email,
-		Password: hashedPassword,
-		Role:     req.Role,
-	}
-	if err := s.userRepository.CreateUser(user); err != nil {
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to create user")
-	}
-	return user, nil
 }
 func (s *AuthService) Login(req request.LoginRequest) (*models.User, string, string, error) {
 	user, err := s.userRepository.GetUserByEmail(req.Email)
