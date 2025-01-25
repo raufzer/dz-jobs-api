@@ -33,79 +33,79 @@ func (s *CandidateService) CreateCandidate(userID string, profilePictureFile, re
 	existingCandidate, err := s.candidateRepo.GetCandidate(uuid.MustParse(userID))
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to check candidate existence")
+			existingCandidate = nil
 		}
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch candidate")
 	}
 	if existingCandidate != nil {
 		return nil, utils.NewCustomError(http.StatusBadRequest, "Candidate already exists")
-	}
+	} else {
 
-	if profilePictureFile == nil {
-		return nil, utils.NewCustomError(http.StatusBadRequest, "Profile picture is required")
-	}
-	if resumeFile == nil {
-		return nil, utils.NewCustomError(http.StatusBadRequest, "Resume is required")
-	}
-
-	profilePictureURL, err := s.uploadAndCacheFile(profilePictureFile, "image")
-	if err != nil {
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to upload profile picture")
-	}
-
-	resumeURL, err := s.uploadAndCacheFile(resumeFile, "pdf")
-	if err != nil {
-
-		if err := s.redisRepository.InvalidateAssetCache(profilePictureURL, "image"); err != nil {
-			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+		if profilePictureFile == nil {
+			return nil, utils.NewCustomError(http.StatusBadRequest, "Profile picture is required")
 		}
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to upload resume")
-	}
-
-	newCandidate := &models.Candidate{
-		ID:             uuid.MustParse(userID),
-		Resume:         resumeURL,
-		ProfilePicture: profilePictureURL,
-	}
-
-	_, err = s.candidateRepo.CreateCandidate(newCandidate)
-	if err != nil {
-
-		if err := s.redisRepository.InvalidateAssetCache(profilePictureURL, "image"); err != nil {
-			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+		if resumeFile == nil {
+			return nil, utils.NewCustomError(http.StatusBadRequest, "Resume is required")
 		}
-		if err := s.redisRepository.InvalidateAssetCache(resumeURL, "pdf"); err != nil {
-			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
-		}
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to create candidate")
-	}
 
-	return newCandidate, nil
+		profilePictureURL, err := s.uploadAndCacheFile(profilePictureFile, "image")
+		if err != nil {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to upload profile picture")
+		}
+
+		resumeURL, err := s.uploadAndCacheFile(resumeFile, "pdf")
+		if err != nil {
+
+			if err := s.redisRepository.InvalidateAssetCache(profilePictureURL, "image"); err != nil {
+				return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+			}
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to upload resume")
+		}
+
+		newCandidate := &models.Candidate{
+			ID:             uuid.MustParse(userID),
+			Resume:         resumeURL,
+			ProfilePicture: profilePictureURL,
+		}
+
+		_, err = s.candidateRepo.CreateCandidate(newCandidate)
+		if err != nil {
+
+			if err := s.redisRepository.InvalidateAssetCache(profilePictureURL, "image"); err != nil {
+				return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+			}
+			if err := s.redisRepository.InvalidateAssetCache(resumeURL, "pdf"); err != nil {
+				return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+			}
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to create candidate")
+		}
+
+		return newCandidate, nil
+	}
 }
 
 func (s *CandidateService) CreateDefaultCandidate(userID, resumeURL, profilePictureURL string) (*models.Candidate, error) {
 	existingCandidate, err := s.candidateRepo.GetCandidate(uuid.MustParse(userID))
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to check candidate existence")
+			existingCandidate = nil
 		}
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch candidate")
 	}
 	if existingCandidate != nil {
 		return nil, utils.NewCustomError(http.StatusBadRequest, "Candidate already exists")
-	}
+	} else {
 
-	newCandidate := &models.Candidate{
-		ID:             uuid.MustParse(userID),
-		Resume:         resumeURL,
-		ProfilePicture: profilePictureURL,
-	}
+		newCandidate := &models.Candidate{
+			ID:             uuid.MustParse(userID),
+			Resume:         resumeURL,
+			ProfilePicture: profilePictureURL,
+		}
 
-	_, err = s.candidateRepo.CreateCandidate(newCandidate)
-	if err != nil {
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to create candidate")
+		_, err = s.candidateRepo.CreateCandidate(newCandidate)
+		if err != nil {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to create candidate")
+		}
+		return newCandidate, nil
 	}
-	return newCandidate, nil
 }
 func (s *CandidateService) GetCandidate(candidateID uuid.UUID) (*models.Candidate, error) {
 	candidate, err := s.candidateRepo.GetCandidate(candidateID)

@@ -34,42 +34,41 @@ func (s *RecruiterService) CreateRecruiter(userID string, req request.CreateRecr
 	if err != nil {
 		if err == sql.ErrNoRows {
 			existingRecruiter = nil
-		} else {
-			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch recruiter")
 		}
 	}
 	if existingRecruiter != nil {
 		return nil, utils.NewCustomError(http.StatusBadRequest, "Recruiter already exists")
-	}
-	if companyLogo == nil {
-		return nil, utils.NewCustomError(http.StatusBadRequest, "Company Logo is required")
-	}
-
-	companyLogoURL, err := s.uploadAndCacheFile(companyLogo, "image")
-	if err != nil {
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to upload company logo")
-	}
-
-	recruiter := &models.Recruiter{
-		ID:                 uuid.MustParse(userID),
-		CompanyName:        req.CompanyName,
-		CompanyLogo:        companyLogoURL,
-		CompanyDescription: req.CompanyDescription,
-		CompanyWebsite:     req.CompanyWebsite,
-		CompanyLocation:    req.CompanyLocation,
-		CompanyContact:     req.CompanyContact,
-		SocialLinks:        req.SocialLinks,
-		VerifiedStatus:     req.VerifiedStatus,
-	}
-
-	if err := s.recruiterRepository.CreateRecruiter(recruiter); err != nil {
-		if err := s.redisRepository.InvalidateAssetCache(companyLogoURL, "image"); err != nil {
-			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+	} else {
+		if companyLogo == nil {
+			return nil, utils.NewCustomError(http.StatusBadRequest, "Company Logo is required")
 		}
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Recruiter creation failed")
-	}
 
-	return recruiter, nil
+		companyLogoURL, err := s.uploadAndCacheFile(companyLogo, "image")
+		if err != nil {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to upload company logo")
+		}
+
+		recruiter := &models.Recruiter{
+			ID:                 uuid.MustParse(userID),
+			CompanyName:        req.CompanyName,
+			CompanyLogo:        companyLogoURL,
+			CompanyDescription: req.CompanyDescription,
+			CompanyWebsite:     req.CompanyWebsite,
+			CompanyLocation:    req.CompanyLocation,
+			CompanyContact:     req.CompanyContact,
+			SocialLinks:        req.SocialLinks,
+			VerifiedStatus:     req.VerifiedStatus,
+		}
+
+		if err := s.recruiterRepository.CreateRecruiter(recruiter); err != nil {
+			if err := s.redisRepository.InvalidateAssetCache(companyLogoURL, "image"); err != nil {
+				return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
+			}
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Recruiter creation failed")
+		}
+
+		return recruiter, nil
+	}
 }
 
 func (s *RecruiterService) GetRecruiter(recruiterID uuid.UUID) (*models.Recruiter, error) {

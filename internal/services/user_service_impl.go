@@ -24,33 +24,33 @@ func (s *UserService) CreateUser(req request.CreateUsersRequest) (*models.User, 
 	existingUser, err := s.userRepository.GetUserByEmail(req.Email)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, utils.NewCustomError(http.StatusNotFound, "User not found")
+			existingUser = nil
 		}
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Error fetching User")
 	}
 	if existingUser != nil {
 		return nil, utils.NewCustomError(http.StatusBadRequest, "User already exists")
-	}
+	} else {
 
-	hashedPassword, err := utils.HashPassword(req.Password)
-	if err != nil {
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Password hashing failed")
-	}
+		hashedPassword, err := utils.HashPassword(req.Password)
+		if err != nil {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Password hashing failed")
+		}
 
-	user := &models.User{
-		Name:      req.Name,
-		Email:     req.Email,
-		Password:  hashedPassword,
-		Role:      req.Role,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-	}
+		user := &models.User{
+			Name:      req.Name,
+			Email:     req.Email,
+			Password:  hashedPassword,
+			Role:      req.Role,
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		}
 
-	if err := s.userRepository.CreateUser(user); err != nil {
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "User creation failed")
-	}
+		if err := s.userRepository.CreateUser(user); err != nil {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "User creation failed")
+		}
 
-	return user, nil
+		return user, nil
+	}
 }
 
 func (s *UserService) GetUser(userID uuid.UUID) (*models.User, error) {
