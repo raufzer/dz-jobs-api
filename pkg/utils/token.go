@@ -78,7 +78,7 @@ func generateRandomBytes(size int) []byte {
 	randomBytes := make([]byte, size)
 	_, err := rand.Read(randomBytes)
 	if err != nil {
-		fmt.Errorf("error generating random bytes: ", err)
+		fmt.Errorf("error generating random bytes: %w", err)
 		return nil
 	}
 	return randomBytes
