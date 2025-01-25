@@ -89,6 +89,9 @@ func (s *UserService) UpdateUser(userID uuid.UUID, req request.UpdateUserRequest
 func (s *UserService) GetAllUsers() ([]*models.User, error) {
 	users, err := s.userRepository.GetAllUsers()
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, utils.NewCustomError(http.StatusNotFound, "Users not found")
+		}
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch users")
 	}
 	return users, nil

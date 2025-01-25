@@ -1,6 +1,7 @@
 package services
 
 import (
+	"database/sql"
 	"dz-jobs-api/config"
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/models"
@@ -44,7 +45,10 @@ func (s *CandidateEducationService) AddEducation(candidateID uuid.UUID, request 
 func (s *CandidateEducationService) GetEducation(candidateID uuid.UUID) ([]models.CandidateEducation, error) {
 	educations, err := s.candidateEducationRepo.GetEducation(candidateID)
 	if err != nil {
-		return nil, utils.NewCustomError(http.StatusNotFound, "No education records found")
+		if err == sql.ErrNoRows {
+			return nil, utils.NewCustomError(http.StatusNotFound, "No education records found")
+		}
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch education records")
 	}
 
 	return educations, nil

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"database/sql"
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/models"
 	"dz-jobs-api/internal/repositories/interfaces"
@@ -35,7 +36,10 @@ func (s *CandidateSkillsService) AddSkill(candidateID uuid.UUID, request request
 func (s *CandidateSkillsService) GetSkills(candidateID uuid.UUID) ([]models.CandidateSkills, error) {
 	skills, err := s.candidateSkillsRepo.GetSkills(candidateID)
 	if err != nil {
-		return nil, utils.NewCustomError(http.StatusNotFound, "No skills found")
+		if err == sql.ErrNoRows {
+			return nil, utils.NewCustomError(http.StatusNotFound, "No skills found")
+		}
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch skills")
 	}
 
 	return skills, nil

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"database/sql"
 	"dz-jobs-api/internal/models"
 	"dz-jobs-api/internal/repositories/interfaces"
 	"dz-jobs-api/pkg/utils"
@@ -35,6 +36,9 @@ func (s *BookmarksService) RemoveBookmark(candidateID uuid.UUID, jobID int64) er
 func (s *BookmarksService) GetBookmarks(candidateID uuid.UUID) ([]*models.Job, error) {
 	bookmarks, err := s.bookmarksRepository.GetBookmarks(candidateID)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, utils.NewCustomError(http.StatusNotFound, "Bookmarks not found")
+		}
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Error fetching Bookmarks")
 	}
 	return bookmarks, nil

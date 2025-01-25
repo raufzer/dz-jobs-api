@@ -82,7 +82,10 @@ func (s *RecruiterService) GetRecruiter(recruiterID uuid.UUID) (*models.Recruite
 func (s *RecruiterService) UpdateRecruiter(recruiterID uuid.UUID, req request.UpdateRecruiterRequest, companyLogo *multipart.FileHeader) (*models.Recruiter, error) {
 	existingRecruiter, err := s.recruiterRepository.GetRecruiter(recruiterID)
 	if err != nil {
-		return nil, utils.NewCustomError(http.StatusNotFound, "Recruiter not found")
+		if err == sql.ErrNoRows {
+			return nil, utils.NewCustomError(http.StatusNotFound, "Recruiter not found")
+		}
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Error fetching recruiter")
 	}
 
 	if companyLogo == nil {
@@ -121,7 +124,10 @@ func (s *RecruiterService) UpdateRecruiter(recruiterID uuid.UUID, req request.Up
 func (s *RecruiterService) DeleteRecruiter(recruiterID uuid.UUID) error {
 	recruiter, err := s.recruiterRepository.GetRecruiter(recruiterID)
 	if err != nil {
-		return utils.NewCustomError(http.StatusNotFound, "Recruiter not found")
+		if err == sql.ErrNoRows {
+			return utils.NewCustomError(http.StatusNotFound, "Recruiter not found")
+		}
+		return utils.NewCustomError(http.StatusInternalServerError, "Error fetching recruiter")
 	}
 
 	if err := s.recruiterRepository.DeleteRecruiter(recruiterID); err != nil {

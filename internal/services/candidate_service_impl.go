@@ -32,6 +32,9 @@ func NewCandidateService(repo interfaces.CandidateRepository, redisRepo interfac
 func (s *CandidateService) CreateCandidate(userID string, profilePictureFile, resumeFile *multipart.FileHeader) (*models.Candidate, error) {
 	existingCandidate, err := s.candidateRepo.GetCandidate(uuid.MustParse(userID))
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to check candidate existence")
+		}
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch candidate")
 	}
 	if existingCandidate != nil {
@@ -83,6 +86,9 @@ func (s *CandidateService) CreateCandidate(userID string, profilePictureFile, re
 func (s *CandidateService) CreateDefaultCandidate(userID, resumeURL, profilePictureURL string) (*models.Candidate, error) {
 	existingCandidate, err := s.candidateRepo.GetCandidate(uuid.MustParse(userID))
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to check candidate existence")
+		}
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch candidate")
 	}
 	if existingCandidate != nil {
@@ -158,7 +164,10 @@ func (s *CandidateService) UpdateCandidate(candidateID uuid.UUID, profilePicture
 
 	existingCandidate, err := s.candidateRepo.GetCandidate(candidateID)
 	if err != nil {
-		return nil, utils.NewCustomError(http.StatusNotFound, "Candidate not found")
+		if err == sql.ErrNoRows {
+			return nil,utils.NewCustomError(http.StatusNotFound, "Candidate not found")
+		}
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch candidate")
 	}
 
 	if profilePictureFile == nil {
@@ -212,7 +221,10 @@ func (s *CandidateService) DeleteCandidate(candidateID uuid.UUID) error {
 
 	candidate, err := s.candidateRepo.GetCandidate(candidateID)
 	if err != nil {
-		return utils.NewCustomError(http.StatusNotFound, "Candidate not found")
+		if err == sql.ErrNoRows {
+			return utils.NewCustomError(http.StatusNotFound, "Candidate not found")
+		}
+		return utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch candidate")
 	}
 
 	if err := s.candidateRepo.DeleteCandidate(candidateID); err != nil {

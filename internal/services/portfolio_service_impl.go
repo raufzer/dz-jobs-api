@@ -1,6 +1,7 @@
 package services
 
 import (
+	"database/sql"
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/models"
 	"dz-jobs-api/internal/repositories/interfaces"
@@ -39,7 +40,10 @@ func (s *CandidatePortfolioService) AddProject(candidateID uuid.UUID, request re
 func (s *CandidatePortfolioService) GetPortfolio(candidateID uuid.UUID) ([]models.CandidatePortfolio, error) {
 	portfolio, err := s.candidatePortfolioRepo.GetPortfolio(candidateID)
 	if err != nil {
-		return nil, utils.NewCustomError(http.StatusNotFound, "No portfolio projects found")
+		if err == sql.ErrNoRows {
+			return nil, utils.NewCustomError(http.StatusNotFound, "No portfolio projects found")
+		}
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch portfolio projects")
 	}
 
 	return portfolio, nil

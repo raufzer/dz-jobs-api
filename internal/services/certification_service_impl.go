@@ -1,6 +1,7 @@
 package services
 
 import (
+	"database/sql"
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/models"
 	"dz-jobs-api/internal/repositories/interfaces"
@@ -39,6 +40,9 @@ func (s *CandidateCertificationsService) AddCertification(candidateID uuid.UUID,
 func (s *CandidateCertificationsService) GetCertifications(candidateID uuid.UUID) ([]models.CandidateCertification, error) {
 	certifications, err := s.candidateCertificationsRepo.GetCertifications(candidateID)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch certifications")
+		}
 		return nil, utils.NewCustomError(http.StatusNotFound, "No certifications found")
 	}
 

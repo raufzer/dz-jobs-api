@@ -1,6 +1,7 @@
 package services
 
 import (
+	"database/sql"
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/models"
 	"dz-jobs-api/internal/repositories/interfaces"
@@ -40,7 +41,10 @@ func (s *CandidateExperienceService) AddExperience(candidateID uuid.UUID, reques
 func (s *CandidateExperienceService) GetExperience(candidateID uuid.UUID) ([]models.CandidateExperience, error) {
 	experiences, err := s.candidateExperienceRepo.GetExperience(candidateID)
 	if err != nil {
-		return nil, utils.NewCustomError(http.StatusNotFound, "No experience records found")
+		if err == sql.ErrNoRows {
+			return nil, utils.NewCustomError(http.StatusNotFound, "No experience records found")
+		}
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch experience records")
 	}
 
 	return experiences, nil

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"database/sql"
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/models"
 	"dz-jobs-api/internal/repositories/interfaces"
@@ -40,7 +41,10 @@ func (s *CandidatePersonalInfoService) UpdatePersonalInfo(candidateID uuid.UUID,
 func (s *CandidatePersonalInfoService) GetPersonalInfo(candidateID uuid.UUID) (*models.CandidatePersonalInfo, error) {
 	info, err := s.candidatePersonalInfoRepo.GetPersonalInfo(candidateID)
 	if err != nil {
-		return nil, utils.NewCustomError(http.StatusNotFound, "Personal info not found")
+		if err == sql.ErrNoRows {
+			return nil, utils.NewCustomError(http.StatusNotFound, "Personal info not found")
+		}
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch personal info")
 	}
 
 	return info, nil
