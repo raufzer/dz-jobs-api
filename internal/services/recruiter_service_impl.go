@@ -30,7 +30,10 @@ func NewRecruiterService(recruiterRepo interfaces.RecruiterRepository, redisRepo
 }
 
 func (s *RecruiterService) CreateRecruiter(userID string, req request.CreateRecruiterRequest, companyLogo *multipart.FileHeader) (*models.Recruiter, error) {
-	existingRecruiter, _ := s.recruiterRepository.GetRecruiter(uuid.MustParse(userID))
+	existingRecruiter, err := s.recruiterRepository.GetRecruiter(uuid.MustParse(userID))
+	if err != nil {
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to check recruiter existence")
+	}
 	if existingRecruiter != nil {
 		return nil, utils.NewCustomError(http.StatusBadRequest, "Recruiter already exists")
 	}

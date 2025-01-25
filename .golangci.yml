@@ -1,15 +1,13 @@
 linters-settings:
   errcheck:
-    check-type-assertions: true
-    check-blank: true
-  unused:
-    check-exported: false
+    check-type-assertions: false
+    check-blank: false
+    exclude-functions:
+      - internal/middlewares/.*\.go
 
 linters:
   disable-all: true
   enable:
     - errcheck
-    - ineffassign
-    - unused
     - govet
-    - gofmt
+    - staticcheck

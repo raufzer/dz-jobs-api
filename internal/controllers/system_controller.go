@@ -36,7 +36,10 @@ func (c *SystemController) DefaultRoute(ctx *gin.Context) {
 }
 
 func (c *SystemController) GetAPIVersion(ctx *gin.Context) {
-	loc, _ := time.LoadLocation("UTC")
+	loc, err := time.LoadLocation("UTC")
+	if err != nil {
+		loc = time.UTC
+	}
 	ctx.JSON(http.StatusOK, response.VersionResponse{
 		APIVersion:       1,
 		BuildVersion:     c.config.BuildVersion,
