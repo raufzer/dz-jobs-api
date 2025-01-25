@@ -2,13 +2,14 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
+    tags:
+      - 'v*.*.*'  # Trigger workflow only for tags like v1.1.5
   pull_request:
     branches: [ main ]
 
 env:
   GO_VERSION: 1.23
-  DOCKER_IMAGE: ghcr.io/${{ github.raufzer }}/dz-jobs-api
+  DOCKER_IMAGE: docker.io/raufzer/dz-jobs-api-docker  # Updated to your Docker Hub repo
   RAILWAY_SERVICE: dz-jobs-api
 
 jobs:
@@ -60,12 +61,19 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: Login to GitHub Container Registry
+    - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+    - name: Extract version tag
+      id: extract_tag
+      run: |
+        # Extract the tag name from the Git reference (e.g., refs/tags/v1.1.5)
+        TAG_NAME=${GITHUB_REF#refs/tags/}
+        echo "Extracted tag: $TAG_NAME"
+        echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
@@ -73,8 +81,8 @@ jobs:
         context: .
         push: true
         tags: |
+          ${{ env.DOCKER_IMAGE }}:${{ steps.extract_tag.outputs.tag_name }}
           ${{ env.DOCKER_IMAGE }}:latest
-          ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
@@ -90,4 +98,4 @@ jobs:
         token: ${{ secrets.RAILWAY_TOKEN }}
         environment: production
         # Uncomment if you need to run migrations
-        # command: make migrate-up 
+        # command: make migrate-up
