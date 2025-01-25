@@ -3,13 +3,13 @@ name: CI/CD Pipeline
 on:
   push:
     tags:
-      - 'v*.*.*'  # Trigger workflow only for tags like v1.1.5
+      - 'v*.*.*' 
   pull_request:
     branches: [ main ]
 
 env:
   GO_VERSION: 1.23
-  DOCKER_IMAGE: docker.io/raufzer/dz-jobs-api-docker  # Updated to your Docker Hub repo
+  DOCKER_IMAGE: docker.io/raufzer/dz-jobs-api-docker  
   RAILWAY_SERVICE: dz-jobs-api
 
 jobs:
