@@ -165,7 +165,7 @@ func (s *CandidateService) UpdateCandidate(candidateID uuid.UUID, profilePicture
 	existingCandidate, err := s.candidateRepo.GetCandidate(candidateID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil,utils.NewCustomError(http.StatusNotFound, "Candidate not found")
+			return nil, utils.NewCustomError(http.StatusNotFound, "Candidate not found")
 		}
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch candidate")
 	}

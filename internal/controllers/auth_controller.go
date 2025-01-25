@@ -41,13 +41,13 @@ func NewAuthController(service serviceInterfaces.AuthService, config *config.App
 func (c *AuthController) Login(ctx *gin.Context) {
 	var req request.LoginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	user, accessToken, refreshToken, err := c.authService.Login(req)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
@@ -73,20 +73,20 @@ func (c *AuthController) Login(ctx *gin.Context) {
 func (c *AuthController) RefreshToken(ctx *gin.Context) {
 	refreshToken, err := ctx.Cookie("refresh_token")
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	userID, userRole, err := c.authService.ValidateToken(refreshToken)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 
 	accessToken, err := c.authService.RefreshAccessToken(userID, userRole, refreshToken)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
@@ -111,13 +111,13 @@ func (c *AuthController) RefreshToken(ctx *gin.Context) {
 func (c *AuthController) Logout(ctx *gin.Context) {
 	refreshToken, err := ctx.Cookie("refresh_token")
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	userID, _, _ := c.authService.ValidateToken(refreshToken)
 	if err := c.authService.Logout(userID, refreshToken); err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
@@ -147,13 +147,13 @@ func (c *AuthController) Logout(ctx *gin.Context) {
 func (c *AuthController) Register(ctx *gin.Context) {
 	var req request.CreateUsersRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	user, err := c.authService.Register(req)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
@@ -179,13 +179,13 @@ func (c *AuthController) Register(ctx *gin.Context) {
 func (c *AuthController) SendResetOTP(ctx *gin.Context) {
 	var req request.SendOTPRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	err := c.authService.SendOTP(req.Email)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
@@ -210,13 +210,13 @@ func (c *AuthController) SendResetOTP(ctx *gin.Context) {
 func (c *AuthController) VerifyOTP(ctx *gin.Context) {
 	var req request.VerifyOTPRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	resetToken, err := c.authService.VerifyOTP(req.Email, req.OTP)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	isProduction := c.config.ServerPort != "9090"
@@ -242,19 +242,19 @@ func (c *AuthController) VerifyOTP(ctx *gin.Context) {
 func (c *AuthController) ResetPassword(ctx *gin.Context) {
 	token, err := ctx.Cookie("reset_token")
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	var req request.ResetPasswordRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	err = c.authService.ResetPassword(req.Email, token, req.NewPassword)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
@@ -310,7 +310,7 @@ func (c *AuthController) GoogleCallbackConnect(ctx *gin.Context) {
 
 	user, accessToken, refreshToken, connect, err := c.authService.GoogleConnect(code, role)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}

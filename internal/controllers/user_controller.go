@@ -38,13 +38,13 @@ func NewUserController(service serviceInterfaces.UserService) *UserController {
 func (c *UserController) CreateUser(ctx *gin.Context) {
 	var req request.CreateUsersRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	user, err := c.userService.CreateUser(req)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	ctx.JSON(http.StatusCreated, response.Response{
@@ -71,13 +71,13 @@ func (c *UserController) CreateUser(ctx *gin.Context) {
 func (c *UserController) GetUser(ctx *gin.Context) {
 	userID, err := uuid.Parse(ctx.Param("userId"))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	user, err := c.userService.GetUser(userID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	ctx.JSON(http.StatusOK, response.Response{
@@ -107,18 +107,18 @@ func (c *UserController) GetUser(ctx *gin.Context) {
 func (c *UserController) UpdateUser(ctx *gin.Context) {
 	var req request.UpdateUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	id, err := uuid.Parse(ctx.Param("userId"))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	updatedUser, err := c.userService.UpdateUser(id, req)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
@@ -143,7 +143,7 @@ func (c *UserController) UpdateUser(ctx *gin.Context) {
 func (c *UserController) GetAllUsers(ctx *gin.Context) {
 	users, err := c.userService.GetAllUsers()
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	ctx.JSON(http.StatusOK, response.Response{
@@ -170,13 +170,13 @@ func (c *UserController) GetAllUsers(ctx *gin.Context) {
 func (c *UserController) DeleteUser(ctx *gin.Context) {
 	userID, err := uuid.Parse(ctx.Param("userId"))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	err = c.userService.DeleteUser(userID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	ctx.JSON(http.StatusOK, response.Response{

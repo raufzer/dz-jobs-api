@@ -41,18 +41,18 @@ func (c *RecruiterController) CreateRecruiter(ctx *gin.Context) {
 
 	companyLogoFile, err := ctx.FormFile("company_logo")
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	var req request.CreateRecruiterRequest
 	if err := ctx.ShouldBind(&req); err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	recruiter, err := c.recruiterService.CreateRecruiter(userID, req, companyLogoFile)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	ctx.JSON(http.StatusCreated, response.Response{
@@ -79,12 +79,12 @@ func (c *RecruiterController) GetRecruiter(ctx *gin.Context) {
 	userID := ctx.MustGet("recruiter_id")
 	recruiterID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	recruiter, err := c.recruiterService.GetRecruiter(recruiterID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	ctx.JSON(http.StatusOK, response.Response{
@@ -113,24 +113,24 @@ func (c *RecruiterController) GetRecruiter(ctx *gin.Context) {
 func (c *RecruiterController) UpdateRecruiter(ctx *gin.Context) {
 	var req request.UpdateRecruiterRequest
 	if err := ctx.ShouldBind(&req); err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	userID := ctx.MustGet("recruiter_id")
 	recruiterID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	companyLogoFile, err := ctx.FormFile("company_logo")
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	updatedRecruiter, err := c.recruiterService.UpdateRecruiter(recruiterID, req, companyLogoFile)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
@@ -158,12 +158,12 @@ func (c *RecruiterController) DeleteRecruiter(ctx *gin.Context) {
 	userID := ctx.MustGet("recruiter_id")
 	recruiterID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	err = c.recruiterService.DeleteRecruiter(recruiterID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	ctx.JSON(http.StatusOK, response.Response{

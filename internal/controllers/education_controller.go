@@ -36,20 +36,20 @@ func (c *CandidateEducationController) AddEducation(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 
 	var req request.AddEducationRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 
 	education, err := c.service.AddEducation(candidateID, req)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	ctx.JSON(http.StatusCreated, response.Response{
@@ -77,13 +77,13 @@ func (c *CandidateEducationController) GetEducation(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 
 	educations, err := c.service.GetEducation(candidateID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	ctx.JSON(http.StatusOK, response.Response{
@@ -112,14 +112,14 @@ func (c *CandidateEducationController) DeleteEducation(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	educationIDstr := ctx.Param("educationId")
 	educationID, _ := uuid.Parse(educationIDstr)
 	err = c.service.DeleteEducation(candidateID, educationID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	ctx.JSON(http.StatusOK, response.Response{

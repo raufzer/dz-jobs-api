@@ -37,19 +37,19 @@ func (c *BookmarksController) AddBookmark(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	jobIDStr := ctx.Param("JobId")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 
 	if err := c.service.AddBookmark(candidateID, jobID); err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 
@@ -77,7 +77,7 @@ func (c *BookmarksController) GetBookmarks(ctx *gin.Context) {
 	candidateID, _ := uuid.Parse(userID.(string))
 	jobs, err := c.service.GetBookmarks(candidateID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 
@@ -110,12 +110,12 @@ func (c *BookmarksController) RemoveBookmark(ctx *gin.Context) {
 	jobIDStr := ctx.Param("JobId")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	if err := c.service.RemoveBookmark(candidateID, jobID); err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	ctx.JSON(http.StatusCreated, response.Response{

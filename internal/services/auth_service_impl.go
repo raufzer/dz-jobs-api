@@ -144,7 +144,7 @@ func (s *AuthService) VerifyOTP(email, otp string) (string, error) {
 	}
 
 	if err := s.redisRepository.InvalidateOTP(email); err != nil {
-		utils.NewCustomError(http.StatusInternalServerError, "Failed to delete OTP")
+		return "", utils.NewCustomError(http.StatusInternalServerError, "Failed to delete OTP")
 	}
 
 	return resetToken, nil

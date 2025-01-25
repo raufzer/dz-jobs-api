@@ -38,18 +38,18 @@ func (c *CandidateController) CreateCandidate(ctx *gin.Context) {
 	userID := candidateID.(string)
 	profilePictureFile, err := ctx.FormFile("profile_picture")
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 
 	resumeFile, err := ctx.FormFile("resume")
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	candidate, err := c.service.CreateCandidate(userID, profilePictureFile, resumeFile)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 
@@ -80,7 +80,7 @@ func (c *CandidateController) CreateDefaultCandidate(ctx *gin.Context) {
 	defaultResumeURL := c.config.DefaultResume
 	candidate, err := c.service.CreateDefaultCandidate(userID, defaultProfilePictureURL, defaultResumeURL)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 
@@ -108,12 +108,12 @@ func (c *CandidateController) GetCandidate(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	candidate, err := c.service.GetCandidate(candidateID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 
@@ -144,24 +144,24 @@ func (c *CandidateController) UpdateCandidate(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	profilePictureFile, err := ctx.FormFile("profile_picture")
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 
 	resumeFile, err := ctx.FormFile("resume")
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 
 	updatedCandidate, err := c.service.UpdateCandidate(candidateID, profilePictureFile, resumeFile)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
@@ -190,13 +190,13 @@ func (c *CandidateController) DeleteCandidate(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 
 	err = c.service.DeleteCandidate(candidateID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	ctx.JSON(http.StatusOK, response.Response{

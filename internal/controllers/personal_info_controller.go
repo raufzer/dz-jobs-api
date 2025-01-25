@@ -36,19 +36,19 @@ func (c *CandidatePersonalInfoController) AddPersonalInfo(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	var req request.AddPersonalInfoRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 
 	createdInfo, err := c.service.AddPersonalInfo(req, candidateID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
@@ -78,13 +78,13 @@ func (c *CandidatePersonalInfoController) GetPersonalInfo(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 
 	info, err := c.service.GetPersonalInfo(candidateID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 
@@ -115,19 +115,19 @@ func (c *CandidatePersonalInfoController) UpdatePersonalInfo(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	var req request.UpdatePersonalInfoRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 
 	updatedInfo, err := c.service.UpdatePersonalInfo(candidateID, req)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
@@ -157,13 +157,13 @@ func (c *CandidatePersonalInfoController) DeletePersonalInfo(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 
 	err = c.service.DeletePersonalInfo(candidateID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}

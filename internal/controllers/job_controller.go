@@ -40,18 +40,18 @@ func (c *JobController) PostNewJob(ctx *gin.Context) {
 	userID := ctx.MustGet("recruiter_id")
 	recruiterID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	var req request.PostNewJobRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	job, err := c.jobService.PostNewJob(recruiterID, req)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	ctx.JSON(http.StatusCreated, response.Response{
@@ -79,19 +79,19 @@ func (c *JobController) GetJobDetails(ctx *gin.Context) {
 	jobIDStr := ctx.Param("jobId")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	userID := ctx.MustGet("recruiter_id")
 	recruiterID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	job, err := c.jobService.GetJobDetails(jobID, recruiterID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	ctx.JSON(http.StatusOK, response.Response{
@@ -119,12 +119,12 @@ func (c *JobController) GetJobListingsByStatus(ctx *gin.Context) {
 	userID := ctx.MustGet("recruiter_id")
 	recruiterID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	jobs, err := c.jobService.GetJobListingsByStatus(ctx.Query("status"), recruiterID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 
@@ -155,25 +155,25 @@ func (c *JobController) EditJob(ctx *gin.Context) {
 	userID := ctx.MustGet("recruiter_id")
 	recruiterID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	var req request.EditJobRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	jobIDStr := ctx.Param("jobId")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	updatedJob, err := c.jobService.EditJob(jobID, req, recruiterID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
@@ -202,19 +202,19 @@ func (c *JobController) DeactivateJob(ctx *gin.Context) {
 	jobIDStr := ctx.Param("jobId")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	userID := ctx.MustGet("recruiter_id")
 	recruiterID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	updatedJob, err := c.jobService.DeactivateJob(jobID, recruiterID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
@@ -243,19 +243,19 @@ func (c *JobController) RepostJob(ctx *gin.Context) {
 	jobIDStr := ctx.Param("jobId")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	userID := ctx.MustGet("recruiter_id")
 	recruiterID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	updatedJob, err := c.jobService.RepostJob(jobID, recruiterID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
@@ -284,19 +284,19 @@ func (c *JobController) DeleteJob(ctx *gin.Context) {
 	jobIDStr := ctx.Param("jobId")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	userID := ctx.MustGet("recruiter_id")
 	recruiterID, err := uuid.Parse(userID.(string))
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	err = c.jobService.DeleteJob(jobID, recruiterID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	ctx.JSON(http.StatusOK, response.Response{
@@ -317,7 +317,7 @@ func (c *JobController) DeleteJob(ctx *gin.Context) {
 func (c *JobController) GetAllJobs(ctx *gin.Context) {
 	jobs, err := c.jobService.GetAllJobs()
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 
@@ -344,14 +344,14 @@ func (c *JobController) GetAllJobs(ctx *gin.Context) {
 func (c *JobController) SearchJobs(ctx *gin.Context) {
 	var filters request.JobFilters
 	if err := ctx.ShouldBindQuery(&filters); err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 
 	jobs, err := c.jobService.SearchJobs(filters)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 
@@ -378,13 +378,13 @@ func (c *JobController) GetJobDetailsPublic(ctx *gin.Context) {
 	jobIDStr := ctx.Param("jobId")
 	jobID, err := strconv.ParseInt(jobIDStr, 10, 64)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 	job, err := c.jobService.GetJobDetailsPublic(jobID)
 	if err != nil {
-		ctx.Error(err)
+		_  = ctx.Error(err)
 		return
 	}
 	ctx.JSON(http.StatusOK, response.Response{

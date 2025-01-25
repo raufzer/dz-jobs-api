@@ -4,6 +4,7 @@ linters-settings:
     check-blank: false
     exclude-functions:
       - internal/middlewares/.*\.go
+      - "(*gin.Context).Error" 
 
 linters:
   disable-all: true
