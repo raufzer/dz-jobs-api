@@ -34,8 +34,9 @@ func (s *JobService) PostNewJob(recruiterID uuid.UUID, req request.PostNewJobReq
 		JobType:        req.JobType,
 	}
 
-	if err := s.jobRepository.CreateJob(job); err != nil {
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Job posting failed")
+	err := s.jobRepository.CreateJob(job)
+	if err != nil {
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to create job")
 	}
 
 	return job, nil
