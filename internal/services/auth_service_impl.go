@@ -31,7 +31,9 @@ func NewAuthService(userRepo interfaces.UserRepository, redisRepo interfaces.Red
 func (s *AuthService) Register(req request.CreateUsersRequest) (*models.User, error) {
 	existingUser, err := s.userRepository.GetUserByEmail(req.Email)
 	if err != nil {
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to check user existence")
+		if err != sql.ErrNoRows {
+			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to check user existence")
+		}
 	}
 	if existingUser != nil {
 		return nil, utils.NewCustomError(http.StatusBadRequest, "User already exists")
