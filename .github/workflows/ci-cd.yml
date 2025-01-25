@@ -1,0 +1,93 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  GO_VERSION: 1.23
+  DOCKER_IMAGE: ghcr.io/${{ github.raufzer }}/dz-jobs-api
+  RAILWAY_SERVICE: dz-jobs-api
+
+jobs:
+  test:
+    name: Test and Lint
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: ${{ env.GO_VERSION }}
+
+    - name: Install Swagger
+      run: go install github.com/swaggo/swag/cmd/swag@latest
+
+    - name: Generate Swagger Docs
+      run: swag init -g cmd/server/main.go -o docs
+
+    - name: Run tests
+      run: go test -v ./...
+
+    - name: Run golangci-lint
+      uses: golangci/golangci-lint-action@v3
+      with:
+        version: latest
+        args: --timeout 5m
+
+    - name: Security audit
+      run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
+
+  build-docker:
+    name: Build and Push Docker Image
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: |
+          ${{ env.DOCKER_IMAGE }}:latest
+          ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy to Railway
+    needs: build-docker
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy to Railway
+      uses: railwayapp/github-actions@v2.0.2
+      with:
+        serviceId: ${{ secrets.RAILWAY_SERVICE_ID }}
+        token: ${{ secrets.RAILWAY_TOKEN }}
+        environment: production
+        # Uncomment if you need to run migrations
+        # command: make migrate-up 
