@@ -32,9 +32,9 @@ func (s *AuthService) Register(req request.CreateUsersRequest) (*models.User, er
 	existingUser, err := s.userRepository.GetUserByEmail(req.Email)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to check user existence")
+			existingUser = nil
 		}
-		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to fetch user")
+		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to retrieve user")
 	}
 	if existingUser != nil {
 		return nil, utils.NewCustomError(http.StatusBadRequest, "User already exists")
