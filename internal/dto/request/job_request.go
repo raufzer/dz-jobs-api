@@ -1,15 +1,23 @@
 package request
 
+//	type PostNewJobRequest struct {
+//		Title          string `json:"title" validate:"required"`
+//		Description    string `json:"description" validate:"required"`
+//		Location       string `json:"location,omitempty"`
+//		SalaryRange    string `json:"salary_range,omitempty" validate:"omitempty,jobSalaryRange"`
+//		RequiredSkills string `json:"required_skills,omitempty"`
+//		Status         string `json:"status" validate:"required,oneof=open closed"`
+//		JobType        string `json:"job_type" validate:"required,oneof=full-time part-time freelance remote"`
+//	}
 type PostNewJobRequest struct {
-	Title          string `json:"title" validate:"required"`
-	Description    string `json:"description" validate:"required"`
+	Title          string `json:"title" binding:"required"`
+	Description    string `json:"description" binding:"required"`
 	Location       string `json:"location,omitempty"`
-	SalaryRange    string `json:"salary_range,omitempty" validate:"omitempty,jobSalaryRange"`
+	SalaryRange    string `json:"salary_range,omitempty" binding:"omitempty"`
 	RequiredSkills string `json:"required_skills,omitempty"`
-	Status         string `json:"status" validate:"required,oneof=open closed"`
-	JobType        string `json:"job_type" validate:"required,oneof=full-time part-time freelance remote"`
+	Status         string `json:"status" binding:"required,oneof=open closed"`
+	JobType        string `json:"job_type" binding:"required,oneof=full-time part-time freelance remote"`
 }
-
 type EditJobRequest struct {
 	Title          string `json:"title,omitempty"`
 	Description    string `json:"description,omitempty"`
