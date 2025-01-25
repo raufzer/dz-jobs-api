@@ -6,22 +6,22 @@ import (
 	"time"
 )
 
-func GetEnv(key string, valueType string) interface{} {
+func GetEnv(key string, valueType string) (interface{}, error) {
 	value := os.Getenv(key)
 	if value == "" {
-		return fmt.Errorf("environment variable %s not set", key)
+		return nil, fmt.Errorf("environment variable %s not set", key)
 	}
 
 	switch valueType {
 	case "duration":
 		duration, err := time.ParseDuration(value)
 		if err != nil {
-			return fmt.Sprintf("Failed to parse duration for environment variable %s: %v", key, err)
+			return nil, fmt.Errorf("failed to parse duration for environment variable %s: %v", key, err)
 		}
-		return duration
+		return duration, nil
 	case "string":
-		return value
+		return value, nil
 	default:
-		return fmt.Sprintf("Unsupported value type %s", valueType)
+		return nil, fmt.Errorf("unsupported value type %s", valueType)
 	}
 }
