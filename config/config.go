@@ -82,6 +82,9 @@ func LoadConfig() (*AppConfig, error) {
 }
 
 func getEnvOrFatal(key, expectedType string) interface{} {
-	val := utils.GetEnv(key, expectedType)
+	val, err := utils.GetEnv(key, expectedType)
+	if err != nil {
+		log.Fatalf("Failed to get environment variable %s: %v", key, err)
+	}
 	return val
 }
