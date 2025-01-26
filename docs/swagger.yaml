@@ -525,7 +525,7 @@ info:
   contact: {}
   description: This is the API documentation for the DZ Jobs portal.
   title: DZ Jobs API
-  version: 1.1.5
+  version: 1.1.9
 paths:
   /admin/users:
     get:
@@ -1180,7 +1180,7 @@ paths:
       summary: Get jobs bookmarked
       tags:
       - Candidates - Bookmarks
-  /candidates/bookmarks/{JobId}:
+  /candidates/bookmarks/{jobId}:
     delete:
       consumes:
       - application/json
@@ -1188,7 +1188,7 @@ paths:
       parameters:
       - description: Job ID
         in: path
-        name: JobId
+        name: jobId
         required: true
         type: integer
       produces:
@@ -1228,7 +1228,7 @@ paths:
       parameters:
       - description: Job ID
         in: path
-        name: JobId
+        name: jobId
         required: true
         type: integer
       produces:

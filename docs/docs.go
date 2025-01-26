@@ -1055,7 +1055,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/candidates/bookmarks/{JobId}": {
+        "/candidates/bookmarks/{jobId}": {
             "post": {
                 "description": "Add a job to bookmarks for a candidate by candidate ID",
                 "consumes": [
@@ -1072,7 +1072,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Job ID",
-                        "name": "JobId",
+                        "name": "jobId",
                         "in": "path",
                         "required": true
                     }
@@ -1132,7 +1132,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Job ID",
-                        "name": "JobId",
+                        "name": "jobId",
                         "in": "path",
                         "required": true
                     }
@@ -4192,7 +4192,7 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.1.5",
+	Version:          "1.1.9",
 	Host:             "dz-jobs-api-production.up.railway.app",
 	BasePath:         "/v1",
 	Schemes:          []string{},
