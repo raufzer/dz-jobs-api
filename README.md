@@ -79,7 +79,7 @@ Create a `.env` file with the following configuration:
 # Server Configuration
 BACK_END_DOMAIN=your-backend-domain.com
 FRONT_END_DOMAIN=your-frontend-domain.com
-SERVER_PORT=9090
+SERVER_PORT=8080
 
 # Database Configuration
 DATABASE_URI=postgres://username:password@localhost:5432/dbname
@@ -92,9 +92,35 @@ REDIS_PASSWORD=your-redis-password
 ACCESS_TOKEN_SECRET=your-access-token-secret
 REFRESH_TOKEN_SECRET=your-refresh-token-secret
 RESET_PASSWORD_TOKEN_SECRET=your-reset-password-token-secret
+ACCESS_TOKEN_MAX_AGE=24h
+REFRESH_TOKEN_MAX_AGE=168h
+RESET_PASSWORD_TOKEN_MAX_AGE=1h
 
-# External Services Configuration
-# (Add SendGrid, Google OAuth, Cloudinary credentials)
+# External Services
+SENDGRID_API_KEY=your-sendgrid-api-key
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_REDIRECT_URL=https://your-backend-domain.com/oauth/google/callback
+CLOUDINARY_CLOUD_NAME=your-cloudinary-cloud-name
+CLOUDINARY_API_KEY=your-cloudinary-api-key
+CLOUDINARY_API_SECRET=your-cloudinary-api-secret
+
+# Defaults
+DEFAULT_PROFILE_PICTURE=https://your-cloudinary-url.com/default-profile-picture.jpg
+DEFAULT_RESUME=https://your-cloudinary-url.com/default-resume.pdf
+
+# Application Metadata
+BUILD_VERSION=1.0.0
+COMMIT_HASH=your-commit-hash
+ENVIRONMENT=production
+DOC_URL=https://your-backend-domain.com/docs
+LAST_MIGRATION=timestamp-of-last-migration
+HEALTH_URL=https://your-backend-domain.com/health
+VERSION_URL=https://your-backend-domain.com/version
+METRICS_URL=https://your-backend-domain.com/metrics
+
+# Service Email
+SERVICE_EMAIL=your-service-email@example.com
 ```
 
 ## Running the Application
@@ -105,6 +131,7 @@ go run cmd/server/main.go
 The server will be accessible at http://localhost:9090.
 
 ## Docker Setup and Usage
+- **Link**: [Docker Hub Repo](https://hub.docker.com/repository/docker/raufzer/dz-jobs-api-docker/)
 
 ### Prerequisites
 - Docker installed
