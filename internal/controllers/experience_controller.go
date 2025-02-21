@@ -46,7 +46,7 @@ func (c *CandidateExperienceController) AddExperience(ctx *gin.Context) {
 		return
 	}
 
-	experience, err := c.service.AddExperience(candidateID, req)
+	experience, err := c.service.AddExperience(ctx,candidateID, req)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -80,7 +80,7 @@ func (c *CandidateExperienceController) GetExperience(ctx *gin.Context) {
 		return
 	}
 
-	experiences, err := c.service.GetExperience(candidateID)
+	experiences, err := c.service.GetExperience(ctx,candidateID)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -117,7 +117,7 @@ func (c *CandidateExperienceController) DeleteExperience(ctx *gin.Context) {
 	}
 	experienceIDstr := ctx.Param("experienceId")
 	experienceID, _ := uuid.Parse(experienceIDstr)
-	err = c.service.DeleteExperience(candidateID, experienceID)
+	err = c.service.DeleteExperience(ctx,candidateID, experienceID)
 	if err != nil {
 		_  = ctx.Error(err)
 		return

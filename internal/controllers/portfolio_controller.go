@@ -46,7 +46,7 @@ func (c *CandidatePortfolioController) AddProject(ctx *gin.Context) {
 		return
 	}
 
-	project, err := c.service.AddProject(candidateID, req)
+	project, err := c.service.AddProject(ctx,candidateID, req)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -80,7 +80,7 @@ func (c *CandidatePortfolioController) GetPortfolio(ctx *gin.Context) {
 		return
 	}
 
-	projects, err := c.service.GetPortfolio(candidateID)
+	projects, err := c.service.GetPortfolio(ctx,candidateID)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -115,7 +115,7 @@ func (c *CandidatePortfolioController) DeleteProject(ctx *gin.Context) {
 		return
 	}
 
-	err = c.service.DeleteProject(candidateID, ctx.Param("projectId"))
+	err = c.service.DeleteProject(ctx,candidateID, ctx.Param("projectId"))
 	if err != nil {
 		_  = ctx.Error(err)
 		return

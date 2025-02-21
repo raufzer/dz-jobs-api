@@ -1,6 +1,7 @@
 package postgresql
 
 import (
+	"context"
 	"database/sql"
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/helpers"
@@ -24,7 +25,7 @@ func NewJobRepository(db *sql.DB) repositoryInterfaces.JobRepository {
 	}
 }
 
-func (r *SQLJobRepository) CreateJob(job *models.Job) error {
+func (r *SQLJobRepository) CreateJob(ctx context.Context, job *models.Job) error {
 	query := `
         INSERT INTO jobs (
             title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status, job_type
@@ -45,8 +46,8 @@ func (r *SQLJobRepository) CreateJob(job *models.Job) error {
 	return nil
 }
 
-func (r *SQLJobRepository) GetJobDetails(jobID int64, recruiterID uuid.UUID) (*models.Job, error) {
-	if err := r.ValidateJobOwnership(jobID, recruiterID); err != nil {
+func (r *SQLJobRepository) GetJobDetails(ctx context.Context, jobID int64, recruiterID uuid.UUID) (*models.Job, error) {
+	if err := r.ValidateJobOwnership(ctx, jobID, recruiterID); err != nil {
 		return nil, err
 	}
 
@@ -68,7 +69,7 @@ func (r *SQLJobRepository) GetJobDetails(jobID int64, recruiterID uuid.UUID) (*m
 	return job, nil
 }
 
-func (r *SQLJobRepository) GetJobListingsByStatus(status string, recruiterID uuid.UUID) ([]*models.Job, error) {
+func (r *SQLJobRepository) GetJobListingsByStatus(ctx context.Context, status string, recruiterID uuid.UUID) ([]*models.Job, error) {
 
 	query := `SELECT job_id, title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status
               FROM jobs WHERE status = $1 AND recruiter_id = $2`
@@ -102,7 +103,7 @@ func (r *SQLJobRepository) GetJobListingsByStatus(status string, recruiterID uui
 	return jobs, nil
 }
 
-func (r *SQLJobRepository) UpdateJob(jobID int64, recruiterID uuid.UUID, job *models.Job) error {
+func (r *SQLJobRepository) UpdateJob(ctx context.Context, jobID int64, recruiterID uuid.UUID, job *models.Job) error {
 	query := `UPDATE jobs SET 
         title = $1, description = $2, location = $3, salary_range = $4, required_skills = $5, 
         recruiter_id = $6, updated_at = $7, status = $8, job_type = $9
@@ -127,7 +128,7 @@ func (r *SQLJobRepository) UpdateJob(jobID int64, recruiterID uuid.UUID, job *mo
 	return nil
 }
 
-func (r *SQLJobRepository) DeactivateJob(jobID int64, recruiterID uuid.UUID) error {
+func (r *SQLJobRepository) DeactivateJob(ctx context.Context, jobID int64, recruiterID uuid.UUID) error {
 
 	query := `UPDATE jobs SET 
         status = $1, 
@@ -150,7 +151,7 @@ func (r *SQLJobRepository) DeactivateJob(jobID int64, recruiterID uuid.UUID) err
 	return nil
 }
 
-func (r *SQLJobRepository) RepostJob(jobID int64, recruiterID uuid.UUID) error {
+func (r *SQLJobRepository) RepostJob(ctx context.Context, jobID int64, recruiterID uuid.UUID) error {
 
 	query := `UPDATE jobs SET 
         status = $1, 
@@ -173,7 +174,7 @@ func (r *SQLJobRepository) RepostJob(jobID int64, recruiterID uuid.UUID) error {
 	return nil
 }
 
-func (r *SQLJobRepository) DeleteJob(jobID int64, recruiterID uuid.UUID) error {
+func (r *SQLJobRepository) DeleteJob(ctx context.Context, jobID int64, recruiterID uuid.UUID) error {
 
 	deleteQuery := "DELETE FROM jobs WHERE job_id = $1"
 	result, err := r.db.Exec(deleteQuery, jobID)
@@ -192,7 +193,7 @@ func (r *SQLJobRepository) DeleteJob(jobID int64, recruiterID uuid.UUID) error {
 	return nil
 }
 
-func (r *SQLJobRepository) ValidateJobOwnership(jobID int64, recruiterID uuid.UUID) error {
+func (r *SQLJobRepository) ValidateJobOwnership(ctx context.Context, jobID int64, recruiterID uuid.UUID) error {
 	query := `SELECT recruiter_id FROM jobs WHERE job_id = $1`
 	row := r.db.QueryRow(query, jobID)
 
@@ -211,7 +212,7 @@ func (r *SQLJobRepository) ValidateJobOwnership(jobID int64, recruiterID uuid.UU
 	return nil
 }
 
-func (r *SQLJobRepository) GetAllJobs() ([]*models.Job, error) {
+func (r *SQLJobRepository) GetAllJobs(ctx context.Context) ([]*models.Job, error) {
 	query := `SELECT job_id, title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status, job_type
               FROM jobs`
 
@@ -241,7 +242,7 @@ func (r *SQLJobRepository) GetAllJobs() ([]*models.Job, error) {
 	return jobs, nil
 }
 
-func (r *SQLJobRepository) GetJobListings(filters request.JobFilters) ([]*models.Job, error) {
+func (r *SQLJobRepository) GetJobListings(ctx context.Context, filters request.JobFilters) ([]*models.Job, error) {
 	query := `SELECT job_id, title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status, job_type
               FROM jobs WHERE 1=1`
 
@@ -316,7 +317,7 @@ func (r *SQLJobRepository) GetJobListings(filters request.JobFilters) ([]*models
 	return jobs, nil
 }
 
-func (r *SQLJobRepository) GetJobDetailsPublic(jobID int64) (*models.Job, error) {
+func (r *SQLJobRepository) GetJobDetailsPublic(ctx context.Context, jobID int64) (*models.Job, error) {
 	query := `SELECT job_id, title, description, location, salary_range, required_skills, recruiter_id, created_at, updated_at, status, job_type
               FROM jobs WHERE job_id = $1`
 

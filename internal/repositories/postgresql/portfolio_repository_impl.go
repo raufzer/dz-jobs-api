@@ -1,6 +1,7 @@
 package postgresql
 
 import (
+		"context"
 	"database/sql"
 	"dz-jobs-api/internal/models"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
@@ -19,7 +20,7 @@ func NewCandidatePortfolioRepository(db *sql.DB) repositoryInterfaces.CandidateP
 	}
 }
 
-func (r *SQLCandidatePortfolioRepository) CreateProject(portfolio *models.CandidatePortfolio) error {
+func (r *SQLCandidatePortfolioRepository) CreateProject(ctx context.Context, portfolio *models.CandidatePortfolio) error {
 	query := `INSERT INTO candidate_portfolio (project_id, candidate_id, project_name, project_link, category, description) 
 			VALUES ($1, $2, $3, $4, $5, $6)`
 	_, err := r.db.Exec(query, portfolio.ID, portfolio.CandidateID, portfolio.ProjectName, portfolio.ProjectLink, portfolio.Category, portfolio.Description)
@@ -29,7 +30,7 @@ func (r *SQLCandidatePortfolioRepository) CreateProject(portfolio *models.Candid
 	return nil
 }
 
-func (r *SQLCandidatePortfolioRepository) GetPortfolio(candidateID uuid.UUID) ([]models.CandidatePortfolio, error) {
+func (r *SQLCandidatePortfolioRepository) GetPortfolio(ctx context.Context, candidateID uuid.UUID) ([]models.CandidatePortfolio, error) {
 	rows, err := r.db.Query(`SELECT project_id, candidate_id, project_name, project_link, category, description FROM candidate_portfolio WHERE candidate_id = $1`, candidateID)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch portfolio: %w", err)
@@ -50,7 +51,7 @@ func (r *SQLCandidatePortfolioRepository) GetPortfolio(candidateID uuid.UUID) ([
 	return portfolios, nil
 }
 
-func (r *SQLCandidatePortfolioRepository) DeleteProject(projectID uuid.UUID, projectName string) error {
+func (r *SQLCandidatePortfolioRepository) DeleteProject(ctx context.Context, projectID uuid.UUID, projectName string) error {
 	query := `DELETE FROM candidate_portfolio WHERE candidate_id = $1 AND project_name = $2`
 	_, err := r.db.Exec(query, projectID, projectName)
 	if err != nil {

@@ -1,14 +1,15 @@
 package interfaces
 
 import (
-	"dz-jobs-api/internal/dto/request"
-	"dz-jobs-api/internal/models"
+    "context"
+    "dz-jobs-api/internal/dto/request"
+    "dz-jobs-api/internal/models"
 
-	"github.com/google/uuid"
+    "github.com/google/uuid"
 )
 
 type CandidatePortfolioService interface {
-	AddProject(candidateID uuid.UUID, request request.AddProjectRequest) (*models.CandidatePortfolio, error)
-	GetPortfolio(candidateID uuid.UUID) ([]models.CandidatePortfolio, error)
-	DeleteProject(projectID uuid.UUID, projectName string) error
+    AddProject(ctx context.Context, candidateID uuid.UUID, request request.AddProjectRequest) (*models.CandidatePortfolio, error)
+    GetPortfolio(ctx context.Context, candidateID uuid.UUID) ([]models.CandidatePortfolio, error)
+    DeleteProject(ctx context.Context, projectID uuid.UUID, projectName string) error
 }

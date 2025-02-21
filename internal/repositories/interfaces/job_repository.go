@@ -1,6 +1,7 @@
 package interfaces
 
 import (
+	"context"
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/models"
 
@@ -8,15 +9,15 @@ import (
 )
 
 type JobRepository interface {
-	CreateJob(job *models.Job) error
-	GetJobDetails(jobID int64, recruiterID uuid.UUID) (*models.Job, error)
-	GetJobListingsByStatus(status string, recruiterID uuid.UUID) ([]*models.Job, error)
-	UpdateJob(jobID int64, recruiterID uuid.UUID, job *models.Job) error
-	DeactivateJob(jobID int64, recruiterID uuid.UUID) error
-	RepostJob(jobID int64, recruiterID uuid.UUID) error
-	DeleteJob(jobID int64, recruiterID uuid.UUID) error
-	ValidateJobOwnership(jobID int64, recruiterID uuid.UUID) error
-	GetAllJobs() ([]*models.Job, error)
-	GetJobListings(filters request.JobFilters) ([]*models.Job, error)
-	GetJobDetailsPublic(jobID int64) (*models.Job, error)
+	CreateJob(ctx context.Context, job *models.Job) error
+	GetJobDetails(ctx context.Context, jobID int64, recruiterID uuid.UUID) (*models.Job, error)
+	GetJobListingsByStatus(ctx context.Context, status string, recruiterID uuid.UUID) ([]*models.Job, error)
+	UpdateJob(ctx context.Context, jobID int64, recruiterID uuid.UUID, job *models.Job) error
+	DeactivateJob(ctx context.Context, jobID int64, recruiterID uuid.UUID) error
+	RepostJob(ctx context.Context, jobID int64, recruiterID uuid.UUID) error
+	DeleteJob(ctx context.Context, jobID int64, recruiterID uuid.UUID) error
+	ValidateJobOwnership(ctx context.Context, jobID int64, recruiterID uuid.UUID) error
+	GetAllJobs(ctx context.Context, ) ([]*models.Job, error)
+	GetJobListings(ctx context.Context, filters request.JobFilters) ([]*models.Job, error)
+	GetJobDetailsPublic(ctx context.Context, jobID int64) (*models.Job, error)
 }

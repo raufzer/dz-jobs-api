@@ -1,11 +1,10 @@
 package postgresql
 
 import (
+	"context"
 	"database/sql"
-
 	"dz-jobs-api/internal/models"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
-
 	"fmt"
 
 	"github.com/google/uuid"
@@ -21,7 +20,7 @@ func NewBookmarskRepository(db *sql.DB) repositoryInterfaces.BookmarksRepository
 	}
 }
 
-func (r *SQLBookmarksRepository) AddBookmark(candidateID uuid.UUID, jobID int64) error {
+func (r *SQLBookmarksRepository) AddBookmark(ctx context.Context, candidateID uuid.UUID, jobID int64) error {
 	query := "INSERT INTO bookmarks (candidate_id, job_id) VALUES ($1, $2)"
 	_, err := r.db.Exec(query, candidateID, jobID)
 	if err != nil {
@@ -30,7 +29,7 @@ func (r *SQLBookmarksRepository) AddBookmark(candidateID uuid.UUID, jobID int64)
 	return nil
 }
 
-func (r *SQLBookmarksRepository) RemoveBookmark(candidateID uuid.UUID, jobID int64) error {
+func (r *SQLBookmarksRepository) RemoveBookmark(ctx context.Context, candidateID uuid.UUID, jobID int64) error {
 	query := "DELETE FROM bookmarks WHERE candidate_id = $1 AND job_id = $2"
 	_, err := r.db.Exec(query, candidateID, jobID)
 	if err != nil {
@@ -39,7 +38,7 @@ func (r *SQLBookmarksRepository) RemoveBookmark(candidateID uuid.UUID, jobID int
 	return nil
 }
 
-func (r *SQLBookmarksRepository) GetBookmarks(candidateID uuid.UUID) ([]*models.Job, error) {
+func (r *SQLBookmarksRepository) GetBookmarks(ctx context.Context, candidateID uuid.UUID) ([]*models.Job, error) {
 	query := `
         SELECT j.job_id, j.title, j.description, j.location, j.salary_range, j.required_skills, j.recruiter_id, j.created_at, j.updated_at, j.status
         FROM bookmarks b

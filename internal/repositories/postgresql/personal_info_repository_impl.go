@@ -1,10 +1,12 @@
 package postgresql
 
 import (
+		"context"
 	"database/sql"
 	"dz-jobs-api/internal/models"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
 	"fmt"
+
 	"github.com/google/uuid"
 )
 
@@ -17,7 +19,7 @@ func NewCandidatePersonalInfoRepository(db *sql.DB) repositoryInterfaces.Candida
 		db: db,
 	}
 }
-func (r *SQLCandidatePersonalInfoRepository) CreatePersonalInfo(info *models.CandidatePersonalInfo) error {
+func (r *SQLCandidatePersonalInfoRepository) CreatePersonalInfo(ctx context.Context, info *models.CandidatePersonalInfo) error {
 	query := `
 		INSERT INTO candidate_personal_info (candidate_id, name, email, phone, address, date_of_birth, gender, bio)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
@@ -27,7 +29,7 @@ func (r *SQLCandidatePersonalInfoRepository) CreatePersonalInfo(info *models.Can
 	}
 	return nil
 }
-func (r *SQLCandidatePersonalInfoRepository) GetPersonalInfo(candidateID uuid.UUID) (*models.CandidatePersonalInfo, error) {
+func (r *SQLCandidatePersonalInfoRepository) GetPersonalInfo(ctx context.Context, candidateID uuid.UUID) (*models.CandidatePersonalInfo, error) {
 	var info models.CandidatePersonalInfo
 	query := `
 		SELECT candidate_id, name, email, phone, address, date_of_birth, gender, bio
@@ -42,7 +44,7 @@ func (r *SQLCandidatePersonalInfoRepository) GetPersonalInfo(candidateID uuid.UU
 	}
 	return &info, nil
 }
-func (r *SQLCandidatePersonalInfoRepository) UpdatePersonalInfo(info *models.CandidatePersonalInfo) error {
+func (r *SQLCandidatePersonalInfoRepository) UpdatePersonalInfo(ctx context.Context, info *models.CandidatePersonalInfo) error {
 	query := `UPDATE candidate_personal_info SET`
 	args := []interface{}{}
 	argIndex := 1
@@ -97,7 +99,7 @@ func (r *SQLCandidatePersonalInfoRepository) UpdatePersonalInfo(info *models.Can
 	}
 	return nil
 }
-func (r *SQLCandidatePersonalInfoRepository) DeletePersonalInfo(candidateID uuid.UUID) error {
+func (r *SQLCandidatePersonalInfoRepository) DeletePersonalInfo(ctx context.Context, candidateID uuid.UUID) error {
 	query := `DELETE FROM candidate_personal_info WHERE candidate_id = $1`
 	_, err := r.db.Exec(query, candidateID)
 	if err != nil {

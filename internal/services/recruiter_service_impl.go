@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"database/sql"
 	"dz-jobs-api/config"
 	"dz-jobs-api/internal/dto/request"
@@ -29,8 +30,8 @@ func NewRecruiterService(recruiterRepo interfaces.RecruiterRepository, redisRepo
 	}
 }
 
-func (s *RecruiterService) CreateRecruiter(userID string, req request.CreateRecruiterRequest, companyLogo *multipart.FileHeader) (*models.Recruiter, error) {
-	existingRecruiter, err := s.recruiterRepository.GetRecruiter(uuid.MustParse(userID))
+func (s *RecruiterService) CreateRecruiter(ctx context.Context, userID string, req request.CreateRecruiterRequest, companyLogo *multipart.FileHeader) (*models.Recruiter, error) {
+	existingRecruiter, err := s.recruiterRepository.GetRecruiter(ctx,uuid.MustParse(userID))
 	if err != nil {
 		if err == sql.ErrNoRows {
 			existingRecruiter = nil
@@ -43,7 +44,7 @@ func (s *RecruiterService) CreateRecruiter(userID string, req request.CreateRecr
 			return nil, utils.NewCustomError(http.StatusBadRequest, "Company Logo is required")
 		}
 
-		companyLogoURL, err := s.uploadAndCacheFile(companyLogo, "image")
+		companyLogoURL, err := s.uploadAndCacheFile(ctx,companyLogo, "image")
 		if err != nil {
 			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to upload company logo")
 		}
@@ -60,8 +61,8 @@ func (s *RecruiterService) CreateRecruiter(userID string, req request.CreateRecr
 			VerifiedStatus:     req.VerifiedStatus,
 		}
 
-		if err := s.recruiterRepository.CreateRecruiter(recruiter); err != nil {
-			if err := s.redisRepository.InvalidateAssetCache(companyLogoURL, "image"); err != nil {
+		if err := s.recruiterRepository.CreateRecruiter(ctx,recruiter); err != nil {
+			if err := s.redisRepository.InvalidateAssetCache(ctx,companyLogoURL, "image"); err != nil {
 				return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
 			}
 			return nil, utils.NewCustomError(http.StatusInternalServerError, "Recruiter creation failed")
@@ -71,8 +72,8 @@ func (s *RecruiterService) CreateRecruiter(userID string, req request.CreateRecr
 	}
 }
 
-func (s *RecruiterService) GetRecruiter(recruiterID uuid.UUID) (*models.Recruiter, error) {
-	recruiter, err := s.recruiterRepository.GetRecruiter(recruiterID)
+func (s *RecruiterService) GetRecruiter(ctx context.Context, recruiterID uuid.UUID) (*models.Recruiter, error) {
+	recruiter, err := s.recruiterRepository.GetRecruiter(ctx,recruiterID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, utils.NewCustomError(http.StatusNotFound, "REcruiter not found")
@@ -82,8 +83,8 @@ func (s *RecruiterService) GetRecruiter(recruiterID uuid.UUID) (*models.Recruite
 	return recruiter, nil
 }
 
-func (s *RecruiterService) UpdateRecruiter(recruiterID uuid.UUID, req request.UpdateRecruiterRequest, companyLogo *multipart.FileHeader) (*models.Recruiter, error) {
-	existingRecruiter, err := s.recruiterRepository.GetRecruiter(recruiterID)
+func (s *RecruiterService) UpdateRecruiter(ctx context.Context, recruiterID uuid.UUID, req request.UpdateRecruiterRequest, companyLogo *multipart.FileHeader) (*models.Recruiter, error) {
+	existingRecruiter, err := s.recruiterRepository.GetRecruiter(ctx,recruiterID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, utils.NewCustomError(http.StatusNotFound, "Recruiter not found")
@@ -95,7 +96,7 @@ func (s *RecruiterService) UpdateRecruiter(recruiterID uuid.UUID, req request.Up
 		return nil, utils.NewCustomError(http.StatusBadRequest, "Company Logo is required")
 	}
 
-	companyLogoURL, err := s.uploadAndCacheFile(companyLogo, "image")
+	companyLogoURL, err := s.uploadAndCacheFile(ctx,companyLogo, "image")
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to upload company logo")
 	}
@@ -111,21 +112,21 @@ func (s *RecruiterService) UpdateRecruiter(recruiterID uuid.UUID, req request.Up
 		VerifiedStatus:     req.VerifiedStatus,
 	}
 
-	if err := s.recruiterRepository.UpdateRecruiter(recruiterID, updatedRecruiter); err != nil {
-		if err := s.redisRepository.InvalidateAssetCache(companyLogoURL, "image"); err != nil {
+	if err := s.recruiterRepository.UpdateRecruiter(ctx,recruiterID, updatedRecruiter); err != nil {
+		if err := s.redisRepository.InvalidateAssetCache(ctx,companyLogoURL, "image"); err != nil {
 			return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
 		}
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to update Recruiter")
 	}
 
-	if err = s.redisRepository.InvalidateAssetCache(existingRecruiter.CompanyLogo, "image"); err != nil {
+	if err = s.redisRepository.InvalidateAssetCache(ctx,existingRecruiter.CompanyLogo, "image"); err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
 	}
-	return s.recruiterRepository.GetRecruiter(recruiterID)
+	return s.recruiterRepository.GetRecruiter(ctx,recruiterID)
 }
 
-func (s *RecruiterService) DeleteRecruiter(recruiterID uuid.UUID) error {
-	recruiter, err := s.recruiterRepository.GetRecruiter(recruiterID)
+func (s *RecruiterService) DeleteRecruiter(ctx context.Context, recruiterID uuid.UUID) error {
+	recruiter, err := s.recruiterRepository.GetRecruiter(ctx,recruiterID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return utils.NewCustomError(http.StatusNotFound, "Recruiter not found")
@@ -133,17 +134,17 @@ func (s *RecruiterService) DeleteRecruiter(recruiterID uuid.UUID) error {
 		return utils.NewCustomError(http.StatusInternalServerError, "Error fetching recruiter")
 	}
 
-	if err := s.recruiterRepository.DeleteRecruiter(recruiterID); err != nil {
+	if err := s.recruiterRepository.DeleteRecruiter(ctx,recruiterID); err != nil {
 		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete Recruiter")
 	}
 
-	if err = s.redisRepository.InvalidateAssetCache(recruiter.CompanyLogo, "image"); err != nil {
+	if err = s.redisRepository.InvalidateAssetCache(ctx,recruiter.CompanyLogo, "image"); err != nil {
 		return utils.NewCustomError(http.StatusInternalServerError, "Failed to invalidate asset cache")
 	}
 	return nil
 }
 
-func (s *RecruiterService) uploadAndCacheFile(file *multipart.FileHeader, fileType string) (string, error) {
+func (s *RecruiterService) uploadAndCacheFile(ctx context.Context, file *multipart.FileHeader, fileType string) (string, error) {
 	src, err := file.Open()
 	if err != nil {
 		return "", err
@@ -166,7 +167,7 @@ func (s *RecruiterService) uploadAndCacheFile(file *multipart.FileHeader, fileTy
 		UpdatedAt: time.Now(),
 	}
 
-	err = s.redisRepository.StoreAssetCache(uploadURL, fileType, assetCache, 24*time.Hour)
+	err = s.redisRepository.StoreAssetCache(ctx,uploadURL, fileType, assetCache, 24*time.Hour)
 	if err != nil {
 		return "", utils.NewCustomError(http.StatusInternalServerError, "Failed to cache asset")
 	}

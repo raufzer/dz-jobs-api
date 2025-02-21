@@ -49,7 +49,7 @@ func (c *JobController) PostNewJob(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	job, err := c.jobService.PostNewJob(recruiterID, req)
+	job, err := c.jobService.PostNewJob(ctx,recruiterID, req)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -89,7 +89,7 @@ func (c *JobController) GetJobDetails(ctx *gin.Context) {
 		_  = ctx.Error(err)
 		return
 	}
-	job, err := c.jobService.GetJobDetails(jobID, recruiterID)
+	job, err := c.jobService.GetJobDetails(ctx,jobID, recruiterID)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -122,7 +122,7 @@ func (c *JobController) GetJobListingsByStatus(ctx *gin.Context) {
 		_  = ctx.Error(err)
 		return
 	}
-	jobs, err := c.jobService.GetJobListingsByStatus(ctx.Query("status"), recruiterID)
+	jobs, err := c.jobService.GetJobListingsByStatus(ctx,ctx.Query("status"), recruiterID)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -171,7 +171,7 @@ func (c *JobController) EditJob(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	updatedJob, err := c.jobService.EditJob(jobID, req, recruiterID)
+	updatedJob, err := c.jobService.EditJob(ctx,jobID, req, recruiterID)
 	if err != nil {
 		_  = ctx.Error(err)
 		ctx.Abort()
@@ -212,7 +212,7 @@ func (c *JobController) DeactivateJob(ctx *gin.Context) {
 		_  = ctx.Error(err)
 		return
 	}
-	updatedJob, err := c.jobService.DeactivateJob(jobID, recruiterID)
+	updatedJob, err := c.jobService.DeactivateJob(ctx,jobID, recruiterID)
 	if err != nil {
 		_  = ctx.Error(err)
 		ctx.Abort()
@@ -253,7 +253,7 @@ func (c *JobController) RepostJob(ctx *gin.Context) {
 		_  = ctx.Error(err)
 		return
 	}
-	updatedJob, err := c.jobService.RepostJob(jobID, recruiterID)
+	updatedJob, err := c.jobService.RepostJob(ctx,jobID, recruiterID)
 	if err != nil {
 		_  = ctx.Error(err)
 		ctx.Abort()
@@ -294,7 +294,7 @@ func (c *JobController) DeleteJob(ctx *gin.Context) {
 		_  = ctx.Error(err)
 		return
 	}
-	err = c.jobService.DeleteJob(jobID, recruiterID)
+	err = c.jobService.DeleteJob(ctx,jobID, recruiterID)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -315,7 +315,7 @@ func (c *JobController) DeleteJob(ctx *gin.Context) {
 // @Failure 500 {object} response.Response "Internal server error"
 // @Router /jobs [get]
 func (c *JobController) GetAllJobs(ctx *gin.Context) {
-	jobs, err := c.jobService.GetAllJobs()
+	jobs, err := c.jobService.GetAllJobs(ctx)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -349,7 +349,7 @@ func (c *JobController) SearchJobs(ctx *gin.Context) {
 		return
 	}
 
-	jobs, err := c.jobService.SearchJobs(filters)
+	jobs, err := c.jobService.SearchJobs(ctx,filters)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -382,7 +382,7 @@ func (c *JobController) GetJobDetailsPublic(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	job, err := c.jobService.GetJobDetailsPublic(jobID)
+	job, err := c.jobService.GetJobDetailsPublic(ctx,jobID)
 	if err != nil {
 		_  = ctx.Error(err)
 		return

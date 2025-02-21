@@ -1,10 +1,12 @@
 package postgresql
 
 import (
+	"context"
 	"database/sql"
 	"dz-jobs-api/internal/models"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
 	"fmt"
+
 	"github.com/google/uuid"
 )
 
@@ -18,7 +20,7 @@ func NewCandidateRepository(db *sql.DB) repositoryInterfaces.CandidateRepository
 	}
 }
 
-func (r *SQLCandidateRepository) CreateCandidate(candidate *models.Candidate) (uuid.UUID, error) {
+func (r *SQLCandidateRepository) CreateCandidate(ctx context.Context, candidate *models.Candidate) (uuid.UUID, error) {
 	query := `INSERT INTO candidates (candidate_id, resume, profile_picture) VALUES ($1, $2, $3) RETURNING candidate_id`
 
 	err := r.db.QueryRow(query, candidate.ID, candidate.Resume, candidate.ProfilePicture).Scan(&candidate.ID)
@@ -29,7 +31,7 @@ func (r *SQLCandidateRepository) CreateCandidate(candidate *models.Candidate) (u
 	return candidate.ID, nil
 }
 
-func (r *SQLCandidateRepository) GetCandidate(candidateID uuid.UUID) (*models.Candidate, error) {
+func (r *SQLCandidateRepository) GetCandidate(ctx context.Context, candidateID uuid.UUID) (*models.Candidate, error) {
 	query := `SELECT candidate_id, resume, profile_picture FROM candidates WHERE candidate_id = $1`
 	row := r.db.QueryRow(query, candidateID)
 	candidate := &models.Candidate{}
@@ -43,7 +45,7 @@ func (r *SQLCandidateRepository) GetCandidate(candidateID uuid.UUID) (*models.Ca
 	return candidate, nil
 }
 
-func (r *SQLCandidateRepository) UpdateCandidate(candidateID uuid.UUID, candidate *models.Candidate) error {
+func (r *SQLCandidateRepository) UpdateCandidate(ctx context.Context, candidateID uuid.UUID, candidate *models.Candidate) error {
 	query := `UPDATE candidates SET resume = $1, profile_picture = $2 WHERE candidate_id = $3`
 	result, err := r.db.Exec(query, candidate.Resume, candidate.ProfilePicture, candidateID)
 	if err != nil {
@@ -59,7 +61,7 @@ func (r *SQLCandidateRepository) UpdateCandidate(candidateID uuid.UUID, candidat
 	return nil
 }
 
-func (r *SQLCandidateRepository) DeleteCandidate(candidateID uuid.UUID) error {
+func (r *SQLCandidateRepository) DeleteCandidate(ctx context.Context, candidateID uuid.UUID) error {
 	query := `DELETE FROM candidates WHERE candidate_id = $1`
 	_, err := r.db.Exec(query, candidateID)
 	if err != nil {

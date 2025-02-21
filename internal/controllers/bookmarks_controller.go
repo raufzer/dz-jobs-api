@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+
 )
 
 type BookmarksController struct {
@@ -48,7 +49,7 @@ func (c *BookmarksController) AddBookmark(ctx *gin.Context) {
 		return
 	}
 
-	if err := c.service.AddBookmark(candidateID, jobID); err != nil {
+	if err := c.service.AddBookmark(ctx, candidateID, jobID); err != nil {
 		_ = ctx.Error(err)
 		return
 	}
@@ -75,7 +76,7 @@ func (c *BookmarksController) AddBookmark(ctx *gin.Context) {
 func (c *BookmarksController) GetBookmarks(ctx *gin.Context) {
 	userID := ctx.MustGet("candidate_id")
 	candidateID, _ := uuid.Parse(userID.(string))
-	jobs, err := c.service.GetBookmarks(candidateID)
+	jobs, err := c.service.GetBookmarks(ctx, candidateID)
 	if err != nil {
 		_ = ctx.Error(err)
 		return
@@ -114,7 +115,7 @@ func (c *BookmarksController) RemoveBookmark(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	if err := c.service.RemoveBookmark(candidateID, jobID); err != nil {
+	if err := c.service.RemoveBookmark(ctx,candidateID, jobID); err != nil {
 		_ = ctx.Error(err)
 		return
 	}

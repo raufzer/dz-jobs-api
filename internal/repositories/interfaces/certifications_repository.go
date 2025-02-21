@@ -1,13 +1,15 @@
 package interfaces
 
 import (
+	"context"
 	"dz-jobs-api/internal/models"
+
 	"github.com/google/uuid"
 )
 
 type CandidateCertificationsRepository interface {
-	CreateCertification(certification *models.CandidateCertification) error
-	GetCertifications(certificationID uuid.UUID) ([]models.CandidateCertification, error)
-	DeleteCertification(certificationID uuid.UUID, certificationName string) error
-	ValidateCertificationOwnership(certificationID uuid.UUID, certificationName string) error
+	CreateCertification(ctx context.Context, certification *models.CandidateCertification) error
+	GetCertifications(ctx context.Context, certificationID uuid.UUID) ([]models.CandidateCertification, error)
+	DeleteCertification(ctx context.Context, certificationID uuid.UUID, certificationName string) error
+	ValidateCertificationOwnership(ctx context.Context, certificationID uuid.UUID, certificationName string) error
 }

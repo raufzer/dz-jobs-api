@@ -1,10 +1,12 @@
 package postgresql
 
 import (
+		"context"
 	"database/sql"
 	"dz-jobs-api/internal/models"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
 	"fmt"
+
 	"github.com/google/uuid"
 )
 
@@ -18,7 +20,7 @@ func NewCandidateEducationRepository(db *sql.DB) repositoryInterfaces.CandidateE
 	}
 }
 
-func (r *SQLCandidateEducationRepository) CreateEducation(education *models.CandidateEducation) error {
+func (r *SQLCandidateEducationRepository) CreateEducation(ctx context.Context, education *models.CandidateEducation) error {
 	query := "INSERT INTO candidate_education (education_id, candidate_id, degree, institution, start_date, end_date, description) " +
 		"VALUES ($1, $2, $3, $4, $5, $6, $7)"
 	_, err := r.db.Exec(query, education.ID, education.CandidateID, education.Degree, education.Institution, education.StartDate, education.EndDate, education.Description)
@@ -28,7 +30,7 @@ func (r *SQLCandidateEducationRepository) CreateEducation(education *models.Cand
 	return nil
 }
 
-func (r *SQLCandidateEducationRepository) GetEducation(educationID uuid.UUID) ([]models.CandidateEducation, error) {
+func (r *SQLCandidateEducationRepository) GetEducation(ctx context.Context, educationID uuid.UUID) ([]models.CandidateEducation, error) {
 	rows, err := r.db.Query(`SELECT education_id, candidate_id, degree, institution, start_date, end_date, description FROM candidate_education WHERE candidate_id = $1`, educationID)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch education: %w", err)
@@ -49,7 +51,7 @@ func (r *SQLCandidateEducationRepository) GetEducation(educationID uuid.UUID) ([
 	return educations, nil
 }
 
-func (r *SQLCandidateEducationRepository) DeleteEducation(candidateID, educationID uuid.UUID) error {
+func (r *SQLCandidateEducationRepository) DeleteEducation(ctx context.Context, candidateID, educationID uuid.UUID) error {
 	query := `DELETE FROM candidate_education WHERE education_id = $1 AND candidate_id = $2`
 	_, err := r.db.Exec(query, educationID, candidateID)
 	if err != nil {

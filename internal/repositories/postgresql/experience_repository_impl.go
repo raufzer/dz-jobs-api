@@ -1,10 +1,12 @@
 package postgresql
 
 import (
+		"context"
 	"database/sql"
 	"dz-jobs-api/internal/models"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
 	"fmt"
+
 	"github.com/google/uuid"
 )
 
@@ -18,7 +20,7 @@ func NewCandidateExperienceRepository(db *sql.DB) repositoryInterfaces.Candidate
 	}
 }
 
-func (r *SQLCandidateExperienceRepository) CreateExperience(experience *models.CandidateExperience) error {
+func (r *SQLCandidateExperienceRepository) CreateExperience(ctx context.Context, experience *models.CandidateExperience) error {
 	query := `INSERT INTO candidate_experience (experience_id, candidate_id, job_title, company, start_date, end_date, description) 
 			VALUES ($1, $2, $3, $4, $5, $6, $7)`
 	_, err := r.db.Exec(query, experience.ID, experience.CandidateID, experience.JobTitle, experience.Company, experience.StartDate, experience.EndDate, experience.Description)
@@ -28,7 +30,7 @@ func (r *SQLCandidateExperienceRepository) CreateExperience(experience *models.C
 	return nil
 }
 
-func (r *SQLCandidateExperienceRepository) GetExperience(candidateID uuid.UUID) ([]models.CandidateExperience, error) {
+func (r *SQLCandidateExperienceRepository) GetExperience(ctx context.Context, candidateID uuid.UUID) ([]models.CandidateExperience, error) {
 	rows, err := r.db.Query(`SELECT experience_id, candidate_id, job_title, company, start_date, end_date, description FROM candidate_experience WHERE candidate_id = $1`, candidateID)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch experience: %w", err)
@@ -49,7 +51,7 @@ func (r *SQLCandidateExperienceRepository) GetExperience(candidateID uuid.UUID) 
 	return experiences, nil
 }
 
-func (r *SQLCandidateExperienceRepository) DeleteExperience(candidateID uuid.UUID, experienceID uuid.UUID) error {
+func (r *SQLCandidateExperienceRepository) DeleteExperience(ctx context.Context, candidateID uuid.UUID, experienceID uuid.UUID) error {
 	query := `DELETE FROM candidate_experience WHERE experience_id = $1 AND candidate_id = $2`
 	_, err := r.db.Exec(query, experienceID, candidateID)
 	if err != nil {

@@ -42,7 +42,7 @@ func (c *UserController) CreateUser(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	user, err := c.userService.CreateUser(req)
+	user, err := c.userService.CreateUser(ctx,req)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -75,7 +75,7 @@ func (c *UserController) GetUser(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	user, err := c.userService.GetUser(userID)
+	user, err := c.userService.GetUser(ctx,userID)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -116,7 +116,7 @@ func (c *UserController) UpdateUser(ctx *gin.Context) {
 		_  = ctx.Error(err)
 		return
 	}
-	updatedUser, err := c.userService.UpdateUser(id, req)
+	updatedUser, err := c.userService.UpdateUser(ctx,id, req)
 	if err != nil {
 		_  = ctx.Error(err)
 		ctx.Abort()
@@ -141,7 +141,7 @@ func (c *UserController) UpdateUser(ctx *gin.Context) {
 // @Failure 500 {object} response.Response "An unexpected error occurred"
 // @Router /admin/users [get]
 func (c *UserController) GetAllUsers(ctx *gin.Context) {
-	users, err := c.userService.GetAllUsers()
+	users, err := c.userService.GetAllUsers(ctx)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -174,7 +174,7 @@ func (c *UserController) DeleteUser(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	err = c.userService.DeleteUser(userID)
+	err = c.userService.DeleteUser(ctx,userID)
 	if err != nil {
 		_  = ctx.Error(err)
 		return

@@ -1,18 +1,19 @@
 package interfaces
 
 import (
-	"dz-jobs-api/internal/dto/request"
-	"dz-jobs-api/internal/models"
+    "context"
+    "dz-jobs-api/internal/dto/request"
+    "dz-jobs-api/internal/models"
 )
 
 type AuthService interface {
-	Register(user request.CreateUsersRequest) (*models.User, error)
-	Login(req request.LoginRequest) (*models.User, string, string, error)
-	Logout(userID, refreshToken string) error
-	RefreshAccessToken(email, role, refreshToken string) (string, error)
-	SendOTP(email string) error
-	VerifyOTP(email, otp string) (string, error)
-	ResetPassword(email, resetToken, newPassword string) error
-	ValidateToken(token string) (string, string, error)
-	GoogleConnect(code string, role string) (*models.User, string, string, string, error)
+    Register(ctx context.Context, user request.CreateUsersRequest) (*models.User, error)
+    Login(ctx context.Context, req request.LoginRequest) (*models.User, string, string, error)
+    Logout(ctx context.Context, userID, refreshToken string) error
+    RefreshAccessToken(ctx context.Context, email, role, refreshToken string) (string, error)
+    SendOTP(ctx context.Context, email string) error
+    VerifyOTP(ctx context.Context, email, otp string) (string, error)
+    ResetPassword(ctx context.Context, email, resetToken, newPassword string) error
+    ValidateToken(ctx context.Context, token string) (string, string, error)
+    GoogleConnect(ctx context.Context, code string, role string) (*models.User, string, string, string, error)
 }

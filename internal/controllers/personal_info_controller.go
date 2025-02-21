@@ -46,7 +46,7 @@ func (c *CandidatePersonalInfoController) AddPersonalInfo(ctx *gin.Context) {
 		return
 	}
 
-	createdInfo, err := c.service.AddPersonalInfo(req, candidateID)
+	createdInfo, err := c.service.AddPersonalInfo(ctx,req, candidateID)
 	if err != nil {
 		_  = ctx.Error(err)
 		ctx.Abort()
@@ -82,7 +82,7 @@ func (c *CandidatePersonalInfoController) GetPersonalInfo(ctx *gin.Context) {
 		return
 	}
 
-	info, err := c.service.GetPersonalInfo(candidateID)
+	info, err := c.service.GetPersonalInfo(ctx,candidateID)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -125,7 +125,7 @@ func (c *CandidatePersonalInfoController) UpdatePersonalInfo(ctx *gin.Context) {
 		return
 	}
 
-	updatedInfo, err := c.service.UpdatePersonalInfo(candidateID, req)
+	updatedInfo, err := c.service.UpdatePersonalInfo(ctx,candidateID, req)
 	if err != nil {
 		_  = ctx.Error(err)
 		ctx.Abort()
@@ -161,7 +161,7 @@ func (c *CandidatePersonalInfoController) DeletePersonalInfo(ctx *gin.Context) {
 		return
 	}
 
-	err = c.service.DeletePersonalInfo(candidateID)
+	err = c.service.DeletePersonalInfo(ctx,candidateID)
 	if err != nil {
 		_  = ctx.Error(err)
 		ctx.Abort()

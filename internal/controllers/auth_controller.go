@@ -45,7 +45,7 @@ func (c *AuthController) Login(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	user, accessToken, refreshToken, err := c.authService.Login(req)
+	user, accessToken, refreshToken, err := c.authService.Login(ctx,req)
 	if err != nil {
 		_  = ctx.Error(err)
 		ctx.Abort()
@@ -77,14 +77,14 @@ func (c *AuthController) RefreshToken(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	userID, userRole, err := c.authService.ValidateToken(refreshToken)
+	userID, userRole, err := c.authService.ValidateToken(ctx,refreshToken)
 	if err != nil {
 		_  = ctx.Error(err)
 		ctx.Abort()
 		return
 	}
 
-	accessToken, err := c.authService.RefreshAccessToken(userID, userRole, refreshToken)
+	accessToken, err := c.authService.RefreshAccessToken(ctx,userID, userRole, refreshToken)
 	if err != nil {
 		_  = ctx.Error(err)
 		ctx.Abort()
@@ -115,8 +115,8 @@ func (c *AuthController) Logout(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	userID, _, _ := c.authService.ValidateToken(refreshToken)
-	if err := c.authService.Logout(userID, refreshToken); err != nil {
+	userID, _, _ := c.authService.ValidateToken(ctx,refreshToken)
+	if err := c.authService.Logout(ctx,userID, refreshToken); err != nil {
 		_  = ctx.Error(err)
 		ctx.Abort()
 		return
@@ -151,7 +151,7 @@ func (c *AuthController) Register(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	user, err := c.authService.Register(req)
+	user, err := c.authService.Register(ctx,req)
 	if err != nil {
 		_  = ctx.Error(err)
 		ctx.Abort()
@@ -183,7 +183,7 @@ func (c *AuthController) SendResetOTP(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	err := c.authService.SendOTP(req.Email)
+	err := c.authService.SendOTP(ctx,req.Email)
 	if err != nil {
 		_  = ctx.Error(err)
 		ctx.Abort()
@@ -214,7 +214,7 @@ func (c *AuthController) VerifyOTP(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	resetToken, err := c.authService.VerifyOTP(req.Email, req.OTP)
+	resetToken, err := c.authService.VerifyOTP(ctx,req.Email, req.OTP)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -252,7 +252,7 @@ func (c *AuthController) ResetPassword(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	err = c.authService.ResetPassword(req.Email, token, req.NewPassword)
+	err = c.authService.ResetPassword(ctx,req.Email, token, req.NewPassword)
 	if err != nil {
 		_  = ctx.Error(err)
 		ctx.Abort()
@@ -308,7 +308,7 @@ func (c *AuthController) GoogleCallbackConnect(ctx *gin.Context) {
 		return
 	}
 
-	user, accessToken, refreshToken, connect, err := c.authService.GoogleConnect(code, role)
+	user, accessToken, refreshToken, connect, err := c.authService.GoogleConnect(ctx,code, role)
 	if err != nil {
 		_  = ctx.Error(err)
 		ctx.Abort()

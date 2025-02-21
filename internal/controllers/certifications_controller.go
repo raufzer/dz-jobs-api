@@ -45,7 +45,7 @@ func (c *CandidateCertificationsController) AddCertification(ctx *gin.Context) {
 		return
 	}
 
-	certification, err := c.service.AddCertification(candidateID, req)
+	certification, err := c.service.AddCertification(ctx,candidateID, req)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -79,7 +79,7 @@ func (c *CandidateCertificationsController) GetCertifications(ctx *gin.Context) 
 		return
 	}
 
-	certifications, err := c.service.GetCertifications(candidateID)
+	certifications, err := c.service.GetCertifications(ctx,candidateID)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -114,7 +114,7 @@ func (c *CandidateCertificationsController) DeleteCertification(ctx *gin.Context
 		return
 	}
 
-	err = c.service.DeleteCertification(candidateID, ctx.Param("certificationName"))
+	err = c.service.DeleteCertification(ctx,candidateID, ctx.Param("certificationName"))
 	if err != nil {
 		_  = ctx.Error(err)
 		return

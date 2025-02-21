@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"database/sql"
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/models"
@@ -19,13 +20,13 @@ func NewCandidateSkillService(repo interfaces.CandidateSkillsRepository) *Candid
 	return &CandidateSkillsService{candidateSkillsRepo: repo}
 }
 
-func (s *CandidateSkillsService) AddSkill(candidateID uuid.UUID, request request.AddSkillRequest) (*models.CandidateSkills, error) {
+func (s *CandidateSkillsService) AddSkill(ctx context.Context, candidateID uuid.UUID, request request.AddSkillRequest) (*models.CandidateSkills, error) {
 	skill := &models.CandidateSkills{
 		ID:    candidateID,
 		Skill: request.Skill,
 	}
 
-	err := s.candidateSkillsRepo.CreateSkill(skill)
+	err := s.candidateSkillsRepo.CreateSkill(ctx,skill)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to add skill")
 	}
@@ -33,8 +34,8 @@ func (s *CandidateSkillsService) AddSkill(candidateID uuid.UUID, request request
 	return skill, nil
 }
 
-func (s *CandidateSkillsService) GetSkills(candidateID uuid.UUID) ([]models.CandidateSkills, error) {
-	skills, err := s.candidateSkillsRepo.GetSkills(candidateID)
+func (s *CandidateSkillsService) GetSkills(ctx context.Context, candidateID uuid.UUID) ([]models.CandidateSkills, error) {
+	skills, err := s.candidateSkillsRepo.GetSkills(ctx,candidateID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, utils.NewCustomError(http.StatusNotFound, "No skills found")
@@ -45,8 +46,8 @@ func (s *CandidateSkillsService) GetSkills(candidateID uuid.UUID) ([]models.Cand
 	return skills, nil
 }
 
-func (s *CandidateSkillsService) DeleteSkill(candidateID uuid.UUID, skill string) error {
-	err := s.candidateSkillsRepo.DeleteSkill(candidateID, skill)
+func (s *CandidateSkillsService) DeleteSkill(ctx context.Context, candidateID uuid.UUID, skill string) error {
+	err := s.candidateSkillsRepo.DeleteSkill(ctx,candidateID, skill)
 	if err != nil {
 		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete skill")
 	}

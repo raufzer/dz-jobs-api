@@ -50,7 +50,7 @@ func (c *RecruiterController) CreateRecruiter(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	recruiter, err := c.recruiterService.CreateRecruiter(userID, req, companyLogoFile)
+	recruiter, err := c.recruiterService.CreateRecruiter(ctx,userID, req, companyLogoFile)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -82,7 +82,7 @@ func (c *RecruiterController) GetRecruiter(ctx *gin.Context) {
 		_  = ctx.Error(err)
 		return
 	}
-	recruiter, err := c.recruiterService.GetRecruiter(recruiterID)
+	recruiter, err := c.recruiterService.GetRecruiter(ctx,recruiterID)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -128,7 +128,7 @@ func (c *RecruiterController) UpdateRecruiter(ctx *gin.Context) {
 		_  = ctx.Error(err)
 		return
 	}
-	updatedRecruiter, err := c.recruiterService.UpdateRecruiter(recruiterID, req, companyLogoFile)
+	updatedRecruiter, err := c.recruiterService.UpdateRecruiter(ctx,recruiterID, req, companyLogoFile)
 	if err != nil {
 		_  = ctx.Error(err)
 		ctx.Abort()
@@ -161,7 +161,7 @@ func (c *RecruiterController) DeleteRecruiter(ctx *gin.Context) {
 		_  = ctx.Error(err)
 		return
 	}
-	err = c.recruiterService.DeleteRecruiter(recruiterID)
+	err = c.recruiterService.DeleteRecruiter(ctx,recruiterID)
 	if err != nil {
 		_  = ctx.Error(err)
 		return

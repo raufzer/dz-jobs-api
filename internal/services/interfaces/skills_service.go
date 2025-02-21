@@ -1,13 +1,14 @@
 package interfaces
 
 import (
-	"dz-jobs-api/internal/dto/request"
-	"dz-jobs-api/internal/models"
-	"github.com/google/uuid"
+    "context"
+    "dz-jobs-api/internal/dto/request"
+    "dz-jobs-api/internal/models"
+    "github.com/google/uuid"
 )
 
 type CandidateSkillsService interface {
-	AddSkill(candidateID uuid.UUID, request request.AddSkillRequest) (*models.CandidateSkills, error)
-	GetSkills(candidateID uuid.UUID) ([]models.CandidateSkills, error)
-	DeleteSkill(candidateID uuid.UUID, skill string) error
+    AddSkill(ctx context.Context, candidateID uuid.UUID, request request.AddSkillRequest) (*models.CandidateSkills, error)
+    GetSkills(ctx context.Context, candidateID uuid.UUID) ([]models.CandidateSkills, error)
+    DeleteSkill(ctx context.Context, candidateID uuid.UUID, skill string) error
 }

@@ -47,7 +47,7 @@ func (c *CandidateEducationController) AddEducation(ctx *gin.Context) {
 		return
 	}
 
-	education, err := c.service.AddEducation(candidateID, req)
+	education, err := c.service.AddEducation(ctx,candidateID, req)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -81,7 +81,7 @@ func (c *CandidateEducationController) GetEducation(ctx *gin.Context) {
 		return
 	}
 
-	educations, err := c.service.GetEducation(candidateID)
+	educations, err := c.service.GetEducation(ctx,candidateID)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -117,7 +117,7 @@ func (c *CandidateEducationController) DeleteEducation(ctx *gin.Context) {
 	}
 	educationIDstr := ctx.Param("educationId")
 	educationID, _ := uuid.Parse(educationIDstr)
-	err = c.service.DeleteEducation(candidateID, educationID)
+	err = c.service.DeleteEducation(ctx,candidateID, educationID)
 	if err != nil {
 		_  = ctx.Error(err)
 		return

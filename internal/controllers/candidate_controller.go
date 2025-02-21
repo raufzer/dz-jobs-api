@@ -47,7 +47,7 @@ func (c *CandidateController) CreateCandidate(ctx *gin.Context) {
 		_  = ctx.Error(err)
 		return
 	}
-	candidate, err := c.service.CreateCandidate(userID, profilePictureFile, resumeFile)
+	candidate, err := c.service.CreateCandidate(ctx,userID, profilePictureFile, resumeFile)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -78,7 +78,7 @@ func (c *CandidateController) CreateDefaultCandidate(ctx *gin.Context) {
 	userID := candidateID.(string)
 	defaultProfilePictureURL := c.config.DefaultProfilePicture
 	defaultResumeURL := c.config.DefaultResume
-	candidate, err := c.service.CreateDefaultCandidate(userID, defaultProfilePictureURL, defaultResumeURL)
+	candidate, err := c.service.CreateDefaultCandidate(ctx,userID, defaultProfilePictureURL, defaultResumeURL)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -111,7 +111,7 @@ func (c *CandidateController) GetCandidate(ctx *gin.Context) {
 		_  = ctx.Error(err)
 		return
 	}
-	candidate, err := c.service.GetCandidate(candidateID)
+	candidate, err := c.service.GetCandidate(ctx,candidateID)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -159,7 +159,7 @@ func (c *CandidateController) UpdateCandidate(ctx *gin.Context) {
 		return
 	}
 
-	updatedCandidate, err := c.service.UpdateCandidate(candidateID, profilePictureFile, resumeFile)
+	updatedCandidate, err := c.service.UpdateCandidate(ctx,candidateID, profilePictureFile, resumeFile)
 	if err != nil {
 		_  = ctx.Error(err)
 		ctx.Abort()
@@ -194,7 +194,7 @@ func (c *CandidateController) DeleteCandidate(ctx *gin.Context) {
 		return
 	}
 
-	err = c.service.DeleteCandidate(candidateID)
+	err = c.service.DeleteCandidate(ctx,candidateID)
 	if err != nil {
 		_  = ctx.Error(err)
 		return

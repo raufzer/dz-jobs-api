@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"database/sql"
 	"dz-jobs-api/internal/dto/request"
 	"dz-jobs-api/internal/models"
@@ -20,8 +21,8 @@ func NewUserService(userRepo interfaces.UserRepository) *UserService {
 	return &UserService{userRepository: userRepo}
 }
 
-func (s *UserService) CreateUser(req request.CreateUsersRequest) (*models.User, error) {
-	existingUser, err := s.userRepository.GetUserByEmail(req.Email)
+func (s *UserService) CreateUser(ctx context.Context, req request.CreateUsersRequest) (*models.User, error) {
+	existingUser, err := s.userRepository.GetUserByEmail(ctx,req.Email)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			existingUser = nil
@@ -45,7 +46,7 @@ func (s *UserService) CreateUser(req request.CreateUsersRequest) (*models.User, 
 			UpdatedAt: time.Now(),
 		}
 
-		if err := s.userRepository.CreateUser(user); err != nil {
+		if err := s.userRepository.CreateUser(ctx,user); err != nil {
 			return nil, utils.NewCustomError(http.StatusInternalServerError, "User creation failed")
 		}
 
@@ -53,11 +54,11 @@ func (s *UserService) CreateUser(req request.CreateUsersRequest) (*models.User, 
 	}
 }
 
-func (s *UserService) GetUser(userID uuid.UUID) (*models.User, error) {
+func (s *UserService) GetUser(ctx context.Context, userID uuid.UUID) (*models.User, error) {
 	if userID == uuid.Nil {
 		return nil, utils.NewCustomError(http.StatusBadRequest, "Invalid user ID")
 	}
-	user, err := s.userRepository.GetUserByID(userID)
+	user, err := s.userRepository.GetUserByID(ctx,userID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, utils.NewCustomError(http.StatusNotFound, "User not found")
@@ -67,7 +68,7 @@ func (s *UserService) GetUser(userID uuid.UUID) (*models.User, error) {
 	return user, nil
 }
 
-func (s *UserService) UpdateUser(userID uuid.UUID, req request.UpdateUserRequest) (*models.User, error) {
+func (s *UserService) UpdateUser(ctx context.Context, userID uuid.UUID, req request.UpdateUserRequest) (*models.User, error) {
 	updatedUser := &models.User{
 		Name:      req.Name,
 		Email:     req.Email,
@@ -76,18 +77,18 @@ func (s *UserService) UpdateUser(userID uuid.UUID, req request.UpdateUserRequest
 		UpdatedAt: time.Now(),
 	}
 
-	if err := s.userRepository.UpdateUser(userID, updatedUser); err != nil {
+	if err := s.userRepository.UpdateUser(ctx,userID, updatedUser); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, utils.NewCustomError(http.StatusNotFound, "User not found")
 		}
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to update user")
 	}
 
-	return s.userRepository.GetUserByID(userID)
+	return s.userRepository.GetUserByID(ctx,userID)
 }
 
-func (s *UserService) GetAllUsers() ([]*models.User, error) {
-	users, err := s.userRepository.GetAllUsers()
+func (s *UserService) GetAllUsers(ctx context.Context, ) ([]*models.User, error) {
+	users, err := s.userRepository.GetAllUsers(ctx)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, utils.NewCustomError(http.StatusNotFound, "Users not found")
@@ -97,8 +98,8 @@ func (s *UserService) GetAllUsers() ([]*models.User, error) {
 	return users, nil
 }
 
-func (s *UserService) DeleteUser(userID uuid.UUID) error {
-	err := s.userRepository.DeleteUser(userID)
+func (s *UserService) DeleteUser(ctx context.Context, userID uuid.UUID) error {
+	err := s.userRepository.DeleteUser(ctx,userID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return utils.NewCustomError(http.StatusNotFound, "User not found")

@@ -47,7 +47,7 @@ func (c *CandidateSkillsController) AddSkill(ctx *gin.Context) {
 		return
 	}
 
-	skill, err := c.service.AddSkill(candidateID, req)
+	skill, err := c.service.AddSkill(ctx,candidateID, req)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -81,7 +81,7 @@ func (c *CandidateSkillsController) GetSkills(ctx *gin.Context) {
 		return
 	}
 
-	skills, err := c.service.GetSkills(candidateID)
+	skills, err := c.service.GetSkills(ctx,candidateID)
 	if err != nil {
 		_  = ctx.Error(err)
 		return
@@ -117,7 +117,7 @@ func (c *CandidateSkillsController) DeleteSkill(ctx *gin.Context) {
 		return
 	}
 
-	err = c.service.DeleteSkill(candidateID, ctx.Param("skillName"))
+	err = c.service.DeleteSkill(ctx,candidateID, ctx.Param("skillName"))
 	if err != nil {
 		_  = ctx.Error(err)
 		return

@@ -1,10 +1,12 @@
 package postgresql
 
 import (
+		"context"
 	"database/sql"
 	"dz-jobs-api/internal/models"
 	repositoryInterfaces "dz-jobs-api/internal/repositories/interfaces"
 	"fmt"
+
 	"github.com/google/uuid"
 )
 
@@ -18,7 +20,7 @@ func NewCandidateSkillsRepository(db *sql.DB) repositoryInterfaces.CandidateSkil
 	}
 }
 
-func (r *SQLCandidateSkillsRepository) CreateSkill(skill *models.CandidateSkills) error {
+func (r *SQLCandidateSkillsRepository) CreateSkill(ctx context.Context, skill *models.CandidateSkills) error {
 	query := `INSERT INTO candidate_skills (candidate_id, skill) VALUES ($1, $2)`
 	_, err := r.db.Exec(query, skill.ID, skill.Skill)
 	if err != nil {
@@ -27,7 +29,7 @@ func (r *SQLCandidateSkillsRepository) CreateSkill(skill *models.CandidateSkills
 	return nil
 }
 
-func (r *SQLCandidateSkillsRepository) GetSkills(candidateID uuid.UUID) ([]models.CandidateSkills, error) {
+func (r *SQLCandidateSkillsRepository) GetSkills(ctx context.Context, candidateID uuid.UUID) ([]models.CandidateSkills, error) {
 	rows, err := r.db.Query(`SELECT candidate_id, skill FROM candidate_skills WHERE candidate_id = $1`, candidateID)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch skills: %w", err)
@@ -48,7 +50,7 @@ func (r *SQLCandidateSkillsRepository) GetSkills(candidateID uuid.UUID) ([]model
 	return skills, nil
 }
 
-func (r *SQLCandidateSkillsRepository) DeleteSkill(candidateID uuid.UUID, skillName string) error {
+func (r *SQLCandidateSkillsRepository) DeleteSkill(ctx context.Context, candidateID uuid.UUID, skillName string) error {
 	query := `DELETE FROM candidate_skills WHERE candidate_id = $1 AND skill = $2`
 	_, err := r.db.Exec(query, candidateID, skillName)
 	if err != nil {

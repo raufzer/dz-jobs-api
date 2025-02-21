@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"database/sql"
 	"dz-jobs-api/config"
 	"dz-jobs-api/internal/dto/request"
@@ -18,11 +19,13 @@ type CandidateEducationService struct {
 }
 
 func NewCandidateEducationService(repo interfaces.CandidateEducationRepository, config *config.AppConfig) *CandidateEducationService {
-	return &CandidateEducationService{candidateEducationRepo: repo,
-		config: config}
+	return &CandidateEducationService{
+		candidateEducationRepo: repo,
+		config:                 config,
+	}
 }
 
-func (s *CandidateEducationService) AddEducation(candidateID uuid.UUID, request request.AddEducationRequest) (*models.CandidateEducation, error) {
+func (s *CandidateEducationService) AddEducation(ctx context.Context, candidateID uuid.UUID, request request.AddEducationRequest) (*models.CandidateEducation, error) {
 
 	education := &models.CandidateEducation{
 		ID:          uuid.New(),
@@ -34,7 +37,7 @@ func (s *CandidateEducationService) AddEducation(candidateID uuid.UUID, request 
 		Description: request.Description,
 	}
 
-	err := s.candidateEducationRepo.CreateEducation(education)
+	err := s.candidateEducationRepo.CreateEducation(ctx, education)
 	if err != nil {
 		return nil, utils.NewCustomError(http.StatusInternalServerError, "Failed to add education")
 	}
@@ -42,8 +45,8 @@ func (s *CandidateEducationService) AddEducation(candidateID uuid.UUID, request 
 	return education, nil
 }
 
-func (s *CandidateEducationService) GetEducation(candidateID uuid.UUID) ([]models.CandidateEducation, error) {
-	educations, err := s.candidateEducationRepo.GetEducation(candidateID)
+func (s *CandidateEducationService) GetEducation(ctx context.Context, candidateID uuid.UUID) ([]models.CandidateEducation, error) {
+	educations, err := s.candidateEducationRepo.GetEducation(ctx, candidateID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, utils.NewCustomError(http.StatusNotFound, "No education records found")
@@ -54,8 +57,8 @@ func (s *CandidateEducationService) GetEducation(candidateID uuid.UUID) ([]model
 	return educations, nil
 }
 
-func (s *CandidateEducationService) DeleteEducation(candidateID uuid.UUID, educationID uuid.UUID) error {
-	err := s.candidateEducationRepo.DeleteEducation(candidateID, educationID)
+func (s *CandidateEducationService) DeleteEducation(ctx context.Context, candidateID uuid.UUID, educationID uuid.UUID) error {
+	err := s.candidateEducationRepo.DeleteEducation(ctx, candidateID, educationID)
 	if err != nil {
 		return utils.NewCustomError(http.StatusInternalServerError, "Failed to delete education")
 	}
